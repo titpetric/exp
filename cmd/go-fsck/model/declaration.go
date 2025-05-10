@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Declaration holds information about a go symbol.
 type Declaration struct {
 	Kind DeclarationKind
 	Type string `json:",omitempty"`
@@ -33,11 +34,11 @@ type Declaration struct {
 }
 
 func (f *Declaration) TypeRef() string {
-	return strings.TrimLeft(f.Type, "[]*")
+	return TypeRef(f.Type)
 }
 
 func (f *Declaration) ReceiverTypeRef() string {
-	return strings.TrimLeft(f.Receiver, "[]*")
+	return TypeRef(f.Receiver)
 }
 
 func (d *Declaration) HasName(find string) bool {
@@ -50,7 +51,7 @@ func (d *Declaration) HasName(find string) bool {
 }
 
 func (d *Declaration) IsExported() bool {
-	if d.Receiver != "" && !ast.IsExported(strings.TrimLeft(d.Receiver, "*")) {
+	if d.Receiver != "" && !ast.IsExported(TypeRef(d.Receiver)) {
 		return false
 	}
 

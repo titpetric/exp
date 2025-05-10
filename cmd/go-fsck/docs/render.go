@@ -61,21 +61,21 @@ func render(cfg *options) error {
 
 	switch cfg.render {
 	case "json":
-		return renderJSON(defs)
+		return renderJSON(cfg, defs)
 	case "puml", "plantuml":
-		return renderPlantUML(defs)
+		return renderPlantUML(cfg, defs)
 	default:
-		return renderMarkdown(defs)
+		return renderMarkdown(cfg, defs)
 	}
 }
 
-func renderJSON(defs []*model.Definition) error {
+func renderJSON(_ *options, defs []*model.Definition) error {
 	enc := json.NewEncoder(os.Stdout)
 	enc.SetIndent("", "  ")
 	return enc.Encode(defs)
 }
 
-func renderMarkdown(defs []*model.Definition) error {
+func renderMarkdown(_ *options, defs []*model.Definition) error {
 	// Loop through function definitions and collect referenced
 	// symbols from imported packages. Globals may also reference
 	// imported packages so this is incomplete at the moment.

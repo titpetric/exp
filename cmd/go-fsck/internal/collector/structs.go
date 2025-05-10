@@ -18,7 +18,7 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 			default:
 				out.Type = p.symbolType(file, obj.Type)
 				item := &model.Field{
-					Name: "item",
+					Name: "type",
 					Type: out.Type,
 				}
 				out.Fields = append(out.Fields, item)

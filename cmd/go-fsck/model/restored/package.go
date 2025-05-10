@@ -1,9 +1,12 @@
 package model
 
 import (
+	"fmt"
+
 	"golang.org/x/tools/go/packages"
 )
 
+// Package holds go package information.
 type Package struct {
 	// ID is the ID of the package as x/tools packages loads it.
 	ID string
@@ -21,6 +24,14 @@ type Package struct {
 	Pkg *packages.Package `json:"-"`
 }
 
+func (p Package) Equal(in Package) bool {
+	return p.ImportPath == in.ImportPath
+}
+
 func (p Package) Name() string {
 	return p.Package
+}
+
+func (p Package) String() string {
+	return fmt.Sprintf("package=%s import_path=%s path=%s test_package=%v", p.Package, p.ImportPath, p.Path, p.TestPackage)
 }

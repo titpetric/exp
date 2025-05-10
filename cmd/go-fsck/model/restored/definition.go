@@ -1,5 +1,10 @@
 package model
 
+import (
+	"strings"
+)
+
+// Definition holds all symbols defined for a Package.
 type Definition struct {
 	Package
 
@@ -10,6 +15,37 @@ type Definition struct {
 	Consts  DeclarationList
 	Vars    DeclarationList
 	Funcs   DeclarationList
+}
+
+func (d *Definition) ClearNonTestFiles() {
+	for filename, _ := range d.Imports {
+		if !strings.HasSuffix(filename, "_test.go") {
+			delete(d.Imports, filename)
+		}
+	}
+	d.Types.ClearNonTestFiles()
+	d.Vars.ClearNonTestFiles()
+	d.Consts.ClearNonTestFiles()
+	d.Funcs.ClearNonTestFiles()
+}
+
+func (d *Definition) ClearSource() {
+	d.Types.ClearSource()
+	d.Vars.ClearSource()
+	d.Consts.ClearSource()
+	d.Funcs.ClearSource()
+}
+
+func (d *Definition) ClearTestFiles() {
+	for filename, _ := range d.Imports {
+		if strings.HasSuffix(filename, "_test.go") {
+			delete(d.Imports, filename)
+		}
+	}
+	d.Types.ClearTestFiles()
+	d.Vars.ClearTestFiles()
+	d.Consts.ClearTestFiles()
+	d.Funcs.ClearTestFiles()
 }
 
 func (d *Definition) Fill() {
@@ -47,6 +83,14 @@ func (d *Definition) Order() []*Declaration {
 	result = append(result, d.Vars...)
 	result = append(result, d.Consts...)
 	return result
+}
+
+// Sort will sort the inner types so they have a stable order.
+func (d *Definition) Sort() {
+	d.Types.Sort()
+	d.Vars.Sort()
+	d.Consts.Sort()
+	d.Funcs.Sort()
 }
 
 func (d *Definition) getImports(decl *Declaration) []string {

@@ -2,6 +2,7 @@ package model
 
 import "strings"
 
+// Definition holds all symbols defined for a Package.
 type Definition struct {
 	Package
 

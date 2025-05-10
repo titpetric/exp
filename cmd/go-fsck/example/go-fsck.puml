@@ -9,16 +9,41 @@ class Body {
 }
 
 class File {
-  - item: string
+  - type: string
 }
 
 class Reseter {
-  - item: any
+  - type: any
 }
 
 class logger {
   - out: []string
-  + Log (s string)
 }
+
+
+note top of Allocator
+Allocator holds a sync.Pool of objects of type T.
+end note
+
+
+
+note top of Body
+Body represends a decoded body
+end note
+
+
+
+note top of File
+File represents a filename
+end note
+
+
+
+note top of Reseter
+Reseter is the interface that types must implement to be managed by Allocator.
+end note
+
+
+
 
 @enduml

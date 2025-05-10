@@ -6,6 +6,7 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// Package holds go package information.
 type Package struct {
 	// ID is the ID of the package as x/tools packages loads it.
 	ID string

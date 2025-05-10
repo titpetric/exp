@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// DeclarationList holds a list of Go symbols.
 type DeclarationList []*Declaration
 
 func (p *DeclarationList) Append(in ...*Declaration) {
@@ -101,11 +102,20 @@ func (p DeclarationList) Exported() (result []*Declaration) {
 	return
 }
 
-func (p DeclarationList) FindKind(kind DeclarationKind) (result []*Declaration) {
+func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result []*Declaration) {
 	for _, decl := range p {
-		if decl.Kind == kind {
+		if matchfn(decl) {
 			result = append(result, decl)
 		}
 	}
 	return
+}
+
+func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
+	for _, decl := range p {
+		if matchfn(decl) {
+			return decl
+		}
+	}
+	return nil
 }

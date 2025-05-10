@@ -230,7 +230,13 @@ func (v *collector) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 		}
 
 	case *ast.FuncDecl:
+		// func name
 		name := node.Name.Name
+		if node.Recv != nil {
+			// func receiver.name
+			name = v.symbolType(file, node.Recv.List[0].Type) + "." + name
+		}
+
 		key := name
 		if packageName != "" {
 			key = packageName + "." + name

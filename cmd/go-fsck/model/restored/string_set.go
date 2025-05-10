@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// StringSet provides a key based unique string slice.
 type StringSet map[string][]string
 
 func NewStringSet() StringSet {

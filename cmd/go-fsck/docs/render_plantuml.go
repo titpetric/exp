@@ -5,18 +5,14 @@ import (
 	"go/ast"
 	"strings"
 
-	"golang.org/x/exp/slices"
-
 	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
 )
 
-func renderPlantUML(defs []*model.Definition) error {
+func renderPlantUML(_ *options, defs []*model.Definition) error {
 	var links []string
 
 	addLink := func(link string) {
-		if !slices.Contains(links, link) {
-			links = append(links, link)
-		}
+		links = append(links, link)
 	}
 
 	fmt.Println("@startuml")
@@ -54,13 +50,50 @@ func renderPlantUML(defs []*model.Definition) error {
 				continue
 			}
 
-			fmt.Println("class", t.Name, "{")
+			for _, name := range t.Names {
+				fmt.Println("class", name, "{")
+				for _, f := range t.Fields {
+					typeRef := f.TypeRef()
+
+					if f.Name == "" {
+						addLink(fmt.Sprintf("%s --|> %s : embeds", name, typeRef))
+						continue
+					}
+
+					if strings.HasPrefix(f.Type, "struct") {
+						f.Type = "struct"
+					}
+					if strings.HasPrefix(f.Type, "interface") {
+						f.Type = "interface"
+					}
+
+					if ast.IsExported(f.Name) {
+						fmt.Println("  +", f.Name+":", f.Type)
+					} else {
+						fmt.Println("  -", f.Name+":", f.Type)
+					}
+					if _, ok := allTypes[typeRef]; ok {
+						addLink(fmt.Sprintf("%s --> %s : %s", name, typeRef, f.Name))
+					}
+				}
+			}
+
+			name := t.Name
+
+			fmt.Println("class", name, "{")
 			for _, f := range t.Fields {
 				typeRef := f.TypeRef()
 
 				if f.Name == "" {
-					addLink(fmt.Sprintf("%s --|> %s : embeds", t.Name, typeRef))
+					addLink(fmt.Sprintf("%s --|> %s : embeded by", typeRef, name))
 					continue
+				}
+
+				if strings.HasPrefix(f.Type, "struct") {
+					f.Type = "struct"
+				}
+				if strings.HasPrefix(f.Type, "interface") {
+					f.Type = "interface"
 				}
 
 				if ast.IsExported(f.Name) {
@@ -68,17 +101,44 @@ func renderPlantUML(defs []*model.Definition) error {
 				} else {
 					fmt.Println("  -", f.Name+":", f.Type)
 				}
+
 				if _, ok := allTypes[typeRef]; ok {
-					addLink(fmt.Sprintf("%s --> %s : types", t.Name, typeRef))
+					addLink(fmt.Sprintf("%s --> %s : %s", name, typeRef, f.Name))
 				}
 			}
 
+			if t.Doc != "" {
+				addLink("")
+				addLink("note top of " + name)
+				addLink(t.Doc)
+				addLink("end note")
+				addLink("")
+			}
+
+			addLink("")
+
 			funcList := allFuncs.Get(t.Name)
 			for _, sig := range funcList {
+				funcName := strings.SplitN(sig, " ", 2)[0]
+				funcInfo := def.Funcs.Find(func(d *model.Declaration) bool {
+					return d.Receiver == t.Name && d.Name == funcName
+				})
+				if funcInfo == nil {
+					continue
+				}
+
+				for _, argType := range funcInfo.Returns {
+					cleanType := model.TypeRef(argType)
+					if _, ok := allTypes[cleanType]; ok {
+						addLink(fmt.Sprintf("%s --> %s : %s", name, cleanType, funcName+"()"))
+						break
+					}
+				}
+
 				if ast.IsExported(sig) {
 					fmt.Println("  +", sig)
 				} else {
-					fmt.Println("  -", sig)
+					// fmt.Println("  -", sig)
 				}
 			}
 

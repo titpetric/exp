@@ -30,6 +30,7 @@ tasks:
       - go-fsck restore -p model --save --verbose
       - go-fsck restore -p model --stats-files | jq -s .
       - go-fsck docs --render puml > go-fsck.puml
+      - plantuml -tsvg go-fsck.puml
       - goimports -w .
       - go fmt .
       - go build .

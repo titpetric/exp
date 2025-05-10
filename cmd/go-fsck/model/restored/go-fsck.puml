@@ -16,29 +16,18 @@ class Declaration {
   + Returns: []string
   + Signature: string
   + Source: string
-  + Equal (in *Declaration) bool
-  + HasName (find string) bool
-  + IsExported () bool
-  + Keys () []string
-  + ReceiverTypeRef () string
-  + TypeRef () string
 }
 
 class DeclarationKind {
-  - item: string
+  - type: string
   + String () string
 }
 
 class DeclarationList {
-  - item: []*Declaration
-  + Append (in ...*Declaration)
-  + AppendUnique (in ...*Declaration)
-  + ClearNonTestFiles ()
-  + ClearSource ()
-  + ClearTestFiles ()
+  - type: []*Declaration
   + Exported () []*Declaration
-  + FindKind (kind DeclarationKind) []*Declaration
-  + Sort ()
+  + Filter (matchfn func(d *Declaration) bool) []*Declaration
+  + Find (matchfn func(d *Declaration) bool) *Declaration
 }
 
 class Definition {
@@ -48,10 +37,6 @@ class Definition {
   + Consts: DeclarationList
   + Vars: DeclarationList
   + Funcs: DeclarationList
-  + Fill ()
-  + Merge (in *Definition)
-  + Order () []*Declaration
-  - getImports (decl *Declaration) []string
 }
 
 class Field {
@@ -66,7 +51,7 @@ class Field {
 }
 
 class FieldList {
-  - item: []*Field
+  - type: []*Field
 }
 
 class Package {
@@ -76,23 +61,78 @@ class Package {
   + Path: string
   + TestPackage: bool
   + Pkg: *packages.Package
+  + Equal (in Package) bool
   + Name () string
+  + String () string
 }
 
 class StringSet {
-  - item: map[string][]string
-  + Add (key string, lits ...string)
+  - type: map[string][]string
   + All () []string
   + Get (key string) []string
   + Map () (map[string]string, []error)
 }
 
-Declaration --> DeclarationKind : types
-Declaration --> FieldList : types
-DeclarationList --> Declaration : types
-Definition --|> Package : embeds
-Definition --> StringSet : types
-Definition --> DeclarationList : types
-FieldList --> Field : types
+Declaration --> DeclarationKind : Kind
+Declaration --> FieldList : Fields
+
+note top of Declaration
+Declaration holds information about a go symbol.
+end note
+
+
+
+note top of DeclarationKind
+DeclarationKind is an enum of go symbol types.
+end note
+
+
+DeclarationList --> Declaration : type
+
+note top of DeclarationList
+DeclarationList holds a list of Go symbols.
+end note
+
+
+DeclarationList --> Declaration : Exported()
+DeclarationList --> Declaration : Filter()
+DeclarationList --> Declaration : Find()
+Package --|> Definition : embeded by
+Definition --> StringSet : Imports
+Definition --> DeclarationList : Types
+Definition --> DeclarationList : Consts
+Definition --> DeclarationList : Vars
+Definition --> DeclarationList : Funcs
+
+note top of Definition
+Definition holds all symbols defined for a Package.
+end note
+
+
+
+note top of Field
+Field holds details about a field definition.
+end note
+
+
+FieldList --> Field : type
+
+note top of FieldList
+FieldList contains all struct fields.
+end note
+
+
+
+note top of Package
+Package holds go package information.
+end note
+
+
+
+note top of StringSet
+StringSet provides a key based unique string slice.
+end note
+
+
 
 @enduml

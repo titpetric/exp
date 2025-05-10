@@ -19,9 +19,6 @@
       "definition.go": [
         "\"strings\""
       ],
-      "field.go": [
-        "\"strings\""
-      ],
       "package.go": [
         "\"fmt\"",
         "\"golang.org/x/tools/go/packages\""
@@ -32,6 +29,9 @@
         "\"slices\"",
         "\"sort\"",
         "\"strings\""
+      ],
+      "type_ref.go": [
+        "\"strings\""
       ]
     },
     "Types": [
@@ -39,6 +39,7 @@
         "Kind": "type",
         "File": "declaration.go",
         "SelfContained": true,
+        "Doc": "Declaration holds information about a go symbol.",
         "Name": "Declaration",
         "Fields": [
           {
@@ -144,44 +145,47 @@
             "JSONName": "Source"
           }
         ],
-        "Source": "type Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\tImports\t[]string\t`json:\",omitempty\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n}"
+        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\tImports\t[]string\t`json:\",omitempty\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
         "Type": "string",
         "File": "declaration_kind.go",
         "SelfContained": false,
+        "Doc": "DeclarationKind is an enum of go symbol types.",
         "Name": "DeclarationKind",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "string",
             "Path": "",
             "JSONName": ""
           }
         ],
-        "Source": "type DeclarationKind string"
+        "Source": "// DeclarationKind is an enum of go symbol types.\ntype DeclarationKind string"
       },
       {
         "Kind": "type",
         "Type": "[]*Declaration",
         "File": "declaration_list.go",
         "SelfContained": false,
+        "Doc": "DeclarationList holds a list of Go symbols.",
         "Name": "DeclarationList",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "[]*Declaration",
             "Path": "",
             "JSONName": ""
           }
         ],
-        "Source": "type DeclarationList []*Declaration"
+        "Source": "// DeclarationList holds a list of Go symbols.\ntype DeclarationList []*Declaration"
       },
       {
         "Kind": "type",
         "File": "definition.go",
         "SelfContained": true,
+        "Doc": "Definition holds all symbols defined for a Package.",
         "Name": "Definition",
         "Fields": [
           {
@@ -227,7 +231,7 @@
             "JSONName": "Funcs"
           }
         ],
-        "Source": "type Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
+        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
       },
       {
         "Kind": "type",
@@ -305,21 +309,23 @@
         "Type": "[]*Field",
         "File": "field_list.go",
         "SelfContained": false,
+        "Doc": "FieldList contains all struct fields.",
         "Name": "FieldList",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "[]*Field",
             "Path": "",
             "JSONName": ""
           }
         ],
-        "Source": "type FieldList []*Field"
+        "Source": "// FieldList contains all struct fields.\ntype FieldList []*Field"
       },
       {
         "Kind": "type",
         "File": "package.go",
         "SelfContained": false,
+        "Doc": "Package holds go package information.",
         "Name": "Package",
         "Fields": [
           {
@@ -366,30 +372,31 @@
             "JSONName": ""
           }
         ],
-        "Source": "type Package struct {\n\t// ID is the ID of the package as x/tools packages loads it.\n\tID\tstring\n\t// Package is the name of the package.\n\tPackage\tstring\n\t// ImportPath contains the import path (github...).\n\tImportPath\tstring\n\t// Path is sanitized to contain the relative location (folder).\n\tPath\tstring\n\t// TestPackage is true if this is a test package.\n\tTestPackage\tbool\n\n\t// Pkg serves to carry ast package information, preventing a double Load().\n\t// It's used during analysis and merging and discarded for the result.\n\tPkg\t*packages.Package\t`json:\"-\"`\n}"
+        "Source": "// Package holds go package information.\ntype Package struct {\n\t// ID is the ID of the package as x/tools packages loads it.\n\tID\tstring\n\t// Package is the name of the package.\n\tPackage\tstring\n\t// ImportPath contains the import path (github...).\n\tImportPath\tstring\n\t// Path is sanitized to contain the relative location (folder).\n\tPath\tstring\n\t// TestPackage is true if this is a test package.\n\tTestPackage\tbool\n\n\t// Pkg serves to carry ast package information, preventing a double Load().\n\t// It's used during analysis and merging and discarded for the result.\n\tPkg\t*packages.Package\t`json:\"-\"`\n}"
       },
       {
         "Kind": "type",
         "Type": "map[string][]string",
         "File": "string_set.go",
         "SelfContained": false,
+        "Doc": "StringSet provides a key based unique string slice.",
         "Name": "StringSet",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "map[string][]string",
             "Path": "",
             "JSONName": ""
           }
         ],
-        "Source": "type StringSet map[string][]string"
+        "Source": "// StringSet provides a key based unique string slice.\ntype StringSet map[string][]string"
       }
     ],
     "Consts": [
       {
         "Kind": "const",
-        "File": "const.go",
-        "SelfContained": true,
+        "File": "declaration_kind.go",
+        "SelfContained": false,
         "Names": [
           "StructKind",
           "ImportKind",
@@ -414,6 +421,28 @@
         ],
         "Signature": "NewStringSet () StringSet",
         "Source": "func NewStringSet() StringSet {\n\treturn make(StringSet)\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "type_ref.go",
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "HasPrefix",
+            "SplitN",
+            "TrimPrefix"
+          ]
+        },
+        "Doc": "TypeRef aims to trim a type name to a reference type.",
+        "Name": "TypeRef",
+        "Arguments": [
+          "string"
+        ],
+        "Returns": [
+          "string"
+        ],
+        "Signature": "TypeRef (name string) string",
+        "Source": "// TypeRef aims to trim a type name to a reference type.\nfunc TypeRef(name string) string {\n\t// trim variadic arg\n\tif strings.HasPrefix(name, \"...\") {\n\t\tname = name[3:]\n\t}\n\n\t// slice, array and map value\n\t// in terms of nesting, this is a hack\n\tif strings.HasPrefix(name, \"[\") || strings.HasPrefix(name, \"map[\") {\n\t\tname = strings.SplitN(name, \"]\", 2)[1]\n\t}\n\n\t// deref pointers\n\treturn strings.TrimPrefix(name, \"*\")\n}"
       },
       {
         "Kind": "func",
@@ -452,9 +481,6 @@
         "References": {
           "ast": [
             "IsExported"
-          ],
-          "strings": [
-            "TrimLeft"
           ]
         },
         "Name": "IsExported",
@@ -463,7 +489,7 @@
           "bool"
         ],
         "Signature": "IsExported () bool",
-        "Source": "func (d *Declaration) IsExported() bool {\n\tif d.Receiver != \"\" \u0026\u0026 !ast.IsExported(strings.TrimLeft(d.Receiver, \"*\")) {\n\t\treturn false\n\t}\n\n\tfor _, name := range d.Names {\n\t\tif ast.IsExported(name) {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn ast.IsExported(d.Name)\n}"
+        "Source": "func (d *Declaration) IsExported() bool {\n\tif d.Receiver != \"\" \u0026\u0026 !ast.IsExported(TypeRef(d.Receiver)) {\n\t\treturn false\n\t}\n\n\tfor _, name := range d.Names {\n\t\tif ast.IsExported(name) {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn ast.IsExported(d.Name)\n}"
       },
       {
         "Kind": "func",
@@ -486,35 +512,25 @@
         "Kind": "func",
         "File": "declaration.go",
         "SelfContained": false,
-        "References": {
-          "strings": [
-            "TrimLeft"
-          ]
-        },
         "Name": "ReceiverTypeRef",
         "Receiver": "*Declaration",
         "Returns": [
           "string"
         ],
         "Signature": "ReceiverTypeRef () string",
-        "Source": "func (f *Declaration) ReceiverTypeRef() string {\n\treturn strings.TrimLeft(f.Receiver, \"[]*\")\n}"
+        "Source": "func (f *Declaration) ReceiverTypeRef() string {\n\treturn TypeRef(f.Receiver)\n}"
       },
       {
         "Kind": "func",
         "File": "declaration.go",
         "SelfContained": false,
-        "References": {
-          "strings": [
-            "TrimLeft"
-          ]
-        },
         "Name": "TypeRef",
         "Receiver": "*Declaration",
         "Returns": [
           "string"
         ],
         "Signature": "TypeRef () string",
-        "Source": "func (f *Declaration) TypeRef() string {\n\treturn strings.TrimLeft(f.Type, \"[]*\")\n}"
+        "Source": "func (f *Declaration) TypeRef() string {\n\treturn TypeRef(f.Type)\n}"
       },
       {
         "Kind": "func",
@@ -598,6 +614,43 @@
         "Kind": "func",
         "File": "definition.go",
         "SelfContained": false,
+        "References": {
+          "strings": [
+            "HasSuffix"
+          ]
+        },
+        "Name": "ClearNonTestFiles",
+        "Receiver": "*Definition",
+        "Signature": "ClearNonTestFiles ()",
+        "Source": "func (d *Definition) ClearNonTestFiles() {\n\tfor filename, _ := range d.Imports {\n\t\tif !strings.HasSuffix(filename, \"_test.go\") {\n\t\t\tdelete(d.Imports, filename)\n\t\t}\n\t}\n\td.Types.ClearNonTestFiles()\n\td.Vars.ClearNonTestFiles()\n\td.Consts.ClearNonTestFiles()\n\td.Funcs.ClearNonTestFiles()\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "definition.go",
+        "SelfContained": false,
+        "Name": "ClearSource",
+        "Receiver": "*Definition",
+        "Signature": "ClearSource ()",
+        "Source": "func (d *Definition) ClearSource() {\n\td.Types.ClearSource()\n\td.Vars.ClearSource()\n\td.Consts.ClearSource()\n\td.Funcs.ClearSource()\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "definition.go",
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "HasSuffix"
+          ]
+        },
+        "Name": "ClearTestFiles",
+        "Receiver": "*Definition",
+        "Signature": "ClearTestFiles ()",
+        "Source": "func (d *Definition) ClearTestFiles() {\n\tfor filename, _ := range d.Imports {\n\t\tif strings.HasSuffix(filename, \"_test.go\") {\n\t\t\tdelete(d.Imports, filename)\n\t\t}\n\t}\n\td.Types.ClearTestFiles()\n\td.Vars.ClearTestFiles()\n\td.Consts.ClearTestFiles()\n\td.Funcs.ClearTestFiles()\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "definition.go",
+        "SelfContained": false,
         "Name": "Fill",
         "Receiver": "*Definition",
         "Signature": "Fill ()",
@@ -626,6 +679,28 @@
         ],
         "Signature": "Order () []*Declaration",
         "Source": "func (d *Definition) Order() []*Declaration {\n\tcount := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)\n\tresult := make([]*Declaration, 0, count)\n\n\tresult = append(result, d.Types...)\n\tresult = append(result, d.Funcs...)\n\tresult = append(result, d.Vars...)\n\tresult = append(result, d.Consts...)\n\treturn result\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "definition.go",
+        "SelfContained": false,
+        "Doc": "Sort will sort the inner types so they have a stable order.",
+        "Name": "Sort",
+        "Receiver": "*Definition",
+        "Signature": "Sort ()",
+        "Source": "// Sort will sort the inner types so they have a stable order.\nfunc (d *Definition) Sort() {\n\td.Types.Sort()\n\td.Vars.Sort()\n\td.Consts.Sort()\n\td.Funcs.Sort()\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "field.go",
+        "SelfContained": false,
+        "Name": "TypeRef",
+        "Receiver": "*Field",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "TypeRef () string",
+        "Source": "func (f *Field) TypeRef() string {\n\treturn TypeRef(f.Type)\n}"
       },
       {
         "Kind": "func",
@@ -673,16 +748,46 @@
         "Kind": "func",
         "File": "declaration_list.go",
         "SelfContained": false,
-        "Name": "FindKind",
+        "Name": "Filter",
         "Receiver": "DeclarationList",
         "Arguments": [
-          "DeclarationKind"
+          "func(d *Declaration) bool"
         ],
         "Returns": [
           "[]*Declaration"
         ],
-        "Signature": "FindKind (kind DeclarationKind) []*Declaration",
-        "Source": "func (p DeclarationList) FindKind(kind DeclarationKind) (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif decl.Kind == kind {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}"
+        "Signature": "Filter (matchfn func(d *Declaration) bool) []*Declaration",
+        "Source": "func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "declaration_list.go",
+        "SelfContained": false,
+        "Name": "Find",
+        "Receiver": "DeclarationList",
+        "Arguments": [
+          "func(d *Declaration) bool"
+        ],
+        "Returns": [
+          "*Declaration"
+        ],
+        "Signature": "Find (matchfn func(d *Declaration) bool) *Declaration",
+        "Source": "func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\treturn decl\n\t\t}\n\t}\n\treturn nil\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "package.go",
+        "SelfContained": false,
+        "Name": "Equal",
+        "Receiver": "Package",
+        "Arguments": [
+          "Package"
+        ],
+        "Returns": [
+          "bool"
+        ],
+        "Signature": "Equal (in Package) bool",
+        "Source": "func (p Package) Equal(in Package) bool {\n\treturn p.ImportPath == in.ImportPath\n}"
       },
       {
         "Kind": "func",
@@ -695,6 +800,23 @@
         ],
         "Signature": "Name () string",
         "Source": "func (p Package) Name() string {\n\treturn p.Package\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "package.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Sprintf"
+          ]
+        },
+        "Name": "String",
+        "Receiver": "Package",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "String () string",
+        "Source": "func (p Package) String() string {\n\treturn fmt.Sprintf(\"package=%s import_path=%s path=%s test_package=%v\", p.Package, p.ImportPath, p.Path, p.TestPackage)\n}"
       },
       {
         "Kind": "func",

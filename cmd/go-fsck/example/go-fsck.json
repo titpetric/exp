@@ -56,7 +56,7 @@
         "Name": "File",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "string",
             "Path": "",
             "JSONName": ""
@@ -73,7 +73,7 @@
         "Name": "Reseter",
         "Fields": [
           {
-            "Name": "item",
+            "Name": "type",
             "Type": "any",
             "Path": "",
             "JSONName": ""

@@ -12,6 +12,7 @@ type options struct {
 	inputFile string
 
 	render string
+	focus  string
 
 	verbose bool
 	args    []string
@@ -25,6 +26,7 @@ func NewOptions() *options {
 
 	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
 	flag.StringVar(&cfg.render, "render", cfg.render, "print results as [markdown, json, ...]")
+	flag.StringVar(&cfg.focus, "focus", cfg.focus, "focus on configured symbol")
 	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
 	flag.Parse()
 
