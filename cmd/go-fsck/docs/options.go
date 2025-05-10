@@ -11,7 +11,8 @@ import (
 type options struct {
 	inputFile string
 
-	json    bool
+	render string
+
 	verbose bool
 	args    []string
 }
@@ -19,10 +20,11 @@ type options struct {
 func NewOptions() *options {
 	cfg := &options{
 		inputFile: "go-fsck.json",
+		render:    "markdown",
 	}
 
 	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
-	flag.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
+	flag.StringVar(&cfg.render, "render", cfg.render, "print results as [markdown, json, ...]")
 	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
 	flag.Parse()
 
@@ -32,6 +34,6 @@ func NewOptions() *options {
 }
 
 func PrintHelp() {
-	fmt.Printf("Usage: %s report <options>:\n\n", path.Base(os.Args[0]))
+	fmt.Printf("Usage: %s docs <options>:\n\n", path.Base(os.Args[0]))
 	flag.PrintDefaults()
 }

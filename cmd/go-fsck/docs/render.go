@@ -1,7 +1,9 @@
 package docs
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"strings"
 
@@ -51,11 +53,27 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 	return defs, nil
 }
 
-func docs(cfg *options) error {
+func render(cfg *options) error {
 	defs, err := getDefinitions(cfg)
 	if err != nil {
 		return err
 	}
+
+	switch cfg.render {
+	case "json":
+		return renderJSON(defs)
+	default:
+		return renderMarkdown(defs)
+	}
+}
+
+func renderJSON(defs []*model.Definition) error {
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	return enc.Encode(defs)
+}
+
+func renderMarkdown(defs []*model.Definition) error {
 
 	// Loop through function definitions and collect referenced
 	// symbols from imported packages. Globals may also reference

@@ -15,5 +15,5 @@ func Run() (err error) {
 		return nil
 	}
 
-	return docs(cfg)
+	return render(cfg)
 }
