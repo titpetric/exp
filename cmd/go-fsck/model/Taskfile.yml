@@ -1,0 +1,9 @@
+---
+version: "3"
+
+tasks:
+  default:
+    desc: "Generate plantuml svgs"
+    cmds:
+      - plantuml -tsvg restored/go-fsck.puml
+      - cp restored/go-fsck.svg /root/projects/incubator.to/static/public/ -f

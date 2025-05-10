@@ -23,10 +23,10 @@
         "Name": "Allocator",
         "Fields": [
           {
-            "name": "pool",
-            "type": "sync.Pool",
-            "path": "Allocator.pool",
-            "json_name": "pool"
+            "Name": "pool",
+            "Type": "sync.Pool",
+            "Path": "Allocator.pool",
+            "JSONName": "pool"
           }
         ],
         "Source": "// Allocator holds a sync.Pool of objects of type T.\ntype Allocator[T Reseter] struct {\n\tpool sync.Pool\n}"
@@ -39,28 +39,46 @@
         "Name": "Body",
         "Fields": [
           {
-            "name": "Name",
-            "type": "string",
-            "path": "Body.Name",
-            "json_name": "Name"
+            "Name": "Name",
+            "Type": "string",
+            "Path": "Body.Name",
+            "JSONName": "Name"
           }
         ],
         "Source": "// Body represends a decoded body\ntype Body struct {\n\tName string\n}"
       },
       {
         "Kind": "type",
+        "Type": "string",
         "File": "example.go",
         "SelfContained": false,
         "Doc": "File represents a filename",
         "Name": "File",
+        "Fields": [
+          {
+            "Name": "item",
+            "Type": "string",
+            "Path": "",
+            "JSONName": ""
+          }
+        ],
         "Source": "// File represents a filename\ntype File string"
       },
       {
         "Kind": "type",
+        "Type": "any",
         "File": "generic.go",
         "SelfContained": true,
         "Doc": "Reseter is the interface that types must implement to be managed by Allocator.",
         "Name": "Reseter",
+        "Fields": [
+          {
+            "Name": "item",
+            "Type": "any",
+            "Path": "",
+            "JSONName": ""
+          }
+        ],
         "Source": "// Reseter is the interface that types must implement to be managed by Allocator.\ntype Reseter interface {\n\tReset()\n}"
       },
       {
@@ -70,10 +88,10 @@
         "Name": "logger",
         "Fields": [
           {
-            "name": "out",
-            "type": "[]string",
-            "path": "logger.out",
-            "json_name": "out"
+            "Name": "out",
+            "Type": "[]string",
+            "Path": "logger.out",
+            "JSONName": "out"
           }
         ],
         "Source": "type logger struct {\n\tout []string\n}"

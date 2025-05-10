@@ -1,0 +1,98 @@
+@startuml
+
+class Declaration {
+  + Kind: DeclarationKind
+  + Type: string
+  + File: string
+  + SelfContained: bool
+  + Imports: []string
+  + References: map[string][]string
+  + Doc: string
+  + Name: string
+  + Names: []string
+  + Receiver: string
+  + Fields: FieldList
+  + Arguments: []string
+  + Returns: []string
+  + Signature: string
+  + Source: string
+  + Equal (in *Declaration) bool
+  + HasName (find string) bool
+  + IsExported () bool
+  + Keys () []string
+  + ReceiverTypeRef () string
+  + TypeRef () string
+}
+
+class DeclarationKind {
+  - item: string
+  + String () string
+}
+
+class DeclarationList {
+  - item: []*Declaration
+  + Append (in ...*Declaration)
+  + AppendUnique (in ...*Declaration)
+  + ClearNonTestFiles ()
+  + ClearSource ()
+  + ClearTestFiles ()
+  + Exported () []*Declaration
+  + FindKind (kind DeclarationKind) []*Declaration
+  + Sort ()
+}
+
+class Definition {
+  + Doc: string
+  + Imports: StringSet
+  + Types: DeclarationList
+  + Consts: DeclarationList
+  + Vars: DeclarationList
+  + Funcs: DeclarationList
+  + Fill ()
+  + Merge (in *Definition)
+  + Order () []*Declaration
+  - getImports (decl *Declaration) []string
+}
+
+class Field {
+  + Name: string
+  + Type: string
+  + Path: string
+  + Doc: string
+  + Comment: string
+  + Tag: string
+  + JSONName: string
+  + MapKey: string
+}
+
+class FieldList {
+  - item: []*Field
+}
+
+class Package {
+  + ID: string
+  + Package: string
+  + ImportPath: string
+  + Path: string
+  + TestPackage: bool
+  + Pkg: *packages.Package
+  + Name () string
+}
+
+class StringSet {
+  - item: map[string][]string
+  + Add (key string, lits ...string)
+  + All () []string
+  + Get (key string) []string
+  + Map () (map[string]string, []error)
+}
+
+Declaration --> DeclarationKind : types
+Declaration --> FieldList : types
+DeclarationList --> Declaration : types
+Definition --|> Package : embeds
+Definition --> StringSet : types
+Definition --> DeclarationList : types
+FieldList --> Field : types
+
+@enduml

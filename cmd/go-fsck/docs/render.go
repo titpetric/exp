@@ -62,6 +62,8 @@ func render(cfg *options) error {
 	switch cfg.render {
 	case "json":
 		return renderJSON(defs)
+	case "puml", "plantuml":
+		return renderPlantUML(defs)
 	default:
 		return renderMarkdown(defs)
 	}
@@ -74,7 +76,6 @@ func renderJSON(defs []*model.Definition) error {
 }
 
 func renderMarkdown(defs []*model.Definition) error {
-
 	// Loop through function definitions and collect referenced
 	// symbols from imported packages. Globals may also reference
 	// imported packages so this is incomplete at the moment.

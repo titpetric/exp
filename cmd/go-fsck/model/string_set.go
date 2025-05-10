@@ -10,6 +10,10 @@ import (
 
 type StringSet map[string][]string
 
+func NewStringSet() StringSet {
+	return make(StringSet)
+}
+
 func (i *StringSet) Add(key string, lits ...string) {
 	data := *i
 	if data == nil {

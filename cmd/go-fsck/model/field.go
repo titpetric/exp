@@ -5,29 +5,29 @@ import "strings"
 // Field holds details about a field definition.
 type Field struct {
 	// Name is the name of the field.
-	Name string `json:"name"`
+	Name string
 
 	// Type is the literal type of the Go field.
-	Type string `json:"type"`
+	Type string `json:",omitempty"`
 
 	// Path is the go path of this field starting from root object.
-	Path string `json:"path"`
+	Path string
 
 	// Doc holds the field doc.
-	Doc string `json:"doc,omitempty"`
+	Doc string `json:",omitempty"`
 
 	// Comment holds the field comment text.
-	Comment string `json:"comment,omitempty"`
+	Comment string `json:",omitempty"`
 
 	// Tag is the go tag, unmodified.
-	Tag string `json:"tag,omitempty"`
+	Tag string `json:",omitempty"`
 
 	// JSONName is the corresponding json name of the field.
 	// It's cleared if it's set to `-` (unexported).
-	JSONName string `json:"json_name"`
+	JSONName string
 
 	// MapKey is the map key type, if this field is a map.
-	MapKey string `json:"map_key,omitempty"`
+	MapKey string `json:",omitempty"`
 }
 
 func (f *Field) TypeRef() string {

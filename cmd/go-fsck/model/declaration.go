@@ -7,6 +7,8 @@ import (
 
 type Declaration struct {
 	Kind DeclarationKind
+	Type string `json:",omitempty"`
+
 	File string
 
 	SelfContained bool
@@ -21,13 +23,21 @@ type Declaration struct {
 	Names    []string `json:",omitempty"`
 	Receiver string   `json:",omitempty"`
 
-	Fields []*Field `json:",omitempty"`
+	Fields FieldList `json:",omitempty"`
 
 	Arguments []string `json:",omitempty"`
 	Returns   []string `json:",omitempty"`
 
 	Signature string `json:",omitempty"`
 	Source    string `json:",omitempty"`
+}
+
+func (f *Declaration) TypeRef() string {
+	return strings.TrimLeft(f.Type, "[]*")
+}
+
+func (f *Declaration) ReceiverTypeRef() string {
+	return strings.TrimLeft(f.Receiver, "[]*")
 }
 
 func (d *Declaration) HasName(find string) bool {

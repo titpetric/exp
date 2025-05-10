@@ -12,8 +12,16 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 	for _, spec := range decl.Specs {
 		switch obj := spec.(type) {
 		case *ast.TypeSpec:
-			if val, ok := obj.Type.(*ast.StructType); ok {
+			switch val := obj.Type.(type) {
+			case *ast.StructType:
 				p.parseStruct(out, file, val)
+			default:
+				out.Type = p.symbolType(file, obj.Type)
+				item := &model.Field{
+					Name: "item",
+					Type: out.Type,
+				}
+				out.Fields = append(out.Fields, item)
 			}
 		default:
 		}

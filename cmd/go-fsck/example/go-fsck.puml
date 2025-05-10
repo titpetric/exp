@@ -1,0 +1,24 @@
+@startuml
+
+class Allocator {
+  - pool: sync.Pool
+}
+
+class Body {
+  + Name: string
+}
+
+class File {
+  - item: string
+}
+
+class Reseter {
+  - item: any
+}
+
+class logger {
+  - out: []string
+  + Log (s string)
+}
+
+@enduml
