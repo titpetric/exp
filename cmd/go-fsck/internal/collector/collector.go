@@ -223,6 +223,9 @@ func (v *collector) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 			pkg.Vars.Append(def)
 		case token.TYPE:
 			def.Kind = model.TypeKind
+
+			v.collectStructFields(def, file, node)
+
 			pkg.Types.Append(def)
 		}
 

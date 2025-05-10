@@ -19,6 +19,9 @@
       "definition.go": [
         "\"strings\""
       ],
+      "field.go": [
+        "\"strings\""
+      ],
       "package.go": [
         "\"fmt\"",
         "\"golang.org/x/tools/go/packages\""
@@ -37,7 +40,104 @@
         "File": "declaration.go",
         "SelfContained": true,
         "Name": "Declaration",
-        "Source": "type Declaration struct {\n\tKind\tDeclarationKind\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\tImports\t[]string\t`json:\",omitempty\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n}"
+        "Fields": [
+          {
+            "name": "Kind",
+            "type": "DeclarationKind",
+            "path": "Declaration.Kind",
+            "json_name": "Kind"
+          },
+          {
+            "name": "File",
+            "type": "string",
+            "path": "Declaration.File",
+            "json_name": "File"
+          },
+          {
+            "name": "SelfContained",
+            "type": "bool",
+            "path": "Declaration.SelfContained",
+            "json_name": "SelfContained"
+          },
+          {
+            "name": "Imports",
+            "type": "[]string",
+            "path": "Declaration.Imports",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Imports"
+          },
+          {
+            "name": "References",
+            "type": "map[string][]string",
+            "path": "Declaration.References",
+            "tag": "json:\",omitempty\"",
+            "json_name": "References"
+          },
+          {
+            "name": "Doc",
+            "type": "string",
+            "path": "Declaration.Doc",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Doc"
+          },
+          {
+            "name": "Name",
+            "type": "string",
+            "path": "Declaration.Name",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Name"
+          },
+          {
+            "name": "Names",
+            "type": "[]string",
+            "path": "Declaration.Names",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Names"
+          },
+          {
+            "name": "Receiver",
+            "type": "string",
+            "path": "Declaration.Receiver",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Receiver"
+          },
+          {
+            "name": "Fields",
+            "type": "[]*Field",
+            "path": "Declaration.Fields",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Fields"
+          },
+          {
+            "name": "Arguments",
+            "type": "[]string",
+            "path": "Declaration.Arguments",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Arguments"
+          },
+          {
+            "name": "Returns",
+            "type": "[]string",
+            "path": "Declaration.Returns",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Returns"
+          },
+          {
+            "name": "Signature",
+            "type": "string",
+            "path": "Declaration.Signature",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Signature"
+          },
+          {
+            "name": "Source",
+            "type": "string",
+            "path": "Declaration.Source",
+            "tag": "json:\",omitempty\"",
+            "json_name": "Source"
+          }
+        ],
+        "Source": "type Declaration struct {\n\tKind\tDeclarationKind\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\tImports\t[]string\t`json:\",omitempty\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\t[]*Field\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -58,13 +158,176 @@
         "File": "definition.go",
         "SelfContained": true,
         "Name": "Definition",
+        "Fields": [
+          {
+            "name": "",
+            "type": "Package",
+            "path": "Definition",
+            "json_name": ""
+          },
+          {
+            "name": "Doc",
+            "type": "string",
+            "path": "Definition.Doc",
+            "json_name": "Doc"
+          },
+          {
+            "name": "Imports",
+            "type": "StringSet",
+            "path": "Definition.Imports",
+            "json_name": "Imports"
+          },
+          {
+            "name": "Types",
+            "type": "DeclarationList",
+            "path": "Definition.Types",
+            "json_name": "Types"
+          },
+          {
+            "name": "Consts",
+            "type": "DeclarationList",
+            "path": "Definition.Consts",
+            "json_name": "Consts"
+          },
+          {
+            "name": "Vars",
+            "type": "DeclarationList",
+            "path": "Definition.Vars",
+            "json_name": "Vars"
+          },
+          {
+            "name": "Funcs",
+            "type": "DeclarationList",
+            "path": "Definition.Funcs",
+            "json_name": "Funcs"
+          }
+        ],
         "Source": "type Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
+      },
+      {
+        "Kind": "type",
+        "File": "field.go",
+        "SelfContained": true,
+        "Doc": "Field holds details about a field definition.",
+        "Name": "Field",
+        "Fields": [
+          {
+            "name": "Name",
+            "type": "string",
+            "path": "Field.Name",
+            "doc": "Name is the name of the field.",
+            "tag": "json:\"name\"",
+            "json_name": "name"
+          },
+          {
+            "name": "Type",
+            "type": "string",
+            "path": "Field.Type",
+            "doc": "Type is the literal type of the Go field.",
+            "tag": "json:\"type\"",
+            "json_name": "type"
+          },
+          {
+            "name": "Path",
+            "type": "string",
+            "path": "Field.Path",
+            "doc": "Path is the go path of this field starting from root object.",
+            "tag": "json:\"path\"",
+            "json_name": "path"
+          },
+          {
+            "name": "Doc",
+            "type": "string",
+            "path": "Field.Doc",
+            "doc": "Doc holds the field doc.",
+            "tag": "json:\"doc,omitempty\"",
+            "json_name": "doc"
+          },
+          {
+            "name": "Comment",
+            "type": "string",
+            "path": "Field.Comment",
+            "doc": "Comment holds the field comment text.",
+            "tag": "json:\"comment,omitempty\"",
+            "json_name": "comment"
+          },
+          {
+            "name": "Tag",
+            "type": "string",
+            "path": "Field.Tag",
+            "doc": "Tag is the go tag, unmodified.",
+            "tag": "json:\"tag,omitempty\"",
+            "json_name": "tag"
+          },
+          {
+            "name": "JSONName",
+            "type": "string",
+            "path": "Field.JSONName",
+            "doc": "JSONName is the corresponding json name of the field.\nIt's cleared if it's set to `-` (unexported).",
+            "tag": "json:\"json_name\"",
+            "json_name": "json_name"
+          },
+          {
+            "name": "MapKey",
+            "type": "string",
+            "path": "Field.MapKey",
+            "doc": "MapKey is the map key type, if this field is a map.",
+            "tag": "json:\"map_key,omitempty\"",
+            "json_name": "map_key"
+          }
+        ],
+        "Source": "// Field holds details about a field definition.\ntype Field struct {\n\t// Name is the name of the field.\n\tName\tstring\t`json:\"name\"`\n\n\t// Type is the literal type of the Go field.\n\tType\tstring\t`json:\"type\"`\n\n\t// Path is the go path of this field starting from root object.\n\tPath\tstring\t`json:\"path\"`\n\n\t// Doc holds the field doc.\n\tDoc\tstring\t`json:\"doc,omitempty\"`\n\n\t// Comment holds the field comment text.\n\tComment\tstring\t`json:\"comment,omitempty\"`\n\n\t// Tag is the go tag, unmodified.\n\tTag\tstring\t`json:\"tag,omitempty\"`\n\n\t// JSONName is the corresponding json name of the field.\n\t// It's cleared if it's set to `-` (unexported).\n\tJSONName\tstring\t`json:\"json_name\"`\n\n\t// MapKey is the map key type, if this field is a map.\n\tMapKey\tstring\t`json:\"map_key,omitempty\"`\n}"
       },
       {
         "Kind": "type",
         "File": "package.go",
         "SelfContained": false,
         "Name": "Package",
+        "Fields": [
+          {
+            "name": "ID",
+            "type": "string",
+            "path": "Package.ID",
+            "doc": "ID is the ID of the package as x/tools packages loads it.",
+            "json_name": "ID"
+          },
+          {
+            "name": "Package",
+            "type": "string",
+            "path": "Package.Package",
+            "doc": "Package is the name of the package.",
+            "json_name": "Package"
+          },
+          {
+            "name": "ImportPath",
+            "type": "string",
+            "path": "Package.ImportPath",
+            "doc": "ImportPath contains the import path (github...).",
+            "json_name": "ImportPath"
+          },
+          {
+            "name": "Path",
+            "type": "string",
+            "path": "Package.Path",
+            "doc": "Path is sanitized to contain the relative location (folder).",
+            "json_name": "Path"
+          },
+          {
+            "name": "TestPackage",
+            "type": "bool",
+            "path": "Package.TestPackage",
+            "doc": "TestPackage is true if this is a test package.",
+            "json_name": "TestPackage"
+          },
+          {
+            "name": "Pkg",
+            "type": "*packages.Package",
+            "path": "Package.Pkg",
+            "doc": "Pkg serves to carry ast package information, preventing a double Load().\nIt's used during analysis and merging and discarded for the result.",
+            "tag": "json:\"-\"",
+            "json_name": ""
+          }
+        ],
         "Source": "type Package struct {\n\t// ID is the ID of the package as x/tools packages loads it.\n\tID\tstring\n\t// Package is the name of the package.\n\tPackage\tstring\n\t// ImportPath contains the import path (github...).\n\tImportPath\tstring\n\t// Path is sanitized to contain the relative location (folder).\n\tPath\tstring\n\t// TestPackage is true if this is a test package.\n\tTestPackage\tbool\n\n\t// Pkg serves to carry ast package information, preventing a double Load().\n\t// It's used during analysis and merging and discarded for the result.\n\tPkg\t*packages.Package\t`json:\"-\"`\n}"
       },
       {
@@ -271,6 +534,23 @@
         ],
         "Signature": "Order () []*Declaration",
         "Source": "func (d *Definition) Order() []*Declaration {\n\tcount := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)\n\tresult := make([]*Declaration, 0, count)\n\n\tresult = append(result, d.Types...)\n\tresult = append(result, d.Funcs...)\n\tresult = append(result, d.Vars...)\n\tresult = append(result, d.Consts...)\n\treturn result\n}"
+      },
+      {
+        "Kind": "func",
+        "File": "field.go",
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "TrimLeft"
+          ]
+        },
+        "Name": "TypeRef",
+        "Receiver": "*Field",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "TypeRef () string",
+        "Source": "func (f *Field) TypeRef() string {\n\treturn strings.TrimLeft(f.Type, \"[]*\")\n}"
       },
       {
         "Kind": "func",

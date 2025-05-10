@@ -21,6 +21,8 @@ type Declaration struct {
 	Names    []string `json:",omitempty"`
 	Receiver string   `json:",omitempty"`
 
+	Fields []*Field `json:",omitempty"`
+
 	Arguments []string `json:",omitempty"`
 	Returns   []string `json:",omitempty"`
 

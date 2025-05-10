@@ -21,6 +21,14 @@
         "SelfContained": false,
         "Doc": "Allocator holds a sync.Pool of objects of type T.",
         "Name": "Allocator",
+        "Fields": [
+          {
+            "name": "pool",
+            "type": "sync.Pool",
+            "path": "Allocator.pool",
+            "json_name": "pool"
+          }
+        ],
         "Source": "// Allocator holds a sync.Pool of objects of type T.\ntype Allocator[T Reseter] struct {\n\tpool sync.Pool\n}"
       },
       {
@@ -29,6 +37,14 @@
         "SelfContained": true,
         "Doc": "Body represends a decoded body",
         "Name": "Body",
+        "Fields": [
+          {
+            "name": "Name",
+            "type": "string",
+            "path": "Body.Name",
+            "json_name": "Name"
+          }
+        ],
         "Source": "// Body represends a decoded body\ntype Body struct {\n\tName string\n}"
       },
       {
@@ -52,6 +68,14 @@
         "File": "internal.go",
         "SelfContained": true,
         "Name": "logger",
+        "Fields": [
+          {
+            "name": "out",
+            "type": "[]string",
+            "path": "logger.out",
+            "json_name": "out"
+          }
+        ],
         "Source": "type logger struct {\n\tout []string\n}"
       }
     ],
