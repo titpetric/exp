@@ -1,8 +1,6 @@
 module github.com/TykTechnologies/exp/cmd/go-fsck
 
-go 1.22.0
-
-toolchain go1.22.7
+go 1.24.3
 
 require (
 	github.com/davecgh/go-spew v1.1.1
