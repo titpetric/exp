@@ -31,6 +31,8 @@ type Declaration struct {
 
 	Signature string `json:",omitempty"`
 	Source    string `json:",omitempty"`
+
+	Complexity *Complexity `json:",omitempty"`
 }
 
 func (f *Declaration) TypeRef() string {

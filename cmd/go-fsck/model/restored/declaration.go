@@ -31,6 +31,8 @@ type Declaration struct {
 
 	Signature string `json:",omitempty"`
 	Source    string `json:",omitempty"`
+
+	Complexity *Complexity `json:",omitempty"`
 }
 
 func (d *Declaration) Equal(in *Declaration) bool {

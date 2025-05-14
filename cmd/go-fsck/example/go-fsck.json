@@ -138,7 +138,11 @@
           "error"
         ],
         "Signature": "GlobalFunc () error",
-        "Source": "// Global func comment\nfunc GlobalFunc() error {\n\t// holds the error\n\tvar err error\t// the err var\n\n\t// inline comment\n\terr = nil\n\n\treturn err\n}"
+        "Source": "// Global func comment\nfunc GlobalFunc() error {\n\t// holds the error\n\tvar err error\t// the err var\n\n\t// inline comment\n\terr = nil\n\n\treturn err\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       },
       {
         "Kind": "func",
@@ -158,7 +162,11 @@
           "*Allocator[T]"
         ],
         "Signature": "New (newFunc func() T) *Allocator[T]",
-        "Source": "// New creates an Allocator for type T using the provided constructor.\nfunc New[T Reseter](newFunc func() T) *Allocator[T] {\n\treturn \u0026Allocator[T]{\n\t\tpool: sync.Pool{\n\t\t\tNew: func() any {\n\t\t\t\treturn newFunc()\n\t\t\t},\n\t\t},\n\t}\n}"
+        "Source": "// New creates an Allocator for type T using the provided constructor.\nfunc New[T Reseter](newFunc func() T) *Allocator[T] {\n\treturn \u0026Allocator[T]{\n\t\tpool: sync.Pool{\n\t\t\tNew: func() any {\n\t\t\t\treturn newFunc()\n\t\t\t},\n\t\t},\n\t}\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       },
       {
         "Kind": "func",
@@ -171,7 +179,11 @@
           "T"
         ],
         "Signature": "Get () T",
-        "Source": "// Get retrieves an object from the internal pool.\nfunc (a *Allocator[T]) Get() T {\n\treturn a.pool.Get().(T)\t//nolint\n}"
+        "Source": "// Get retrieves an object from the internal pool.\nfunc (a *Allocator[T]) Get() T {\n\treturn a.pool.Get().(T)\t//nolint\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       },
       {
         "Kind": "func",
@@ -184,7 +196,11 @@
           "T"
         ],
         "Signature": "Put (t T)",
-        "Source": "// Put returns an object to the pool after resetting it.\nfunc (a *Allocator[T]) Put(t T) {\n\tt.Reset()\n\ta.pool.Put(t)\n}"
+        "Source": "// Put returns an object to the pool after resetting it.\nfunc (a *Allocator[T]) Put(t T) {\n\tt.Reset()\n\ta.pool.Put(t)\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       },
       {
         "Kind": "func",
@@ -196,7 +212,11 @@
           "string"
         ],
         "Signature": "Log (s string)",
-        "Source": "func (l *logger) Log(s string) {\n\tl.out = append(l.out, s)\n}"
+        "Source": "func (l *logger) Log(s string) {\n\tl.out = append(l.out, s)\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       }
     ]
   },
@@ -232,7 +252,11 @@
           "*testing.T"
         ],
         "Signature": "TestExample (t *testing.T)",
-        "Source": "func TestExample(t *testing.T) {\n\tassert.True(t, true)\n\tassert.NoError(t, GlobalFunc())\n}"
+        "Source": "func TestExample(t *testing.T) {\n\tassert.True(t, true)\n\tassert.NoError(t, GlobalFunc())\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       }
     ]
   },
@@ -279,7 +303,11 @@
           "error"
         ],
         "Signature": "PrintSource (out io.Writer, fset *token.FileSet, node any) error",
-        "Source": "func PrintSource(out io.Writer, fset *token.FileSet, node any) error {\n\treturn printer.Fprint(out, fset, node)\n}"
+        "Source": "func PrintSource(out io.Writer, fset *token.FileSet, node any) error {\n\treturn printer.Fprint(out, fset, node)\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1
+        }
       },
       {
         "Kind": "func",
@@ -314,7 +342,11 @@
           "*testing.T"
         ],
         "Signature": "TestPrinter (t *testing.T)",
-        "Source": "func TestPrinter(t *testing.T) {\n\tfset := token.NewFileSet()\n\tfs, err := parser.ParseDir(fset, \".\", nil, parser.ParseComments)\n\tassert.NoError(t, err)\n\n\tfor _, pkg := range fs {\n\t\tfor _, f := range pkg.Files {\n\t\t\tfor _, decl := range f.Decls {\n\t\t\t\tvar out strings.Builder\n\t\t\t\tx := \u0026printer.CommentedNode{\n\t\t\t\t\tNode:\t\tdecl,\n\t\t\t\t\tComments:\tf.Comments,\n\t\t\t\t}\n\t\t\t\tassert.NoError(t, ast.PrintSource(\u0026out, fset, x))\n\t\t\t\tfmt.Println(out.String())\n\t\t\t}\n\t\t}\n\t}\n}"
+        "Source": "func TestPrinter(t *testing.T) {\n\tfset := token.NewFileSet()\n\tfs, err := parser.ParseDir(fset, \".\", nil, parser.ParseComments)\n\tassert.NoError(t, err)\n\n\tfor _, pkg := range fs {\n\t\tfor _, f := range pkg.Files {\n\t\t\tfor _, decl := range f.Decls {\n\t\t\t\tvar out strings.Builder\n\t\t\t\tx := \u0026printer.CommentedNode{\n\t\t\t\t\tNode:\t\tdecl,\n\t\t\t\t\tComments:\tf.Comments,\n\t\t\t\t}\n\t\t\t\tassert.NoError(t, ast.PrintSource(\u0026out, fset, x))\n\t\t\t\tfmt.Println(out.String())\n\t\t\t}\n\t\t}\n\t}\n}",
+        "Complexity": {
+          "Cognitive": 6,
+          "Cyclomatic": 4
+        }
       }
     ]
   }

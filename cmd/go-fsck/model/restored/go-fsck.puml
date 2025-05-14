@@ -1,5 +1,10 @@
 @startuml
 
+class Complexity {
+  + Cognitive: int
+  + Cyclomatic: int
+}
+
 class Declaration {
   + Kind: DeclarationKind
   + Type: string
@@ -16,6 +21,7 @@ class Declaration {
   + Returns: []string
   + Signature: string
   + Source: string
+  + Complexity: *Complexity
 }
 
 class DeclarationKind {
@@ -73,8 +79,10 @@ class StringSet {
   + Map () (map[string]string, []error)
 }
 
+
 Declaration --> DeclarationKind : Kind
 Declaration --> FieldList : Fields
+Declaration --> Complexity : Complexity
 
 note top of Declaration
 Declaration holds information about a go symbol.

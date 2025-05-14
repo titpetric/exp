@@ -5,11 +5,13 @@ go 1.24.3
 require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/fbiville/markdown-table-formatter v0.3.0
+	github.com/fzipp/gocyclo v0.6.0
 	github.com/go-bridget/mig v0.0.0-20230727211837-a3b5a2787f94
 	github.com/kortschak/utter v1.7.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stoewer/go-strcase v1.3.0
 	github.com/stretchr/testify v1.9.0
+	github.com/uudashr/gocognit v1.2.0
 	golang.org/x/exp v0.0.0-20231108232855-2478ac86f678
 	golang.org/x/tools v0.28.0
 	modernc.org/sqlite v1.33.0
