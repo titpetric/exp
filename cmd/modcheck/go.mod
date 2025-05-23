@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/modcheck
+module github.com/titpetric/exp/cmd/modcheck
 
 go 1.20
 

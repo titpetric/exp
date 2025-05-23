@@ -5,7 +5,7 @@ files and produces a mermaidjs diagram for each workflow.
 
 To install:
 
-`go install github.com/TykTechnologies/exp/cmd/github-actions-viz@main`
+`go install github.com/titpetric/exp/cmd/github-actions-viz@main`
 
 Flags:
 
@@ -106,4 +106,4 @@ to read the github actions workflow files.
 
 ## Usage
 
-Used for [/exp/docs/github-actions](https://github.com/TykTechnologies/exp/tree/main/docs/github-actions).
+Used for [/exp/docs/github-actions](https://github.com/titpetric/exp/tree/main/docs/github-actions).

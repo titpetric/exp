@@ -6,7 +6,7 @@ official go proxy to get a list of versions for each of the imports.
 ## Install
 
 ```bash
-go install github.com/TykTechnologies/exp/cmd/modcheck@main
+go install github.com/titpetric/exp/cmd/modcheck@main
 ```
 
 ## Usage

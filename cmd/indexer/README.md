@@ -9,7 +9,7 @@ This tool generates an `index.html` file to be used in cases where:
 ## Install
 
 ```
-go install github.com/TykTechnologies/exp/cmd/indexer@main
+go install github.com/titpetric/exp/cmd/indexer@main
 ```
 
 Just run `indexer` in victim folder.

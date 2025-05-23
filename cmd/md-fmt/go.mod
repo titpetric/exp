@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/md-fmt
+module github.com/titpetric/exp/cmd/md-fmt
 
 go 1.20
 

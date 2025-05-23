@@ -14,7 +14,7 @@ that's being referenced. This has a few benefits:
 Install the tool like so:
 
 ```bash
-go get github.com/TykTechnologies/exp/cmd/discover@main
+go get github.com/titpetric/exp/cmd/discover@main
 ```
 
 Usage is: `discover <StructName> <FieldName>`.

@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/httpbin-logserver
+module github.com/titpetric/exp/cmd/httpbin-logserver
 
 go 1.21.4
 

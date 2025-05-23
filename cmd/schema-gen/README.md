@@ -10,7 +10,7 @@ extract a data model from any package enough to:
 
 To install:
 
-`go install github.com/TykTechnologies/exp/cmd/schema-gen@main`
+`go install github.com/titpetric/exp/cmd/schema-gen@main`
 
 Invoke `schema-gen` without arguments to print usage help.
 

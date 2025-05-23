@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/github-actions-viz
+module github.com/titpetric/exp/cmd/github-actions-viz
 
 go 1.20
 
