@@ -9,7 +9,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func render(cfg *options) error {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
-	. "github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
+	. "github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func linterFields(cfg *options, pkgInfo *model.PackageInfo) *LintError {

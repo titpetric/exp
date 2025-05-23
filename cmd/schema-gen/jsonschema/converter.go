@@ -10,8 +10,8 @@ import (
 
 	"golang.org/x/tools/go/packages"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/extract"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/extract"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 // ParseAndConvertStruct parses the given repo directory for Go structs and

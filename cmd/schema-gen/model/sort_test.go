@@ -8,7 +8,7 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func Test_DefinitionsList_Sort(t *testing.T) {

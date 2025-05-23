@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
-	. "github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
+	. "github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func lint(cfg *options) error {

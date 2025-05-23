@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
+	"github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func Title(s string) string {

@@ -593,8 +593,8 @@
   {
     "name": "model_test",
     "imports": [
-      "\"github.com/TykTechnologies/exp/cmd/schema-gen/model\"",
       "\"github.com/davecgh/go-spew/spew\"",
+      "\"github.com/titpetric/exp/cmd/schema-gen/model\"",
       "\"testing\""
     ],
     "declarations": [],

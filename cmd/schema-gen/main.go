@@ -11,12 +11,12 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/extract"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/jsonschema"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/lint"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/list"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/markdown"
-	"github.com/TykTechnologies/exp/cmd/schema-gen/restore"
+	"github.com/titpetric/exp/cmd/schema-gen/extract"
+	"github.com/titpetric/exp/cmd/schema-gen/jsonschema"
+	"github.com/titpetric/exp/cmd/schema-gen/lint"
+	"github.com/titpetric/exp/cmd/schema-gen/list"
+	"github.com/titpetric/exp/cmd/schema-gen/markdown"
+	"github.com/titpetric/exp/cmd/schema-gen/restore"
 )
 
 func main() {

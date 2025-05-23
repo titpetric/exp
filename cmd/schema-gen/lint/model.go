@@ -1,6 +1,6 @@
 package lint
 
-import "github.com/TykTechnologies/exp/cmd/schema-gen/model"
+import "github.com/titpetric/exp/cmd/schema-gen/model"
 
 type Linter interface {
 	GetName() string
