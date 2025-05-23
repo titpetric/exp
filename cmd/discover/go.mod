@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/discover
+module github.com/titpetric/exp/cmd/discover
 
 go 1.23.5
 

@@ -1,0 +1,9 @@
+---
+version: "3"
+
+tasks:
+  default:
+    desc: "Build the Go project"
+    cmds:
+      - go fmt .
+      - go install .
