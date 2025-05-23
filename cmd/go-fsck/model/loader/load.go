@@ -12,8 +12,8 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 	"golang.org/x/tools/go/packages"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal/collector"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/internal/collector"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 // Load definitions from package located in sourcePath.

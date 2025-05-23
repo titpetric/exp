@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal/ast"
+	"github.com/titpetric/exp/cmd/go-fsck/internal/ast"
 )
 
 const src = `package example

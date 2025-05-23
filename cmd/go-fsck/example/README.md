@@ -2,7 +2,7 @@
 
 ```go
 import (
-	"github.com/TykTechnologies/exp/cmd/go-fsck/example"
+	"github.com/titpetric/exp/cmd/go-fsck/example"
 }
 ```
 

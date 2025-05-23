@@ -6,8 +6,8 @@ import (
 	"github.com/kortschak/utter"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
 
 func TestLoad(t *testing.T) {

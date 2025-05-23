@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 // Helper function to create a Definition instance

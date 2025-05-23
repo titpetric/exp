@@ -6,7 +6,7 @@ import (
 	"github.com/fzipp/gocyclo"
 	"github.com/uudashr/gocognit"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 func complexity(in *ast.FuncDecl) *model.Complexity {

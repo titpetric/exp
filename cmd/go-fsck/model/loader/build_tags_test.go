@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
 
 func TestBuildTags(t *testing.T) {

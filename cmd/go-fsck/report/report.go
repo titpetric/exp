@@ -3,10 +3,10 @@ package report
 import (
 	"fmt"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model/loader"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/report/testusage"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/report/testusage"
 )
 
 func getDefinitions(cfg *options) ([]*model.Definition, error) {

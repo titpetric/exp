@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/tools/go/packages"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 // ListPackages returns a slice of local packages in the specified root directory.

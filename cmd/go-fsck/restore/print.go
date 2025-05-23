@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 func printLayout(cfg *options, files map[string]model.DeclarationList, filenames []string) error {

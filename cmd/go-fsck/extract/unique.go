@@ -1,6 +1,6 @@
 package extract
 
-import "github.com/TykTechnologies/exp/cmd/go-fsck/model"
+import "github.com/titpetric/exp/cmd/go-fsck/model"
 
 func unique(defs []*model.Definition) []*model.Definition {
 	result := make([]*model.Definition, 0, len(defs))

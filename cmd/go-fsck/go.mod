@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/cmd/go-fsck
+module github.com/titpetric/exp/cmd/go-fsck
 
 go 1.24.3
 

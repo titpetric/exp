@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal/files"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
-	. "github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/internal/files"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
+	. "github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 // RestoreDefinition creates files for the given definition in the package.

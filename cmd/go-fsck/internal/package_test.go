@@ -6,7 +6,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
 )
 
 var ListPackages = internal.ListPackages

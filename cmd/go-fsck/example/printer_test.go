@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/internal/ast"
+	"github.com/titpetric/exp/cmd/go-fsck/internal/ast"
 )
 
 func PrintSource(out io.Writer, fset *token.FileSet, node any) error {

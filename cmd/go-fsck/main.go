@@ -10,14 +10,14 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/docs"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/extract"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/lint"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/query"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/report"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/restore"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/search"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/stats"
+	"github.com/titpetric/exp/cmd/go-fsck/docs"
+	"github.com/titpetric/exp/cmd/go-fsck/extract"
+	"github.com/titpetric/exp/cmd/go-fsck/lint"
+	"github.com/titpetric/exp/cmd/go-fsck/query"
+	"github.com/titpetric/exp/cmd/go-fsck/report"
+	"github.com/titpetric/exp/cmd/go-fsck/restore"
+	"github.com/titpetric/exp/cmd/go-fsck/search"
+	"github.com/titpetric/exp/cmd/go-fsck/stats"
 )
 
 func main() {

@@ -10,8 +10,8 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
 
 func restore(cfg *options) error {

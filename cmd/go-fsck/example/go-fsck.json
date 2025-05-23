@@ -1,8 +1,8 @@
 [
   {
-    "ID": "github.com/TykTechnologies/exp/cmd/go-fsck/example",
+    "ID": "github.com/titpetric/exp/cmd/go-fsck/example",
     "Package": "example",
-    "ImportPath": "github.com/TykTechnologies/exp/cmd/go-fsck/example",
+    "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example",
     "Path": ".",
     "TestPackage": false,
     "Doc": "Example package doc.",
@@ -221,9 +221,9 @@
     ]
   },
   {
-    "ID": "github.com/TykTechnologies/exp/cmd/go-fsck/example [github.com/TykTechnologies/exp/cmd/go-fsck/example.test]",
+    "ID": "github.com/titpetric/exp/cmd/go-fsck/example [github.com/titpetric/exp/cmd/go-fsck/example.test]",
     "Package": "example_test",
-    "ImportPath": "github.com/TykTechnologies/exp/cmd/go-fsck/example_test",
+    "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
     "Doc": "Example package doc.",
@@ -261,9 +261,9 @@
     ]
   },
   {
-    "ID": "github.com/TykTechnologies/exp/cmd/go-fsck/example_test [github.com/TykTechnologies/exp/cmd/go-fsck/example.test]",
+    "ID": "github.com/titpetric/exp/cmd/go-fsck/example_test [github.com/titpetric/exp/cmd/go-fsck/example.test]",
     "Package": "example_test",
-    "ImportPath": "github.com/TykTechnologies/exp/cmd/go-fsck/example_test",
+    "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
     "Doc": "",
@@ -277,7 +277,7 @@
         "\"strings\"",
         "\"testing\"",
         "\"github.com/stretchr/testify/assert\"",
-        "\"github.com/TykTechnologies/exp/cmd/go-fsck/internal/ast\""
+        "\"github.com/titpetric/exp/cmd/go-fsck/internal/ast\""
       ]
     },
     "Types": [],

@@ -1,8 +1,8 @@
 [
   {
-    "ID": "github.com/TykTechnologies/exp/cmd/go-fsck/model",
+    "ID": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Package": "model",
-    "ImportPath": "github.com/TykTechnologies/exp/cmd/go-fsck/model",
+    "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Path": ".",
     "TestPackage": false,
     "Doc": "",

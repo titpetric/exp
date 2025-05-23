@@ -4,8 +4,8 @@ import (
 	"go/ast"
 	"strings"
 
-	. "github.com/TykTechnologies/exp/cmd/go-fsck/internal/ast"
-	"github.com/TykTechnologies/exp/cmd/go-fsck/model"
+	. "github.com/titpetric/exp/cmd/go-fsck/internal/ast"
+	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, decl *ast.GenDecl) {
