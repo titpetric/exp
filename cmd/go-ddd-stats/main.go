@@ -8,14 +8,9 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
-	"sort"
-	"strconv"
 	"strings"
-
-	"github.com/montanaflynn/stats"
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
 )
 
 func main() {
@@ -24,15 +19,46 @@ func main() {
 	}
 }
 
+type ModuleStats struct {
+	Files    []*File
+	Packages []*Package
+}
+
+func (m *ModuleStats) AppendFile(f *File) {
+	m.Files = append(m.Files, f)
+}
+
+func (m *ModuleStats) Package(packagePath string) *Package {
+	for _, pkg := range m.Packages {
+		if pkg.Path == packagePath {
+			return pkg
+		}
+	}
+	result := &Package{
+		Path: packagePath,
+	}
+	m.Packages = append(m.Packages, result)
+	return result
+}
+
+type Package struct {
+	Name    string
+	Path    string
+	Size    int64
+	Count   int64
+	Average int64
+}
+
 type File struct {
-	Name string
+	Name    string
+	Path    string
 	Package string
-	Size int64
+	Size    int64
 }
 
 type Size struct {
 	Size  string
-	Count int
+	Count int64
 }
 
 func start(_ context.Context) error {
@@ -41,116 +67,39 @@ func start(_ context.Context) error {
 		return err
 	}
 
-	records := []File{}
+	collection := ModuleStats{}
 	for _, filename := range files {
-		packageName := path.Base(filename)
+		// skip vendored files from analysis
+		if strings.Contains(filename, "vendor/") {
+			continue
+		}
 
 		size, _ := filesize(filename)
 
-		records = append(records, File{
-			Name: filename,
-			Package: packageName,
-			Size: size,
+		packagePath := path.Dir(filename)
+		if packagePath == "." {
+			packagePath = ""
+		}
+
+		collection.AppendFile(&File{
+			Name:    filename,
+			Path:    packagePath,
+			Package: path.Base(path.Dir(filename)),
+			Size:    size,
 		})
 	}
 
-	asJSON := slices.Contains(os.Args, "--json")
-	groupByPackage := slieces.Contains(os.Args, "--group")
-	printStats := slices.Contains(os.Args, "--stats")
-
-	grouped := map[string][]File{}
-	for _, stat := range records {
-		size := findGroup(stat)
-		if _, ok := grouped[size]; !ok {
-			grouped[size] = []File{}
-		}
-		grouped[size] = append(grouped[size], stat)
+	for _, record := range collection.Files {
+		pkg := collection.Package(record.Path)
+		pkg.Name = record.Package
+		pkg.Size += record.Size
+		pkg.Count++
+		pkg.Average = pkg.Size / pkg.Count
 	}
 
-	keys := maps.Keys(grouped)
-
-	var lastErr error
-	sort.Slice(keys, func(i, j int) bool {
-		a, err := strconv.ParseInt(keys[i], 10, 64)
-		if err != nil {
-			lastErr = err
-			return false
-		}
-		b, err := strconv.ParseInt(keys[j], 10, 64)
-		if err != nil {
-			lastErr = err
-			return false
-		}
-		return a < b
-	})
-	if lastErr != nil {
-		return lastErr
-	}
-
-	sizes := make([]int64, 0, len(records))
-	for _, stat := range records {
-		sizes = append(sizes, stat.Size)
-	}
-
-	data := stats.LoadRawData(sizes)
-	var median, p80 float64
-	median, _ = stats.Median(data)
-	p80, _ = stats.Percentile(data, 80)
-
-	packageCount := getPackageCount()
-
-	switch {
-	case asJSON:
-		if !printStats {
-			b, err := json.Marshal(records)
-			if err != nil {
-				return err
-			}
-			fmt.Println(string(b))
-			return nil
-		}
-
-		b, err := json.Marshal(struct {
-			Package  string
-			Sizes    []Size
-			Median   float64
-			P80      float64
-			Packages int
-			Files    int
-		}{
-			getPackageName(),
-			getSizes(keys, grouped),
-			median,
-			p80,
-			packageCount,
-			len(records),
-		})
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(string(b))
-		return nil
-
-	default:
-		if !printStats {
-			for _, stat := range records {
-				fmt.Println(stat.Name, stat.Size)
-			}
-			return nil
-		}
-
-		fmt.Println("Package:", getPackageName())
-		for _, key := range keys {
-			fmt.Println("Size", key, "KB, Count", len(grouped[key]))
-		}
-		fmt.Printf("Median size: %.0f\n", median)
-		fmt.Printf("Size 80th percentile: %.0f\n", p80)
-		fmt.Println("Number of packages:", packageCount)
-		fmt.Println("Number of files:", len(records))
-		return nil
-	}
-	return nil
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	return enc.Encode(collection)
 }
 
 func getPackageName() string {
@@ -162,17 +111,6 @@ func getPackageCount() int {
 	output, _ := exec.Command("go", "list", "./...").CombinedOutput()
 	lines := bytes.Split(output, []byte("\n"))
 	return len(lines)
-}
-
-func getSizes(keys []string, grouped map[string][]File) []Size {
-	result := make([]Size, 0, len(keys))
-	for _, key := range keys {
-		result = append(result, Size{
-			Size:  key + " KB",
-			Count: len(grouped[key]),
-		})
-	}
-	return result
 }
 
 func findGroup(file File) string {
