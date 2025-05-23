@@ -77,7 +77,7 @@ func stats(cfg *options) error {
 
 	// Aggregations are easier in SQL... the following block of
 	// code uses an sqlite in-memory database to do some math.
-	conn, err := db.ConnectWithOptions(ctx, db.Options{
+	conn, err := db.ConnectWithOptions(ctx, &db.Options{
 		Credentials: db.Credentials{
 			DSN:    ":memory:",
 			Driver: "sqlite",
