@@ -3,6 +3,8 @@
 The motivation behind this is to validate the data model against the
 swagger specification, validating that all fields are covered in schema.
 
+> This tool has been deprecated, kept around for generic purposes.
+> Go to cmd/schema-gen and look at the jsonschema command.
 
 ## Development usage
 
