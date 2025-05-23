@@ -10,12 +10,12 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/TykTechnologies/exp/cmd/summary/coverfunc"
-	"github.com/TykTechnologies/exp/cmd/summary/golangcilint"
-	"github.com/TykTechnologies/exp/cmd/summary/lsof"
-	"github.com/TykTechnologies/exp/cmd/summary/modfile"
-	"github.com/TykTechnologies/exp/cmd/summary/semgrep"
-	"github.com/TykTechnologies/exp/cmd/summary/vet"
+	"github.com/titpetric/exp/cmd/summary/coverfunc"
+	"github.com/titpetric/exp/cmd/summary/golangcilint"
+	"github.com/titpetric/exp/cmd/summary/lsof"
+	"github.com/titpetric/exp/cmd/summary/modfile"
+	"github.com/titpetric/exp/cmd/summary/semgrep"
+	"github.com/titpetric/exp/cmd/summary/vet"
 )
 
 func main() {

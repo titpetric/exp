@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/TykTechnologies/exp/cmd/summary/internal"
+	"github.com/titpetric/exp/cmd/summary/internal"
 )
 
 func coverfunc(cfg *options) error {
