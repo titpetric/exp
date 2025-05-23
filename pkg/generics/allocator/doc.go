@@ -1,4 +1,4 @@
-// The allocator package handles two concerns related to allocations:
+// The allocator package serves as an optimization utility.
 //
 // 1. It uses sync.Pool to manage an in-memory cache of reusable types.
 // 2. Provides a generic interface to take advantage of type safety.
@@ -9,23 +9,18 @@
 // With strongly typed code, a similar function is expected:
 //
 // ```go
-//
-//	func NewDocument() (*Document, error) {
-//		// Significant pre-allocations, multiple make() calls...
-//	}
-//
+// func NewDocument() (*Document, error) {
+// }
 // ```
 //
 // To take advantage of the sync.Pool back allocator, you can
 // use it like so:
 //
 // ```go
-//
-//	repo := allocator.New[*Document](NewDocument)
-//	value := repo.Get()
-//	// doing things with value...
-//	repo.Put(value)
-//
+// repo := allocator.New[*Document](NewDocument)
+// value := repo.Get()
+// // doing things with value...
+// repo.Put(value)
 // ```
 //
 // The type must implement a Reset() function. The reliance
