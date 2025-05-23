@@ -1,3 +1,3 @@
 module github.com/titpetric/exp/cmd/indexer
 
-go 1.21.4
+go 1.24.3
