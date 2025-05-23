@@ -28,7 +28,7 @@ func NewOptions() *options {
 	}
 	// handle: `go-fsck extract ./...`
 	if len(os.Args) > 2 {
-		if os.Args[2] == "./..." {
+		if os.Args[len(os.Args)-1] == "./..." {
 			cfg.recursive = true
 		}
 	}

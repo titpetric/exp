@@ -52,11 +52,6 @@ func cleanPackages(pkgs []*packages.Package, workDir string) []*model.Package {
 			}
 		}
 
-		// This skips compiled tests.
-		if pkg.Name == "main" {
-			continue
-		}
-
 		isTestScope := false
 		for _, f := range pkg.GoFiles {
 			if strings.HasSuffix(f, "_test.go") {

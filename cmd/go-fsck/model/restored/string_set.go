@@ -67,7 +67,6 @@ func (i StringSet) Map() (map[string]string, []error) {
 
 	cleanPackageName := func(name string) (string, bool) {
 		clean := name
-		clean = strings.ToLower(clean)
 		clean = strings.ReplaceAll(clean, "_", "")
 		return clean, name == clean
 	}
@@ -79,6 +78,7 @@ func (i StringSet) Map() (map[string]string, []error) {
 		var short, long string
 
 		// aliased package
+		imported = strings.ReplaceAll(imported, "/go-", "/")
 		if strings.Contains(imported, " ") {
 			line := strings.Split(imported, " ")
 			short, long = line[0], strings.Trim(line[1], `"`)
