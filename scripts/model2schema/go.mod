@@ -1,9 +1,9 @@
-module github.com/TykTechnologies/exp/scripts/model2schema
+module github.com/titpetric/exp/scripts/model2schema
 
 go 1.21.5
 
 require (
-	github.com/TykTechnologies/exp/cmd/schema-gen v0.0.0-20240715162418-12c4900438ee
+	github.com/titpetric/exp/cmd/schema-gen v0.0.0-20240715162418-12c4900438ee
 	gopkg.in/yaml.v3 v3.0.1
 )
 

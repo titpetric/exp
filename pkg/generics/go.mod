@@ -1,4 +1,4 @@
-module github.com/TykTechnologies/exp/pkg/generics
+module github.com/titpetric/exp/pkg/generics
 
 go 1.23.5
 
