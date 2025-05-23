@@ -9,7 +9,7 @@ swagger specification, validating that all fields are covered in schema.
 To use the task stand alone, install and run it like so:
 
 ```
-go install github.com/TykTechnologies/exp/scripts/model2schema@main
+go install github.com/titpetric/exp/scripts/model2schema@main
 ```
 
 In the folder where you want to get the definitions:

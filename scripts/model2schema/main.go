@@ -6,8 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/TykTechnologies/exp/cmd/schema-gen/model"
 	"gopkg.in/yaml.v3"
+
+	"github.com/titpetric/exp/cmd/schema-gen/model"
 )
 
 func main() {

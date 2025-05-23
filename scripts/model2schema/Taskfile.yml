@@ -4,12 +4,10 @@ version: "3"
 tasks:
   default:
     desc: "Run"
-    deps: [collect]
     cmds:
       - goimports -w .
       - go mod tidy
       - go fmt .
-      - task: test
 
   # collect desired output from gateway data models
   collect:
@@ -71,4 +69,4 @@ tasks:
   update:
     desc: "Update schema-gen dependency"
     cmds:
-      - go get github.com/TykTechnologies/exp/cmd/schema-gen@main
+      - go get github.com/titpetric/exp/cmd/schema-gen@main
