@@ -1,3 +1,0 @@
-ping
-tyk-liveness-probe
-host-checker:PollerActiveInstanceID
