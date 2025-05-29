@@ -1,16 +1,15 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/titpetric/exp/cmd/go-ddd-stats/model"
 )
 
 func main() {
@@ -19,55 +18,13 @@ func main() {
 	}
 }
 
-type ModuleStats struct {
-	Files    []*File
-	Packages []*Package
-}
-
-func (m *ModuleStats) AppendFile(f *File) {
-	m.Files = append(m.Files, f)
-}
-
-func (m *ModuleStats) Package(packagePath string) *Package {
-	for _, pkg := range m.Packages {
-		if pkg.Path == packagePath {
-			return pkg
-		}
-	}
-	result := &Package{
-		Path: packagePath,
-	}
-	m.Packages = append(m.Packages, result)
-	return result
-}
-
-type Package struct {
-	Name    string
-	Path    string
-	Size    int64
-	Count   int64
-	Average int64
-}
-
-type File struct {
-	Name    string
-	Path    string
-	Package string
-	Size    int64
-}
-
-type Size struct {
-	Size  string
-	Count int64
-}
-
 func start(_ context.Context) error {
 	files, err := glob(".", ".go")
 	if err != nil {
 		return err
 	}
 
-	collection := ModuleStats{}
+	collection := &model.Stats{}
 	for _, filename := range files {
 		// skip vendored files from analysis
 		if strings.Contains(filename, "vendor/") {
@@ -81,7 +38,7 @@ func start(_ context.Context) error {
 			packagePath = ""
 		}
 
-		collection.AppendFile(&File{
+		collection.AppendFile(&model.File{
 			Name:    filename,
 			Path:    packagePath,
 			Package: path.Base(path.Dir(filename)),
@@ -97,33 +54,12 @@ func start(_ context.Context) error {
 		pkg.Average = pkg.Size / pkg.Count
 	}
 
+	collection.Histogram = model.Histogram(collection)
+
 	enc := json.NewEncoder(os.Stdout)
+	enc.SetEscapeHTML(false)
 	enc.SetIndent("", "  ")
 	return enc.Encode(collection)
-}
-
-func getPackageName() string {
-	output, _ := exec.Command("go", "list", ".").CombinedOutput()
-	return strings.TrimSpace(string(output))
-}
-
-func getPackageCount() int {
-	output, _ := exec.Command("go", "list", "./...").CombinedOutput()
-	lines := bytes.Split(output, []byte("\n"))
-	return len(lines)
-}
-
-func findGroup(file File) string {
-	var increment int64 = 4
-
-	bucket := increment
-	for {
-		if file.Size > bucket*1024 {
-			bucket *= 2
-			continue
-		}
-		return fmt.Sprint(bucket)
-	}
 }
 
 func filesize(filename string) (int64, error) {
