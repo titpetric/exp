@@ -1,0 +1,14 @@
+---
+version: "3"
+
+env:
+  CGO_ENABLED: 0
+
+tasks:
+  default:
+    desc: "Everything"
+    cmds:
+      - go vet ./...
+      - goimports -w -local=$(go list .) .
+      - go fmt ./...
+      - go build .
