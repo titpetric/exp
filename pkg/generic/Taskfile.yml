@@ -21,6 +21,7 @@ tasks:
     cmds:
       - goimports -w .
       - go fmt ./...
+      - go-fsck docs . > README.md
       - go-fsck docs ./allocator > allocator/README.md
 
   test:

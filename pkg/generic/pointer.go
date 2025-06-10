@@ -6,8 +6,8 @@ import (
 
 type Value any
 
-func Pointer[T Value](val T) *T {
-	return &val
+func Pointer[T Value](value T) *T {
+	return &value
 }
 
 var _ *time.Time = Pointer(time.Now())
