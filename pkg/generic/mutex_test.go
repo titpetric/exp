@@ -2,7 +2,6 @@ package generic_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/tj/assert"
 
@@ -63,7 +62,7 @@ func BenchmarkMutexUseParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			m.Use(func(d TestMutexCounter) {
-				time.Sleep(time.Millisecond)
+				//time.Sleep(time.Millisecond)
 				_ = d.Value
 			})
 		}
@@ -88,7 +87,7 @@ func BenchmarkMutexUseCopyParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			_ = m.UseCopy(func(d TestMutexCounter) {
-				time.Sleep(time.Millisecond)
+				//time.Sleep(time.Millisecond)
 				_ = d.Value
 			})
 		}
