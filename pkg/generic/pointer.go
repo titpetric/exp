@@ -4,9 +4,8 @@ import (
 	"time"
 )
 
-type Value any
-
-func Pointer[T Value](value T) *T {
+// Pointer will return a *T, referencing the value T.
+func Pointer[T any](value T) *T {
 	return &value
 }
 

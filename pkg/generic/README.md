@@ -9,6 +9,10 @@ import (
 ## Types
 
 ```go
+// List[T] is analogous with []T with utility functions.
+//
+// It's generally asumed you hold an exclusive reference to a list,
+// and thus the following is not concurrency safe.
 type List[T any] []T
 ```
 
@@ -18,10 +22,6 @@ type Mutex[T any] struct {
 	mu	sync.Mutex
 	value	T
 }
-```
-
-```go
-type Value any
 ```
 
 ## Function symbols
@@ -41,12 +41,36 @@ type Value any
 - `func (List[T]) Get (index int) T`
 - `func (List[T]) Value () []T`
 
+### ListMap
+
+ListMap converts a List[K] to a List[V] given a mapping function.
+
+```go
+func ListMap (l List[K], mapfn func(K) V) List[V]
+```
+
+### NewList
+
+NewList creates a new List[T].
+
+```go
+func NewList () List[T]
+```
+
 ### NewMutex
 
 NewMutex will create a new mutex protected value.
 
 ```go
 func NewMutex (value T) *Mutex[T]
+```
+
+### Pointer
+
+Pointer will return a *T, referencing the value T.
+
+```go
+func Pointer (value T) *T
 ```
 
 ### UseMutex
@@ -98,25 +122,9 @@ stored value, returning the copy for exclusive use.
 func (*Mutex[T]) UseCopy (callback func(T)) T
 ```
 
-### ListMap
-
-```go
-func ListMap (l List[K], mapfn func(K) V) List[V]
-```
-
-### NewList
-
-```go
-func NewList () List[T]
-```
-
-### Pointer
-
-```go
-func Pointer (value T) *T
-```
-
 ### Filter
+
+Filter traverses the list, and returns a new list with matching items.
 
 ```go
 func (List[T]) Filter (match func(T) bool) List[T]
@@ -124,17 +132,23 @@ func (List[T]) Filter (match func(T) bool) List[T]
 
 ### Find
 
+Find will return the first matching T element from the list, or the zero value of T.
+
 ```go
 func (List[T]) Find (match func(T) bool) T
 ```
 
 ### Get
 
+Get will return the T from index in the list, or the zero value of T.
+
 ```go
 func (List[T]) Get (index int) T
 ```
 
 ### Value
+
+Value function transforms the list to a native []T slice.
 
 ```go
 func (List[T]) Value () []T
