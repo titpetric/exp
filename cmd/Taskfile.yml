@@ -7,6 +7,11 @@ tasks:
     cmds:
       - task api:list | xargs -I{} echo 'cd {} ; task ; cd ..' | sh
 
+  update:
+    desc: "Set go version for tools"
+    cmds:
+      - task api:list | xargs -I{} echo 'cd {} ; go mod edit -go=1.24.4 ; go get -u ./... ; go mod tidy ; cd ..' | sh
+
   api:list:
     desc: "List cmd/ folders"
     cmd: find -maxdepth 1 -mindepth 1 -type d 

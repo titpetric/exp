@@ -1,13 +1,13 @@
 module github.com/titpetric/exp/cmd/summary
 
-go 1.24.3
+go 1.24.4
 
 require (
 	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
-	golang.org/x/mod v0.24.0
-	modernc.org/sqlite v1.37.1
+	golang.org/x/exp v0.0.0-20250606033433-dcc06ee1d476
+	golang.org/x/mod v0.25.0
+	modernc.org/sqlite v1.38.0
 )
 
 require (
@@ -20,7 +20,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.65.8 // indirect
+	modernc.org/libc v1.65.10 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
 )
