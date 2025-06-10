@@ -4,9 +4,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/tj/assert"
 
-	"github.com/TykTechnologies/exp/pkg/generics/allocator"
+	"github.com/titpetric/exp/pkg/generic/allocator"
 )
 
 func TestAllocator(t *testing.T) {

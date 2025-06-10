@@ -2,7 +2,7 @@
 
 ```go
 import (
-	"github.com/TykTechnologies/exp/pkg/generics/allocator"
+	"github.com/titpetric/exp/pkg/generic/allocator"
 }
 ```
 

@@ -1,0 +1,49 @@
+---
+version: "3"
+
+vars:
+  coverage1: test/allocator.cov
+  cpuprofile1: test/allocator.prof
+  memprofile2: test/allocator.mprof
+  coverage2: test/generic.cov
+  cpuprofile2: test/generic.prof
+  memprofile2: test/generic.mprof
+
+tasks:
+  default:
+    desc: "Run everything"
+    cmds:
+      - task: fmt
+      - task: test
+
+  fmt:
+    desc: "Run formatters"
+    cmds:
+      - goimports -w .
+      - go fmt ./...
+      - go-fsck docs ./allocator > allocator/README.md
+
+  test:
+    desc: "Build/run tests"
+    cmds:
+      - mkdir -p test
+      - defer: rm -f allocator.test
+      - go test -bench=. -benchtime=5s -benchmem -race -cpu 1,2,3 -cover -coverprofile {{.coverage2}} -cpuprofile {{.cpuprofile2}} -memprofile {{.memprofile2}} -coverpkg="$(go list .)/..." -v .
+      - go test -bench=. -benchtime=5s -benchmem -race -cpu 1,2,3 -cover -coverprofile {{.coverage1}} -cpuprofile {{.cpuprofile1}} -memprofile {{.memprofile1}} -coverpkg="$(go list .)/..." -v ./allocator
+
+  list:
+    desc: "List packages to test"
+    cmd: go list ./...
+
+  cover:
+    desc: "Show source coverage"
+    aliases: [coverage, cov]
+    cmds:
+      - go tool cover -func={{.coverage1}}
+      - go tool cover -func={{.coverage2}}
+
+  uncover:
+    desc: "Show uncovered source"
+    cmds:
+      - uncover {{.coverage1}}
+      - uncover {{.coverage2}}
