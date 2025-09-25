@@ -7,6 +7,7 @@ require (
 	github.com/fbiville/markdown-table-formatter v0.3.0
 	github.com/fzipp/gocyclo v0.6.0
 	github.com/go-bridget/mig v0.0.0-20250602101636-3ef9a7549616
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/kortschak/utter v1.7.0
 	github.com/spf13/pflag v1.0.6
 	github.com/stoewer/go-strcase v1.3.0
@@ -28,7 +29,6 @@ require (
 	github.com/go-sql-driver/mysql v1.9.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jcchavezs/porto v0.7.0 // indirect
-	github.com/jmoiron/sqlx v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

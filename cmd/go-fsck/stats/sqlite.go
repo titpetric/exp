@@ -39,5 +39,9 @@ func storeDefinitions(cfg *options) error {
 		}
 	}
 
-	return sqlite.Stats(conn)
+	if err := sqlite.Stats(conn); err != nil {
+		return err
+	}
+
+	return nil
 }
