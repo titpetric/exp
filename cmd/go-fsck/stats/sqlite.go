@@ -2,6 +2,8 @@ package stats
 
 import (
 	"context"
+	"errors"
+	"os"
 
 	"github.com/go-bridget/mig/db"
 
@@ -16,11 +18,14 @@ func storeDefinitions(cfg *options) error {
 
 	ctx := context.Background()
 
+	_, err = os.Stat("go-fsck.db")
+	create := errors.Is(err, os.ErrNotExist)
+
 	// Aggregations are easier in SQL... the following block of
 	// code uses an sqlite in-memory database to do some math.
 	conn, err := db.ConnectWithOptions(ctx, &db.Options{
 		Credentials: db.Credentials{
-			DSN:    ":memory:",
+			DSN:    "file:go-fsck.db",
 			Driver: "sqlite",
 		},
 	})
@@ -29,13 +34,15 @@ func storeDefinitions(cfg *options) error {
 		return err
 	}
 
-	for _, stmt := range sqlite.Statements() {
-		conn.MustExec(stmt)
-	}
+	if create {
+		for _, stmt := range sqlite.Statements() {
+			conn.MustExec(stmt)
+		}
 
-	for _, def := range defs {
-		if err := sqlite.Store(conn, def); err != nil {
-			return err
+		for _, def := range defs {
+			if err := sqlite.Store(conn, def); err != nil {
+				return err
+			}
 		}
 	}
 
