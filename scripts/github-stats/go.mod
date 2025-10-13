@@ -1,4 +1,4 @@
-module github-actions-runs
+module github.com/titpetric/etl/scripts/github-stats
 
 go 1.20
 
