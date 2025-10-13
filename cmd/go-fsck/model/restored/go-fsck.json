@@ -52,9 +52,15 @@
             "Type": "int",
             "Path": "Complexity.Cyclomatic",
             "JSONName": "Cyclomatic"
+          },
+          {
+            "Name": "Lines",
+            "Type": "int",
+            "Path": "Complexity.Lines",
+            "JSONName": "Lines"
           }
         ],
-        "Source": "type Complexity struct {\n\tCognitive\tint\n\tCyclomatic\tint\n}"
+        "Source": "type Complexity struct {\n\tCognitive\tint\n\tCyclomatic\tint\n\tLines\t\tint\n}"
       },
       {
         "Kind": "type",
@@ -451,7 +457,8 @@
         "Source": "func NewStringSet() StringSet {\n\treturn make(StringSet)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -477,7 +484,8 @@
         "Source": "// TypeRef aims to trim a type name to a reference type.\nfunc TypeRef(name string) string {\n\t// trim variadic arg\n\tif strings.HasPrefix(name, \"...\") {\n\t\tname = name[3:]\n\t}\n\n\t// slice, array and map value\n\t// in terms of nesting, this is a hack\n\tif strings.HasPrefix(name, \"[\") || strings.HasPrefix(name, \"map[\") {\n\t\tname = strings.SplitN(name, \"]\", 2)[1]\n\t}\n\n\t// deref pointers\n\treturn strings.TrimPrefix(name, \"*\")\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 4
+          "Cyclomatic": 4,
+          "Lines": 16
         }
       },
       {
@@ -496,7 +504,8 @@
         "Source": "func (d *Declaration) Equal(in *Declaration) bool {\n\tif d.File == in.File \u0026\u0026 d.Kind == in.Kind \u0026\u0026 d.Name == in.Name {\n\t\treturn true\n\t}\n\treturn false\n}",
         "Complexity": {
           "Cognitive": 2,
-          "Cyclomatic": 4
+          "Cyclomatic": 4,
+          "Lines": 6
         }
       },
       {
@@ -515,7 +524,8 @@
         "Source": "func (d *Declaration) HasName(find string) bool {\n\tfor _, name := range d.Names {\n\t\tif name == find {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn d.Name == find\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 8
         }
       },
       {
@@ -536,7 +546,8 @@
         "Source": "func (d *Declaration) IsExported() bool {\n\tif d.Receiver != \"\" \u0026\u0026 !ast.IsExported(TypeRef(d.Receiver)) {\n\t\treturn false\n\t}\n\n\tfor _, name := range d.Names {\n\t\tif ast.IsExported(name) {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn ast.IsExported(d.Name)\n}",
         "Complexity": {
           "Cognitive": 5,
-          "Cyclomatic": 5
+          "Cyclomatic": 5,
+          "Lines": 12
         }
       },
       {
@@ -557,7 +568,8 @@
         "Source": "func (d *Declaration) Keys() []string {\n\ttrimPath := \"*.\"\n\tif d.Name != \"\" {\n\t\treturn []string{\n\t\t\tstrings.Trim(d.Receiver+\".\"+d.Name, trimPath),\n\t\t}\n\t}\n\tif len(d.Names) != 0 {\n\t\tresult := make([]string, len(d.Names))\n\t\tfor k, v := range d.Names {\n\t\t\tresult[k] = strings.Trim(d.Receiver+\".\"+v, trimPath)\n\t\t}\n\t}\n\treturn nil\n}",
         "Complexity": {
           "Cognitive": 4,
-          "Cyclomatic": 4
+          "Cyclomatic": 4,
+          "Lines": 15
         }
       },
       {
@@ -573,7 +585,8 @@
         "Source": "func (f *Declaration) ReceiverTypeRef() string {\n\treturn TypeRef(f.Receiver)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -589,7 +602,8 @@
         "Source": "func (f *Declaration) TypeRef() string {\n\treturn TypeRef(f.Type)\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -605,7 +619,8 @@
         "Source": "func (p *DeclarationList) Append(in ...*Declaration) {\n\t*p = append(*p, in...)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -621,7 +636,8 @@
         "Source": "func (p *DeclarationList) AppendUnique(in ...*Declaration) {\n\tfor _, i := range in {\n\t\tshouldAppend := true\n\t\tfor _, decl := range *p {\n\t\t\tif decl.Equal(i) {\n\t\t\t\tshouldAppend = false\n\t\t\t\tbreak\n\t\t\t}\n\t\t}\n\n\t\tif shouldAppend {\n\t\t\t*p = append(*p, i)\n\t\t}\n\t}\n\tp.Sort()\n}",
         "Complexity": {
           "Cognitive": 8,
-          "Cyclomatic": 5
+          "Cyclomatic": 5,
+          "Lines": 16
         }
       },
       {
@@ -639,7 +655,8 @@
         "Source": "func (p *DeclarationList) ClearNonTestFiles() {\n\tresult := DeclarationList{}\n\tfor _, decl := range *p {\n\t\tif !strings.HasSuffix(decl.File, \"_test.go\") {\n\t\t\tcontinue\n\t\t}\n\t\tresult.Append(decl)\n\t}\n\t*p = result\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 10
         }
       },
       {
@@ -652,7 +669,8 @@
         "Source": "func (p *DeclarationList) ClearSource() {\n\tfor _, decl := range *p {\n\t\tdecl.Source = \"\"\n\t}\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 2
+          "Cyclomatic": 2,
+          "Lines": 5
         }
       },
       {
@@ -670,7 +688,8 @@
         "Source": "func (p *DeclarationList) ClearTestFiles() {\n\tresult := DeclarationList{}\n\tfor _, decl := range *p {\n\t\tif strings.HasSuffix(decl.File, \"_test.go\") {\n\t\t\tcontinue\n\t\t}\n\t\tresult.Append(decl)\n\t}\n\t*p = result\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 10
         }
       },
       {
@@ -691,7 +710,8 @@
         "Source": "func (p *DeclarationList) Sort() {\n\tsort.Slice(*p, func(i, j int) bool {\n\t\ta, b := (*p)[i], (*p)[j]\n\t\tif a.Kind != b.Kind {\n\t\t\tindexOf := map[DeclarationKind]int{\n\t\t\t\tCommentKind:\t0,\n\t\t\t\tImportKind:\t1,\n\t\t\t\tConstKind:\t2,\n\t\t\t\tStructKind:\t3,\n\t\t\t\tTypeKind:\t4,\n\t\t\t\tVarKind:\t5,\n\t\t\t\tFuncKind:\t6,\n\t\t\t}\n\t\t\treturn indexOf[a.Kind] \u003c indexOf[b.Kind]\n\t\t}\n\t\tae, be := ast.IsExported(a.Name), ast.IsExported(b.Name)\n\t\tif ae != be {\n\t\t\treturn ae\n\t\t}\n\n\t\tif a.Receiver != b.Receiver {\n\t\t\tif a.Receiver == \"\" {\n\t\t\t\treturn true\n\t\t\t}\n\t\t\treturn a.Receiver \u003c b.Receiver\n\t\t}\n\n\t\tif a.Signature != b.Signature {\n\t\t\treturn a.Signature \u003c b.Signature\n\t\t}\n\n\t\treturn a.Name \u003c b.Name\n\t})\n}",
         "Complexity": {
           "Cognitive": 11,
-          "Cyclomatic": 6
+          "Cyclomatic": 6,
+          "Lines": 34
         }
       },
       {
@@ -709,7 +729,8 @@
         "Source": "func (d *Definition) ClearNonTestFiles() {\n\tfor filename, _ := range d.Imports {\n\t\tif !strings.HasSuffix(filename, \"_test.go\") {\n\t\t\tdelete(d.Imports, filename)\n\t\t}\n\t}\n\td.Types.ClearNonTestFiles()\n\td.Vars.ClearNonTestFiles()\n\td.Consts.ClearNonTestFiles()\n\td.Funcs.ClearNonTestFiles()\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 11
         }
       },
       {
@@ -722,7 +743,8 @@
         "Source": "func (d *Definition) ClearSource() {\n\td.Types.ClearSource()\n\td.Vars.ClearSource()\n\td.Consts.ClearSource()\n\td.Funcs.ClearSource()\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 6
         }
       },
       {
@@ -740,7 +762,8 @@
         "Source": "func (d *Definition) ClearTestFiles() {\n\tfor filename, _ := range d.Imports {\n\t\tif strings.HasSuffix(filename, \"_test.go\") {\n\t\t\tdelete(d.Imports, filename)\n\t\t}\n\t}\n\td.Types.ClearTestFiles()\n\td.Vars.ClearTestFiles()\n\td.Consts.ClearTestFiles()\n\td.Funcs.ClearTestFiles()\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 11
         }
       },
       {
@@ -753,7 +776,8 @@
         "Source": "func (d *Definition) Fill() {\n\tfor _, decl := range d.Order() {\n\t\tdecl.Imports = d.getImports(decl)\n\t}\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 2
+          "Cyclomatic": 2,
+          "Lines": 5
         }
       },
       {
@@ -769,7 +793,8 @@
         "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
         "Complexity": {
           "Cognitive": 2,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 19
         }
       },
       {
@@ -785,7 +810,8 @@
         "Source": "func (d *Definition) Order() []*Declaration {\n\tcount := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)\n\tresult := make([]*Declaration, 0, count)\n\n\tresult = append(result, d.Types...)\n\tresult = append(result, d.Funcs...)\n\tresult = append(result, d.Vars...)\n\tresult = append(result, d.Consts...)\n\treturn result\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 10
         }
       },
       {
@@ -799,7 +825,8 @@
         "Source": "// Sort will sort the inner types so they have a stable order.\nfunc (d *Definition) Sort() {\n\td.Types.Sort()\n\td.Vars.Sort()\n\td.Consts.Sort()\n\td.Funcs.Sort()\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 7
         }
       },
       {
@@ -815,7 +842,8 @@
         "Source": "func (f *Field) TypeRef() string {\n\treturn TypeRef(f.Type)\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -837,7 +865,8 @@
         "Source": "func (i *StringSet) Add(key string, lits ...string) {\n\tdata := *i\n\tif data == nil {\n\t\tdata = make(StringSet)\n\t}\n\tif set, ok := data[key]; ok {\n\t\tfor _, lit := range lits {\n\t\t\tif slices.Contains(set, lit) {\n\t\t\t\treturn\n\t\t\t}\n\t\t\tset = append(set, lit)\n\t\t}\n\n\t\tdata[key] = set\n\t\treturn\n\t}\n\tdata[key] = lits[:]\n\t*i = data\n}",
         "Complexity": {
           "Cognitive": 7,
-          "Cyclomatic": 5
+          "Cyclomatic": 5,
+          "Lines": 19
         }
       },
       {
@@ -853,7 +882,8 @@
         "Source": "func (d DeclarationKind) String() string {\n\treturn string(d)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -869,7 +899,8 @@
         "Source": "func (p DeclarationList) Exported() (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif decl.IsExported() {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 8
         }
       },
       {
@@ -888,7 +919,8 @@
         "Source": "func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 8
         }
       },
       {
@@ -907,7 +939,8 @@
         "Source": "func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\treturn decl\n\t\t}\n\t}\n\treturn nil\n}",
         "Complexity": {
           "Cognitive": 3,
-          "Cyclomatic": 3
+          "Cyclomatic": 3,
+          "Lines": 8
         }
       },
       {
@@ -926,7 +959,8 @@
         "Source": "func (p Package) Equal(in Package) bool {\n\treturn p.ImportPath == in.ImportPath\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -942,7 +976,8 @@
         "Source": "func (p Package) Name() string {\n\treturn p.Package\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -963,7 +998,8 @@
         "Source": "func (p Package) String() string {\n\treturn fmt.Sprintf(\"package=%s import_path=%s path=%s test_package=%v\", p.Package, p.ImportPath, p.Path, p.TestPackage)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       },
       {
@@ -979,7 +1015,8 @@
         "Source": "func (i StringSet) All() []string {\n\tresult := []string{}\n\tfor _, set := range i {\n\t\tresult = append(result, set...)\n\t}\n\treturn result\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 2
+          "Cyclomatic": 2,
+          "Lines": 7
         }
       },
       {
@@ -1003,7 +1040,8 @@
         "Source": "func (i StringSet) Get(key string) []string {\n\tval, _ := i[key]\n\tif val != nil {\n\t\tsort.Strings(val)\n\t}\n\treturn val\n}",
         "Complexity": {
           "Cognitive": 1,
-          "Cyclomatic": 2
+          "Cyclomatic": 2,
+          "Lines": 7
         }
       },
       {
@@ -1036,7 +1074,8 @@
         "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map() (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\timports := i.All()\n\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
         "Complexity": {
           "Cognitive": 22,
-          "Cyclomatic": 11
+          "Cyclomatic": 11,
+          "Lines": 72
         }
       },
       {
@@ -1055,7 +1094,8 @@
         "Source": "func (d *Definition) getImports(decl *Declaration) []string {\n\treturn d.Imports.Get(decl.File)\n}",
         "Complexity": {
           "Cognitive": 0,
-          "Cyclomatic": 1
+          "Cyclomatic": 1,
+          "Lines": 3
         }
       }
     ]

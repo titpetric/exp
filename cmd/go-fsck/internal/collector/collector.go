@@ -295,6 +295,8 @@ func (v *collector) identNames(decl []*ast.Ident) []string {
 func (v *collector) collectFuncDeclaration(file *ast.File, decl *ast.FuncDecl, filename string, stack []ast.Node) *Declaration {
 	args, returns := v.functionBindings(file, decl)
 
+	source := v.getSource(file, decl)
+
 	declaration := &Declaration{
 		Doc:        strings.TrimSpace(v.getSource(file, decl.Doc)),
 		Kind:       model.FuncKind,
@@ -304,8 +306,8 @@ func (v *collector) collectFuncDeclaration(file *ast.File, decl *ast.FuncDecl, f
 		Returns:    returns,
 		Signature:  v.functionDef(decl),
 		References: collectFuncReferences(decl),
-		Source:     v.getSource(file, decl),
-		Complexity: complexity(decl),
+		Source:     source,
+		Complexity: complexity(decl, source),
 	}
 
 	if decl.Recv != nil {
