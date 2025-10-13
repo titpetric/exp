@@ -1,4 +1,4 @@
-module covertrace
+module github.com/titpetric/exp/cmd/covertrace
 
 go 1.24.4
 
