@@ -14,29 +14,36 @@ func coverfunc(cfg *options) error {
 		return err
 	}
 
-	encoder := json.NewEncoder(os.Stdout)
-	encoder.SetIndent("", "  ")
-
-	if cfg == nil {
-		fmt.Println("Options not provided. Rendering data.")
-		return coverPackages(nil, lines, encoder)
-	}
+	var encoder *json.Encoder
 
 	if cfg.RenderJSON {
-		if cfg.GroupByFiles {
-			return coverFiles(cfg, lines, encoder)
-		}
-		return coverPackages(cfg, lines, encoder)
+		encoder = json.NewEncoder(os.Stdout)
+		encoder.SetIndent("", "  ")
 	}
+
+	parsed := Parse(lines, cfg.SkipUncovered)
 
 	if cfg.GroupByFiles {
-		return coverFiles(cfg, lines, nil)
+		return coverFiles(parsed, encoder)
 	}
-	return coverPackages(cfg, lines, nil)
+	if cfg.GroupByPackage {
+		return coverPackages(parsed, encoder)
+	}
+	return coverFunctions(parsed, encoder)
 }
 
-func coverFiles(cfg *options, lines [][]string, encoder *json.Encoder) error {
-	parsed := Parse(lines, cfg.SkipUncovered)
+func coverFunctions(parsed []CoverageInfo, encoder *json.Encoder) error {
+	files := ByFunction(parsed)
+	if encoder != nil {
+		return encoder.Encode(files)
+	}
+	for _, f := range files {
+		fmt.Println(f.String())
+	}
+	return nil
+}
+
+func coverFiles(parsed []CoverageInfo, encoder *json.Encoder) error {
 	files := ByFile(parsed)
 	if encoder != nil {
 		return encoder.Encode(files)
@@ -47,8 +54,7 @@ func coverFiles(cfg *options, lines [][]string, encoder *json.Encoder) error {
 	return nil
 }
 
-func coverPackages(cfg *options, lines [][]string, encoder *json.Encoder) error {
-	parsed := Parse(lines, cfg.SkipUncovered)
+func coverPackages(parsed []CoverageInfo, encoder *json.Encoder) error {
 	pkgs := ByPackage(parsed)
 	if encoder != nil {
 		return encoder.Encode(pkgs)

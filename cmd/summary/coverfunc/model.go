@@ -2,6 +2,7 @@ package coverfunc
 
 import (
 	"fmt"
+	"path"
 )
 
 // CoverageInfo represents information about coverage for a specific function.
@@ -10,6 +11,23 @@ type CoverageInfo struct {
 	Line     int
 	Function string
 	Percent  float64
+}
+
+// GetPackage returns the package location from the filename.
+func (c *CoverageInfo) GetPackage() string {
+	return path.Dir(c.Filename)
+}
+
+// FunctionInfo holds coverage info for functions.
+type FunctionInfo struct {
+	Package  string
+	Function string
+	Coverage float64
+}
+
+// String returns a string representation of a FunctionInfo.
+func (p FunctionInfo) String() string {
+	return fmt.Sprintf("%s, function %s, coverage %.2f%%", p.Package, p.Function, p.Coverage)
 }
 
 // PackageInfo represents information about coverage for a package.
