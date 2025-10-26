@@ -117,6 +117,10 @@ func (v *collector) collectImports(filename string, decl *ast.GenDecl, def *Defi
 func collectFuncReferences(funcDecl *ast.FuncDecl) map[string][]string {
 	imports := make(map[string][]string)
 
+	if funcDecl == nil || funcDecl.Body == nil {
+		return imports
+	}
+
 	// Traverse the function body and look for package identifiers.
 	ast.Inspect(funcDecl.Body, func(node ast.Node) bool {
 		switch n := node.(type) {
@@ -383,12 +387,17 @@ func (p *collector) functionDef(fun *ast.FuncDecl) string {
 			log.Fatalf("failed printing %s", err)
 		}
 
-		names := make([]string, 0)
+		names := make([]string, 0, len(p.Names))
 		for _, name := range p.Names {
 			names = append(names, name.Name)
 		}
 
-		params = append(params, fmt.Sprintf("%s %s", strings.Join(names, ","), typeNameBuf.String()))
+		if len(names) > 0 {
+			params = append(params, fmt.Sprintf("%s %s", strings.Join(names, ","), typeNameBuf.String()))
+		} else {
+			// unnamed parameter: parts of interfaces, unused parameter, like `_` but omitted name.
+			params = append(params, typeNameBuf.String())
+		}
 	}
 	returns := make([]string, 0)
 	if fun.Type.Results != nil {
