@@ -14,7 +14,8 @@ type Declaration struct {
 
 	SelfContained bool
 
-	Imports []string `json:",omitempty"`
+	// This is not encoded to json, it's computed on load.
+	Imports []string `json:"-"`
 
 	References map[string][]string `json:",omitempty"`
 

@@ -58,9 +58,17 @@
             "Type": "int",
             "Path": "Complexity.Lines",
             "JSONName": "Lines"
+          },
+          {
+            "Name": "Coverage",
+            "Type": "float64",
+            "Path": "Complexity.Coverage",
+            "Doc": "Coverage is filled out of band (summary coverfunc).",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Coverage"
           }
         ],
-        "Source": "type Complexity struct {\n\tCognitive\tint\n\tCyclomatic\tint\n\tLines\t\tint\n}"
+        "Source": "type Complexity struct {\n\tCognitive\tint\n\tCyclomatic\tint\n\tLines\t\tint\n\n\t// Coverage is filled out of band (summary coverfunc).\n\tCoverage\tfloat64\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -98,8 +106,9 @@
             "Name": "Imports",
             "Type": "[]string",
             "Path": "Declaration.Imports",
-            "Tag": "json:\",omitempty\"",
-            "JSONName": "Imports"
+            "Doc": "This is not encoded to json, it's computed on load.",
+            "Tag": "json:\"-\"",
+            "JSONName": ""
           },
           {
             "Name": "References",
@@ -179,7 +188,7 @@
             "JSONName": "Complexity"
           }
         ],
-        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\tImports\t[]string\t`json:\",omitempty\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
+        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\t// This is not encoded to json, it's computed on load.\n\tImports\t[]string\t`json:\"-\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",

@@ -4,6 +4,7 @@ class Complexity {
   + Cognitive: int
   + Cyclomatic: int
   + Lines: int
+  + Coverage: float64
 }
 
 class Declaration {
