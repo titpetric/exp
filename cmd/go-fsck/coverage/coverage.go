@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sort"
+
+	"github.com/fbiville/markdown-table-formatter/pkg/markdown"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
 	"github.com/titpetric/exp/cmd/go-fsck/model"
@@ -40,10 +43,16 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 type CoverageInfo struct {
 	Package, Function string
 	Coverage          float64
+	Cognitive         int
 }
 
 func loadCoverage(name string) ([]CoverageInfo, error) {
 	var result []CoverageInfo
+
+	// We can just print coverage.
+	if name == "" {
+		return result, nil
+	}
 
 	b, err := os.ReadFile(name)
 	if err != nil {
@@ -98,16 +107,60 @@ func coverage(cfg *options) error {
 		}
 	}
 
-	b, err := json.MarshalIndent(defs, "", "  ")
-	if err != nil {
-		return err
-	}
+	if cfg.outputFile != "" {
+		b, err := json.MarshalIndent(defs, "", "  ")
+		if err != nil {
+			return err
+		}
 
-	if err := os.WriteFile(cfg.outputFile, b, 0644); err != nil {
-		return err
-	}
+		if err := os.WriteFile(cfg.outputFile, b, 0644); err != nil {
+			return err
+		}
 
-	fmt.Printf("Wrote coverage information for %d functions to %s\n", len(coverinfo), cfg.outputFile)
+		fmt.Printf("Wrote coverage information for %d functions to %s\n", len(coverinfo), cfg.outputFile)
+	} else {
+		var result []CoverageInfo
+		for _, def := range defs {
+			fns := def.Funcs.Filter(func(d *model.Declaration) bool {
+				if cfg.verbose {
+					return true
+				}
+				return d.Complexity != nil && d.Complexity.Coverage > 0
+			})
+			for _, fn := range fns {
+				info := CoverageInfo{
+					Package:   def.Package.ImportPath,
+					Function:  fn.Name,
+					Coverage:  fn.Complexity.Coverage,
+					Cognitive: fn.Complexity.Cognitive,
+				}
+				result = append(result, info)
+			}
+		}
+
+		sort.Slice(result, func(i, j int) bool {
+			return result[i].Coverage > result[j].Coverage
+		})
+
+		if cfg.json {
+			encoder := json.NewEncoder(os.Stdout)
+			encoder.SetIndent("", "  ")
+			return encoder.Encode(result)
+		}
+
+		// Encode aggregated results as markdown.
+		data := [][]string{}
+		for _, r := range result {
+			data = append(data, []string{r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
+		}
+
+		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Package", "Function", "Coverage", "Cognit").Format(data)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(table)
+	}
 
 	return nil
 }

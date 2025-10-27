@@ -19,8 +19,7 @@ type options struct {
 
 func NewOptions() *options {
 	cfg := &options{
-		inputFile:  "go-fsck.json",
-		outputFile: "go-fsck.json.modified",
+		inputFile: "go-fsck.json",
 	}
 
 	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
