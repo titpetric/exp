@@ -1,0 +1,3240 @@
+[
+  {
+    "ID": "github.com/titpetric/platform/internal",
+    "Package": "internal",
+    "ImportPath": "github.com/titpetric/platform/internal",
+    "Path": "./internal",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "context.go": [
+        "\"context\"",
+        "\"net/http\""
+      ],
+      "counter.go": [
+        "\"expvar\""
+      ],
+      "database_provider.go": [
+        "\"fmt\"",
+        "\"github.com/jmoiron/sqlx\"",
+        "\"strings\""
+      ],
+      "routes.go": [
+        "\"github.com/go-chi/chi/v5\"",
+        "\"log\"",
+        "\"net/http\"",
+        "\"reflect\"",
+        "\"runtime\""
+      ],
+      "template.go": [
+        "\"html/template\"",
+        "\"io/fs\"",
+        "\"net/http\""
+      ],
+      "ulid.go": [
+        "\"github.com/oklog/ulid/v2\"",
+        "\"math/rand\"",
+        "\"time\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "File": "context.go",
+        "SelfContained": true,
+        "Name": "ContextValue",
+        "Fields": [
+          {
+            "Name": "Key",
+            "Type": "any",
+            "Path": "ContextValue.Key",
+            "JSONName": "Key"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "counter.go",
+        "SelfContained": false,
+        "Doc": "Counter encapsulates an int32 counter and exposes it via expvar.",
+        "Name": "Counter",
+        "Fields": [
+          {
+            "Name": "",
+            "Type": "*expvar.Int",
+            "Path": "Counter",
+            "JSONName": ""
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "database_provider.go",
+        "SelfContained": true,
+        "Name": "DatabaseProvider",
+        "Fields": [
+          {
+            "Name": "credentials",
+            "Type": "map[string]string",
+            "Path": "DatabaseProvider.credentials",
+            "JSONName": "credentials"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "template.go",
+        "SelfContained": false,
+        "Name": "Template",
+        "Fields": [
+          {
+            "Name": "templates",
+            "Type": "*template.Template",
+            "Path": "Template.templates",
+            "JSONName": "templates"
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "context.go",
+        "SelfContained": false,
+        "Name": "NewContextValue",
+        "Arguments": [
+          "any"
+        ],
+        "Returns": [
+          "*ContextValue[T]"
+        ],
+        "Signature": "NewContextValue (key any) *ContextValue[T]",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "counter.go",
+        "SelfContained": false,
+        "References": {
+          "expvar": [
+            "NewInt"
+          ]
+        },
+        "Doc": "NewCounter constructs a Counter, registers it to expvar with the given name, and returns a pointer.",
+        "Name": "NewCounter",
+        "Arguments": [
+          "string"
+        ],
+        "Returns": [
+          "*Counter"
+        ],
+        "Signature": "NewCounter (name string) *Counter",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 7
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "database_provider.go",
+        "SelfContained": false,
+        "Name": "NewDatabaseProvider",
+        "Returns": [
+          "*DatabaseProvider"
+        ],
+        "Signature": "NewDatabaseProvider () *DatabaseProvider",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "template.go",
+        "SelfContained": false,
+        "Doc": "NewTemplate takes a html/template instance with parsed files.",
+        "Name": "NewTemplate",
+        "Arguments": [
+          "*template.Template"
+        ],
+        "Returns": [
+          "*Template"
+        ],
+        "Signature": "NewTemplate (templates *template.Template) *Template",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "template.go",
+        "SelfContained": false,
+        "References": {
+          "template": [
+            "ParseFS"
+          ]
+        },
+        "Doc": "NewTemplateFS parses templates from any FS and returns a Template instance.",
+        "Name": "NewTemplateFS",
+        "Arguments": [
+          "fs.FS",
+          "string"
+        ],
+        "Returns": [
+          "*Template",
+          "error"
+        ],
+        "Signature": "NewTemplateFS (fs fs.FS, pattern string) (*Template, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 11
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "routes.go",
+        "SelfContained": false,
+        "References": {
+          "http": [
+            "Handler"
+          ],
+          "log": [
+            "Printf"
+          ],
+          "reflect": [
+            "ValueOf"
+          ],
+          "runtime": [
+            "FuncForPC"
+          ]
+        },
+        "Name": "PrintRoutes",
+        "Arguments": [
+          "chi.Routes"
+        ],
+        "Signature": "PrintRoutes (r chi.Routes)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "ulid.go",
+        "SelfContained": false,
+        "References": {
+          "rand": [
+            "New",
+            "NewSource"
+          ],
+          "time": [
+            "Now"
+          ]
+        },
+        "Name": "ULID",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "ULID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "context.go",
+        "SelfContained": false,
+        "Name": "Get",
+        "Receiver": "*ContextValue[T]",
+        "Arguments": [
+          "*http.Request"
+        ],
+        "Returns": [
+          "T"
+        ],
+        "Signature": "Get (r *http.Request) T",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "context.go",
+        "SelfContained": false,
+        "References": {
+          "context": [
+            "WithValue"
+          ]
+        },
+        "Name": "Set",
+        "Receiver": "*ContextValue[T]",
+        "Arguments": [
+          "*http.Request",
+          "T"
+        ],
+        "Returns": [
+          "*http.Request"
+        ],
+        "Signature": "Set (r *http.Request, val T) *http.Request",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "counter.go",
+        "SelfContained": false,
+        "Doc": "Inc increments the counter atomically.",
+        "Name": "Inc",
+        "Receiver": "*Counter",
+        "Signature": "Inc ()",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "database_provider.go",
+        "SelfContained": false,
+        "Name": "Add",
+        "Receiver": "*DatabaseProvider",
+        "Arguments": [
+          "string"
+        ],
+        "Signature": "Add (name string, config string)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "database_provider.go",
+        "SelfContained": false,
+        "References": {
+          "sqlx": [
+            "Connect"
+          ]
+        },
+        "Name": "Connect",
+        "Receiver": "*DatabaseProvider",
+        "Arguments": [
+          "...string"
+        ],
+        "Returns": [
+          "*sqlx.DB",
+          "error"
+        ],
+        "Signature": "Connect (names ...string) (*sqlx.DB, error)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "database_provider.go",
+        "SelfContained": false,
+        "References": {
+          "sqlx": [
+            "Open"
+          ]
+        },
+        "Name": "Open",
+        "Receiver": "*DatabaseProvider",
+        "Arguments": [
+          "...string"
+        ],
+        "Returns": [
+          "*sqlx.DB",
+          "error"
+        ],
+        "Signature": "Open (names ...string) (*sqlx.DB, error)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "template.go",
+        "SelfContained": false,
+        "References": {
+          "http": [
+            "Error",
+            "StatusInternalServerError"
+          ]
+        },
+        "Name": "Render",
+        "Receiver": "*Template",
+        "Arguments": [
+          "http.ResponseWriter",
+          "string",
+          "any"
+        ],
+        "Signature": "Render (w http.ResponseWriter, name string, data any)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "database_provider.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "strings": [
+            "Index"
+          ]
+        },
+        "Name": "with",
+        "Receiver": "*DatabaseProvider",
+        "Arguments": [
+          "func(string, string) (*sqlx.DB, error)",
+          "...string"
+        ],
+        "Returns": [
+          "*sqlx.DB",
+          "error"
+        ],
+        "Signature": "with (connector func(string, string) (*sqlx.DB, error), names ...string) (*sqlx.DB, error)",
+        "Complexity": {
+          "Cognitive": 7,
+          "Cyclomatic": 5,
+          "Lines": 24
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/internal/repository",
+    "Package": "repository",
+    "ImportPath": "github.com/titpetric/platform/internal/repository",
+    "Path": "./internal/repository",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "middleware.go": [
+        "\"net/http\""
+      ],
+      "registry.go": [
+        "\"log\"",
+        "\"runtime/debug\"",
+        "\"sync\""
+      ],
+      "router.go": [
+        "\"github.com/go-chi/chi/v5\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "Type": "func(http.Handler) http.Handler",
+        "File": "middleware.go",
+        "SelfContained": false,
+        "Doc": "Middleware is a type alias for middleware functions.",
+        "Name": "Middleware",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "func(http.Handler) http.Handler",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "Type": "any",
+        "File": "module.go",
+        "SelfContained": true,
+        "Doc": "Module is the implementation contract for modules.\n\nThe interface should only be used to enforce the API contract as\nshown below. It's also used to provide AddModule().",
+        "Name": "Module",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "any",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "plugin.go",
+        "SelfContained": true,
+        "Name": "Plugin",
+        "Fields": [
+          {
+            "Name": "name",
+            "Type": "string",
+            "Path": "Plugin.name",
+            "JSONName": "name"
+          },
+          {
+            "Name": "hook",
+            "Type": "func(Router)",
+            "Path": "Plugin.hook",
+            "JSONName": "hook"
+          },
+          {
+            "Name": "shutdown",
+            "Type": "func()",
+            "Path": "Plugin.shutdown",
+            "JSONName": "shutdown"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "Registry provides a programmatic API to manage middleware and plugins.\nA plugin registers middleware and has a contract to enforce lifecycle.",
+        "Name": "Registry",
+        "Fields": [
+          {
+            "Name": "mu",
+            "Type": "sync.RWMutex",
+            "Path": "Registry.mu",
+            "JSONName": "mu"
+          },
+          {
+            "Name": "plugins",
+            "Type": "[]Plugin",
+            "Path": "Registry.plugins",
+            "JSONName": "plugins"
+          },
+          {
+            "Name": "middleware",
+            "Type": "[]Middleware",
+            "Path": "Registry.middleware",
+            "JSONName": "middleware"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "Type": "chi.Router",
+        "File": "router.go",
+        "SelfContained": false,
+        "Doc": "Router is a local shim that aliases the chi router interface.",
+        "Name": "Router",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "chi.Router",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "module.go",
+        "SelfContained": false,
+        "Doc": "Assert *Plugin implements the Module interface.",
+        "Name": "_"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "plugin.go",
+        "SelfContained": false,
+        "Name": "NewPlugin",
+        "Arguments": [
+          "string",
+          "func(Router)",
+          "func()"
+        ],
+        "Returns": [
+          "Plugin"
+        ],
+        "Signature": "NewPlugin (name string, hook func(Router), shutdown func()) Plugin",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 7
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "plugin.go",
+        "SelfContained": false,
+        "Name": "Close",
+        "Receiver": "*Plugin",
+        "Signature": "Close ()",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "plugin.go",
+        "SelfContained": false,
+        "Name": "Mount",
+        "Receiver": "*Plugin",
+        "Arguments": [
+          "Router"
+        ],
+        "Signature": "Mount (r Router)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "plugin.go",
+        "SelfContained": false,
+        "Name": "Name",
+        "Receiver": "*Plugin",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "Name () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "Add will create a new plugin in the registry.",
+        "Name": "Add",
+        "Receiver": "*Registry",
+        "Arguments": [
+          "string",
+          "func(Router)",
+          "func()"
+        ],
+        "Signature": "Add (name string, hook func(Router), shutdown func())",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 7
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "AddMiddleware adds a middleware to the server.",
+        "Name": "AddMiddleware",
+        "Receiver": "*Registry",
+        "Arguments": [
+          "Middleware"
+        ],
+        "Signature": "AddMiddleware (f Middleware)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 7
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "AddModule will create a new plugin in the registry via a Module.",
+        "Name": "AddModule",
+        "Receiver": "*Registry",
+        "Arguments": [
+          "Module"
+        ],
+        "Signature": "AddModule (m Module)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "Clone provides a copy of the registry for use in the platform.\nClosing the copy leaves the package global state alone.",
+        "Name": "Clone",
+        "Receiver": "*Registry",
+        "Returns": [
+          "*Registry"
+        ],
+        "Signature": "Clone () *Registry",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 16
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "References": {
+          "debug": [
+            "Stack"
+          ],
+          "log": [
+            "Printf"
+          ],
+          "sync": [
+            "WaitGroup"
+          ]
+        },
+        "Doc": "Close will invoke all the plugins close functions in parallel.\nWhen finished, it will clear the registered plugins list, as\nwell as any defined middleware.",
+        "Name": "Close",
+        "Receiver": "*Registry",
+        "Signature": "Close ()",
+        "Complexity": {
+          "Cognitive": 5,
+          "Cyclomatic": 3,
+          "Lines": 27
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "Mount will mount all the plugins registered.",
+        "Name": "Mount",
+        "Receiver": "*Registry",
+        "Arguments": [
+          "Router"
+        ],
+        "Signature": "Mount (mux Router)",
+        "Complexity": {
+          "Cognitive": 2,
+          "Cyclomatic": 3,
+          "Lines": 13
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "registry.go",
+        "SelfContained": false,
+        "Doc": "Stats returns counts for plugins and middlewares in the registry.",
+        "Name": "Stats",
+        "Receiver": "*Registry",
+        "Returns": [
+          "int"
+        ],
+        "Signature": "Stats () int",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform",
+    "Package": "platform",
+    "ImportPath": "github.com/titpetric/platform",
+    "Path": ".",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "global.go": [
+        "\"github.com/jmoiron/sqlx\"",
+        "\"github.com/titpetric/platform/internal\"",
+        "\"github.com/titpetric/platform/internal/repository\""
+      ],
+      "init.go": [
+        "\"os\"",
+        "\"strings\""
+      ],
+      "platform.go": [
+        "\"context\"",
+        "\"github.com/go-chi/chi/v5\"",
+        "\"github.com/titpetric/platform/internal\"",
+        "\"log\"",
+        "\"net\"",
+        "\"net/http\"",
+        "\"os\"",
+        "\"os/signal\"",
+        "\"syscall\"",
+        "\"time\""
+      ],
+      "platform_start.go": [
+        "\"context\""
+      ],
+      "respond.go": [
+        "\"encoding/json\"",
+        "\"net/http\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "Type": "any",
+        "File": "global.go",
+        "SelfContained": false,
+        "Doc": "DatabaseProvider is the implementation interface for working with named connections.\nIf no connection name is passed, the \"default\" connection will be used.",
+        "Name": "DatabaseProvider",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "any",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "options.go",
+        "SelfContained": true,
+        "Doc": "Options is a configuration struct for platform behaviour.",
+        "Name": "Options",
+        "Fields": [
+          {
+            "Name": "ServerAddr",
+            "Type": "string",
+            "Path": "Options.ServerAddr",
+            "Doc": "ServerAddr is the address the server listens to.",
+            "JSONName": "ServerAddr"
+          },
+          {
+            "Name": "Quiet",
+            "Type": "bool",
+            "Path": "Options.Quiet",
+            "Doc": "Quiet turns down the verbosity in the Platform logging code, set to true in tests.",
+            "JSONName": "Quiet"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "Platform is our world struct.",
+        "Name": "Platform",
+        "Fields": [
+          {
+            "Name": "options",
+            "Type": "*Options",
+            "Path": "Platform.options",
+            "JSONName": "options"
+          },
+          {
+            "Name": "router",
+            "Type": "*chi.Mux",
+            "Path": "Platform.router",
+            "Doc": "server setup",
+            "JSONName": "router"
+          },
+          {
+            "Name": "server",
+            "Type": "*http.Server",
+            "Path": "Platform.server",
+            "JSONName": "server"
+          },
+          {
+            "Name": "listener",
+            "Type": "net.Listener",
+            "Path": "Platform.listener",
+            "JSONName": "listener"
+          },
+          {
+            "Name": "context",
+            "Type": "context.Context",
+            "Path": "Platform.context",
+            "Doc": "final shutdown context",
+            "JSONName": "context"
+          },
+          {
+            "Name": "cancel",
+            "Type": "context.CancelFunc",
+            "Path": "Platform.cancel",
+            "JSONName": "cancel"
+          },
+          {
+            "Name": "stop",
+            "Type": "func()",
+            "Path": "Platform.stop",
+            "JSONName": "stop"
+          },
+          {
+            "Name": "registry",
+            "Type": "*Registry",
+            "Path": "Platform.registry",
+            "Doc": "registry holds settings for plugins and middleware.\nIt's auto-filled from global scope.",
+            "JSONName": "registry"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "Type": "repository.Router",
+        "File": "global.go",
+        "SelfContained": false,
+        "Names": [
+          "Plugin",
+          "Module",
+          "Registry",
+          "Middleware",
+          "Router"
+        ],
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "repository.Plugin",
+            "Path": "",
+            "JSONName": ""
+          },
+          {
+            "Name": "type",
+            "Type": "repository.Module",
+            "Path": "",
+            "JSONName": ""
+          },
+          {
+            "Name": "type",
+            "Type": "repository.Registry",
+            "Path": "",
+            "JSONName": ""
+          },
+          {
+            "Name": "type",
+            "Type": "repository.Middleware",
+            "Path": "",
+            "JSONName": ""
+          },
+          {
+            "Name": "type",
+            "Type": "repository.Router",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "global.go",
+        "SelfContained": true,
+        "Doc": "Database is a holder of the database provider api in package namespace.\nIt's intended to be used as `platform.Database.Connect/Open(name string)` to\nget a live connection, or an error if one occured.",
+        "Name": "Database"
+      },
+      {
+        "Kind": "var",
+        "File": "global.go",
+        "SelfContained": true,
+        "Names": [
+          "AddModule",
+          "AddMiddleware"
+        ]
+      },
+      {
+        "Kind": "var",
+        "File": "global.go",
+        "SelfContained": true,
+        "Doc": "global is a value to prevent pollution of the global package namespace.\nfor testing purposes the global state should be empty. The state is\ncloned as necessary into the *Platform object, on server creation.",
+        "Name": "global"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "respond.go",
+        "SelfContained": false,
+        "Name": "Error",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request",
+          "int",
+          "error"
+        ],
+        "Signature": "Error (w http.ResponseWriter, r *http.Request, status int, data error)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 12
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "respond.go",
+        "SelfContained": false,
+        "References": {
+          "json": [
+            "NewEncoder"
+          ]
+        },
+        "Name": "JSON",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request",
+          "int",
+          "any"
+        ],
+        "Signature": "JSON (w http.ResponseWriter, r *http.Request, status int, data any)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "New is a shorthand for NewPlatform, using default options.",
+        "Name": "New",
+        "Returns": [
+          "*Platform",
+          "error"
+        ],
+        "Signature": "New () (*Platform, error)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "options.go",
+        "SelfContained": false,
+        "Doc": "NewOptions provides default options for the platform.",
+        "Name": "NewOptions",
+        "Returns": [
+          "*Options"
+        ],
+        "Signature": "NewOptions () *Options",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "References": {
+          "context": [
+            "WithCancel",
+            "Background"
+          ],
+          "log": [
+            "Println"
+          ],
+          "net": [
+            "Listen"
+          ]
+        },
+        "Doc": "NewPlatform will create a new *Platform object. It is the allocation point\nfor each platform instance. If no options are passed, the defaults are in use.\nThe defaults options are provided by NewOptions().",
+        "Name": "NewPlatform",
+        "Arguments": [
+          "*Options"
+        ],
+        "Returns": [
+          "*Platform",
+          "error"
+        ],
+        "Signature": "NewPlatform (options *Options) (*Platform, error)",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 4,
+          "Lines": 32,
+          "Coverage": 75
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform_start.go",
+        "SelfContained": false,
+        "References": {
+          "context": [
+            "Background"
+          ]
+        },
+        "Name": "Start",
+        "Returns": [
+          "error"
+        ],
+        "Signature": "Start () error",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 9
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform_start.go",
+        "SelfContained": false,
+        "Name": "StartPlatform",
+        "Arguments": [
+          "context.Context",
+          "*Options"
+        ],
+        "Returns": [
+          "*Platform",
+          "error"
+        ],
+        "Signature": "StartPlatform (ctx context.Context, options *Options) (*Platform, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 9,
+          "Coverage": 80
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "AddMiddleware will add a middleware to the internal platform registry.\nThis function should be called before Serve is called.",
+        "Name": "AddMiddleware",
+        "Receiver": "*Platform",
+        "Arguments": [
+          "Middleware"
+        ],
+        "Signature": "AddMiddleware (m Middleware)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "AddModule will add a registry.Module into the internal platform registry.\nThis function should be called before Serve is called.",
+        "Name": "AddModule",
+        "Receiver": "*Platform",
+        "Arguments": [
+          "Module"
+        ],
+        "Signature": "AddModule (m Module)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "References": {
+          "context": [
+            "WithTimeout",
+            "Background"
+          ],
+          "log": [
+            "Println",
+            "Printf"
+          ],
+          "time": [
+            "Second"
+          ]
+        },
+        "Doc": "Close will gracefully shutdown the server and then cancel the server context when done.\n\nClose is an important part of the lifecycle tests. When closing the registry,\neach plugins Close function gets invoked in parallel. This enables the plugin\nto clear background goroutine event loops, or flush a dirty buffer to storage.\n\nOnly after the server has fully shut down does the internal context get cancelled.\nThis is used by `Wait` to signal the service has shut down and the program can cleanly exit.",
+        "Name": "Close",
+        "Receiver": "*Platform",
+        "Signature": "Close ()",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 4,
+          "Lines": 32,
+          "Coverage": 72.7
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "Context returns the cancellation context for the service.\nWhen the context finishes, the server has shut down.",
+        "Name": "Context",
+        "Receiver": "*Platform",
+        "Returns": [
+          "context.Context"
+        ],
+        "Signature": "Context () context.Context",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "References": {
+          "http": [
+            "Server",
+            "ErrServerClosed"
+          ],
+          "log": [
+            "Printf"
+          ],
+          "os": [
+            "Interrupt"
+          ],
+          "signal": [
+            "NotifyContext"
+          ],
+          "syscall": [
+            "SIGTERM"
+          ]
+        },
+        "Doc": "Serve will start the server and print the registered routes.\nIt respects cancellation from the passed context, as well as\nsets up signal notification to respond to SIGTERM.",
+        "Name": "Serve",
+        "Receiver": "*Platform",
+        "Arguments": [
+          "context.Context"
+        ],
+        "Signature": "Serve (ctx context.Context)",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 3,
+          "Lines": 32,
+          "Coverage": 90.9
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "Stats will report how many middlewares and plugins are added to the registry.",
+        "Name": "Stats",
+        "Receiver": "*Platform",
+        "Returns": [
+          "int"
+        ],
+        "Signature": "Stats () (int, int)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4,
+          "Coverage": 100
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "References": {
+          "net": [
+            "SplitHostPort"
+          ]
+        },
+        "Doc": "URL gives the e2e endpoint URL for requests.",
+        "Name": "URL",
+        "Receiver": "*Platform",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "URL () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "platform.go",
+        "SelfContained": false,
+        "Doc": "Wait will block until the server has shut down.",
+        "Name": "Wait",
+        "Receiver": "*Platform",
+        "Signature": "Wait ()",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "init.go",
+        "SelfContained": false,
+        "Name": "init",
+        "Signature": "init ()",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3,
+          "Coverage": 100
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "init.go",
+        "SelfContained": false,
+        "References": {
+          "os": [
+            "Environ"
+          ],
+          "strings": [
+            "CutPrefix",
+            "SplitN",
+            "ToLower"
+          ]
+        },
+        "Doc": "setupConnections will parse the env for named connection strings.",
+        "Name": "setupConnections",
+        "Arguments": [
+          "func(string, string)"
+        ],
+        "Signature": "setupConnections (add func(string, string))",
+        "Complexity": {
+          "Cognitive": 4,
+          "Cyclomatic": 4,
+          "Lines": 18,
+          "Coverage": 100
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module/theme",
+    "Package": "theme",
+    "ImportPath": "github.com/titpetric/platform/module/theme",
+    "Path": "./module/theme",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "embed.go": [
+        "\"embed\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "File": "options.go",
+        "SelfContained": true,
+        "Name": "Category",
+        "Fields": [
+          {
+            "Name": "Name",
+            "Type": "string",
+            "Path": "Category.Name",
+            "JSONName": "Name"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "options.go",
+        "SelfContained": false,
+        "Name": "Options",
+        "Fields": [
+          {
+            "Name": "Title",
+            "Type": "string",
+            "Path": "Options.Title",
+            "JSONName": "Title"
+          },
+          {
+            "Name": "Categories",
+            "Type": "[]Category",
+            "Path": "Options.Categories",
+            "JSONName": "Categories"
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "embed.go",
+        "SelfContained": false,
+        "Name": "TemplateFS"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "options.go",
+        "SelfContained": false,
+        "Name": "NewOptions",
+        "Returns": [
+          "*Options"
+        ],
+        "Signature": "NewOptions () *Options",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 11
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module/user/model",
+    "Package": "model",
+    "ImportPath": "github.com/titpetric/platform/module/user/model",
+    "Path": "./module/user/model",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "errors.go": [
+        "\"errors\""
+      ],
+      "storage.go": [
+        "\"context\""
+      ],
+      "types.mig.go": [
+        "\"time\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "Type": "any",
+        "File": "storage.go",
+        "SelfContained": false,
+        "Name": "SessionStorage",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "any",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "User generated for db table `user`.\n\nStores user profile information using ULID as primary key.",
+        "Name": "User",
+        "Fields": [
+          {
+            "Name": "ID",
+            "Type": "string",
+            "Path": "User.ID",
+            "Doc": "Primary key: ULID string",
+            "Tag": "db:\"id\"",
+            "JSONName": "ID"
+          },
+          {
+            "Name": "FirstName",
+            "Type": "string",
+            "Path": "User.FirstName",
+            "Doc": "User first name",
+            "Tag": "db:\"first_name\"",
+            "JSONName": "FirstName"
+          },
+          {
+            "Name": "LastName",
+            "Type": "string",
+            "Path": "User.LastName",
+            "Doc": "User last name",
+            "Tag": "db:\"last_name\"",
+            "JSONName": "LastName"
+          },
+          {
+            "Name": "DeletedAt",
+            "Type": "*time.Time",
+            "Path": "User.DeletedAt",
+            "Doc": "Soft delete timestamp, NULL if active",
+            "Tag": "db:\"deleted_at\"",
+            "JSONName": "DeletedAt"
+          },
+          {
+            "Name": "CreatedAt",
+            "Type": "*time.Time",
+            "Path": "User.CreatedAt",
+            "Doc": "Record creation timestamp",
+            "Tag": "db:\"created_at\"",
+            "JSONName": "CreatedAt"
+          },
+          {
+            "Name": "UpdatedAt",
+            "Type": "*time.Time",
+            "Path": "User.UpdatedAt",
+            "Doc": "Record update timestamp",
+            "Tag": "db:\"updated_at\"",
+            "JSONName": "UpdatedAt"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "UserAuth generated for db table `user_auth`.\n\nStores user authentication credentials.",
+        "Name": "UserAuth",
+        "Fields": [
+          {
+            "Name": "UserID",
+            "Type": "string",
+            "Path": "UserAuth.UserID",
+            "Doc": "Reference to user.id (ULID)",
+            "Tag": "db:\"user_id\"",
+            "JSONName": "UserID"
+          },
+          {
+            "Name": "Email",
+            "Type": "string",
+            "Path": "UserAuth.Email",
+            "Doc": "User email address, unique",
+            "Tag": "db:\"email\"",
+            "JSONName": "Email"
+          },
+          {
+            "Name": "Password",
+            "Type": "string",
+            "Path": "UserAuth.Password",
+            "Doc": "Hashed password",
+            "Tag": "db:\"password\"",
+            "JSONName": "Password"
+          },
+          {
+            "Name": "CreatedAt",
+            "Type": "*time.Time",
+            "Path": "UserAuth.CreatedAt",
+            "Doc": "Record creation timestamp",
+            "Tag": "db:\"created_at\"",
+            "JSONName": "CreatedAt"
+          },
+          {
+            "Name": "UpdatedAt",
+            "Type": "*time.Time",
+            "Path": "UserAuth.UpdatedAt",
+            "Doc": "Record update timestamp",
+            "Tag": "db:\"updated_at\"",
+            "JSONName": "UpdatedAt"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "UserGroup generated for db table `user_group`.\n\nStores user group information using ULID as primary key.",
+        "Name": "UserGroup",
+        "Fields": [
+          {
+            "Name": "ID",
+            "Type": "string",
+            "Path": "UserGroup.ID",
+            "Doc": "Primary key: ULID string",
+            "Tag": "db:\"id\"",
+            "JSONName": "ID"
+          },
+          {
+            "Name": "Title",
+            "Type": "string",
+            "Path": "UserGroup.Title",
+            "Doc": "Group name/title",
+            "Tag": "db:\"title\"",
+            "JSONName": "Title"
+          },
+          {
+            "Name": "CreatedAt",
+            "Type": "*time.Time",
+            "Path": "UserGroup.CreatedAt",
+            "Doc": "Record creation timestamp",
+            "Tag": "db:\"created_at\"",
+            "JSONName": "CreatedAt"
+          },
+          {
+            "Name": "UpdatedAt",
+            "Type": "*time.Time",
+            "Path": "UserGroup.UpdatedAt",
+            "Doc": "Record update timestamp",
+            "Tag": "db:\"updated_at\"",
+            "JSONName": "UpdatedAt"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "UserGroupMember generated for db table `user_group_member`.\n\nStores user memberships in groups using ULID for IDs.",
+        "Name": "UserGroupMember",
+        "Fields": [
+          {
+            "Name": "UserGroupID",
+            "Type": "string",
+            "Path": "UserGroupMember.UserGroupID",
+            "Doc": "Reference to user_group.id (ULID)",
+            "Tag": "db:\"user_group_id\"",
+            "JSONName": "UserGroupID"
+          },
+          {
+            "Name": "UserID",
+            "Type": "string",
+            "Path": "UserGroupMember.UserID",
+            "Doc": "Reference to user.id (ULID)",
+            "Tag": "db:\"user_id\"",
+            "JSONName": "UserID"
+          },
+          {
+            "Name": "JoinedAt",
+            "Type": "*time.Time",
+            "Path": "UserGroupMember.JoinedAt",
+            "Doc": "Timestamp when user joined the group",
+            "Tag": "db:\"joined_at\"",
+            "JSONName": "JoinedAt"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "UserSession generated for db table `user_session`.\n\nStores immutable user sessions with ULID IDs and expiration.",
+        "Name": "UserSession",
+        "Fields": [
+          {
+            "Name": "ID",
+            "Type": "string",
+            "Path": "UserSession.ID",
+            "Doc": "Primary key: ULID string, also used as session token",
+            "Tag": "db:\"id\"",
+            "JSONName": "ID"
+          },
+          {
+            "Name": "UserID",
+            "Type": "string",
+            "Path": "UserSession.UserID",
+            "Doc": "Reference to user.id (ULID)",
+            "Tag": "db:\"user_id\"",
+            "JSONName": "UserID"
+          },
+          {
+            "Name": "ExpiresAt",
+            "Type": "*time.Time",
+            "Path": "UserSession.ExpiresAt",
+            "Doc": "Session expiration timestamp",
+            "Tag": "db:\"expires_at\"",
+            "JSONName": "ExpiresAt"
+          },
+          {
+            "Name": "CreatedAt",
+            "Type": "*time.Time",
+            "Path": "UserSession.CreatedAt",
+            "Doc": "Session creation timestamp",
+            "Tag": "db:\"created_at\"",
+            "JSONName": "CreatedAt"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "Type": "any",
+        "File": "storage.go",
+        "SelfContained": false,
+        "Name": "UserStorage",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "any",
+            "Path": "",
+            "JSONName": ""
+          }
+        ]
+      }
+    ],
+    "Consts": [
+      {
+        "Kind": "const",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserAuthTable is the name of the table in the DB.",
+        "Name": "UserAuthTable"
+      },
+      {
+        "Kind": "const",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupMemberTable is the name of the table in the DB.",
+        "Name": "UserGroupMemberTable"
+      },
+      {
+        "Kind": "const",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupTable is the name of the table in the DB.",
+        "Name": "UserGroupTable"
+      },
+      {
+        "Kind": "const",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserSessionTable is the name of the table in the DB.",
+        "Name": "UserSessionTable"
+      },
+      {
+        "Kind": "const",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserTable is the name of the table in the DB.",
+        "Name": "UserTable"
+      }
+    ],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "errors.go",
+        "SelfContained": true,
+        "Name": "ErrSessionExpired"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserAuthFields is a list of all columns in the DB table.",
+        "Name": "UserAuthFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserAuthPrimaryFields are the primary key fields in the DB table.",
+        "Name": "UserAuthPrimaryFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserFields is a list of all columns in the DB table.",
+        "Name": "UserFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupFields is a list of all columns in the DB table.",
+        "Name": "UserGroupFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupMemberFields is a list of all columns in the DB table.",
+        "Name": "UserGroupMemberFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupMemberPrimaryFields are the primary key fields in the DB table.",
+        "Name": "UserGroupMemberPrimaryFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserGroupPrimaryFields are the primary key fields in the DB table.",
+        "Name": "UserGroupPrimaryFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserPrimaryFields are the primary key fields in the DB table.",
+        "Name": "UserPrimaryFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserSessionFields is a list of all columns in the DB table.",
+        "Name": "UserSessionFields"
+      },
+      {
+        "Kind": "var",
+        "File": "types.mig.go",
+        "SelfContained": true,
+        "Doc": "UserSessionPrimaryFields are the primary key fields in the DB table.",
+        "Name": "UserSessionPrimaryFields"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetCreatedAt will return the value of CreatedAt.",
+        "Name": "GetCreatedAt",
+        "Receiver": "*User",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetCreatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetDeletedAt will return the value of DeletedAt.",
+        "Name": "GetDeletedAt",
+        "Receiver": "*User",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetDeletedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetFirstName will return the value of FirstName.",
+        "Name": "GetFirstName",
+        "Receiver": "*User",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetFirstName () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetID will return the value of ID.",
+        "Name": "GetID",
+        "Receiver": "*User",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetLastName will return the value of LastName.",
+        "Name": "GetLastName",
+        "Receiver": "*User",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetLastName () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUpdatedAt will return the value of UpdatedAt.",
+        "Name": "GetUpdatedAt",
+        "Receiver": "*User",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetUpdatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.go",
+        "SelfContained": false,
+        "Name": "IsActive",
+        "Receiver": "*User",
+        "Returns": [
+          "bool"
+        ],
+        "Signature": "IsActive () bool",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetCreatedAt sets CreatedAt to the provided value.",
+        "Name": "SetCreatedAt",
+        "Receiver": "*User",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetCreatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetDeletedAt sets DeletedAt to the provided value.",
+        "Name": "SetDeletedAt",
+        "Receiver": "*User",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetDeletedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetUpdatedAt sets UpdatedAt to the provided value.",
+        "Name": "SetUpdatedAt",
+        "Receiver": "*User",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetUpdatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.go",
+        "SelfContained": false,
+        "Name": "String",
+        "Receiver": "*User",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "String () string",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetCreatedAt will return the value of CreatedAt.",
+        "Name": "GetCreatedAt",
+        "Receiver": "*UserAuth",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetCreatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetEmail will return the value of Email.",
+        "Name": "GetEmail",
+        "Receiver": "*UserAuth",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetEmail () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetPassword will return the value of Password.",
+        "Name": "GetPassword",
+        "Receiver": "*UserAuth",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetPassword () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUpdatedAt will return the value of UpdatedAt.",
+        "Name": "GetUpdatedAt",
+        "Receiver": "*UserAuth",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetUpdatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUserID will return the value of UserID.",
+        "Name": "GetUserID",
+        "Receiver": "*UserAuth",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetUserID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetCreatedAt sets CreatedAt to the provided value.",
+        "Name": "SetCreatedAt",
+        "Receiver": "*UserAuth",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetCreatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetUpdatedAt sets UpdatedAt to the provided value.",
+        "Name": "SetUpdatedAt",
+        "Receiver": "*UserAuth",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetUpdatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetCreatedAt will return the value of CreatedAt.",
+        "Name": "GetCreatedAt",
+        "Receiver": "*UserGroup",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetCreatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetID will return the value of ID.",
+        "Name": "GetID",
+        "Receiver": "*UserGroup",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetTitle will return the value of Title.",
+        "Name": "GetTitle",
+        "Receiver": "*UserGroup",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetTitle () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUpdatedAt will return the value of UpdatedAt.",
+        "Name": "GetUpdatedAt",
+        "Receiver": "*UserGroup",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetUpdatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetCreatedAt sets CreatedAt to the provided value.",
+        "Name": "SetCreatedAt",
+        "Receiver": "*UserGroup",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetCreatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetUpdatedAt sets UpdatedAt to the provided value.",
+        "Name": "SetUpdatedAt",
+        "Receiver": "*UserGroup",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetUpdatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.go",
+        "SelfContained": false,
+        "Name": "String",
+        "Receiver": "*UserGroup",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "String () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetJoinedAt will return the value of JoinedAt.",
+        "Name": "GetJoinedAt",
+        "Receiver": "*UserGroupMember",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetJoinedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUserGroupID will return the value of UserGroupID.",
+        "Name": "GetUserGroupID",
+        "Receiver": "*UserGroupMember",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetUserGroupID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUserID will return the value of UserID.",
+        "Name": "GetUserID",
+        "Receiver": "*UserGroupMember",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetUserID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetJoinedAt sets JoinedAt to the provided value.",
+        "Name": "SetJoinedAt",
+        "Receiver": "*UserGroupMember",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetJoinedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetCreatedAt will return the value of CreatedAt.",
+        "Name": "GetCreatedAt",
+        "Receiver": "*UserSession",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetCreatedAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetExpiresAt will return the value of ExpiresAt.",
+        "Name": "GetExpiresAt",
+        "Receiver": "*UserSession",
+        "Returns": [
+          "*time.Time"
+        ],
+        "Signature": "GetExpiresAt () *time.Time",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetID will return the value of ID.",
+        "Name": "GetID",
+        "Receiver": "*UserSession",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "GetUserID will return the value of UserID.",
+        "Name": "GetUserID",
+        "Receiver": "*UserSession",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "GetUserID () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetCreatedAt sets CreatedAt to the provided value.",
+        "Name": "SetCreatedAt",
+        "Receiver": "*UserSession",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetCreatedAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "types.mig.go",
+        "SelfContained": false,
+        "Doc": "SetExpiresAt sets ExpiresAt to the provided value.",
+        "Name": "SetExpiresAt",
+        "Receiver": "*UserSession",
+        "Arguments": [
+          "time.Time"
+        ],
+        "Signature": "SetExpiresAt (stamp time.Time)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 2
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module/user/storage",
+    "Package": "storage",
+    "ImportPath": "github.com/titpetric/platform/module/user/storage",
+    "Path": "./module/user/storage",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "session.go": [
+        "\"context\"",
+        "\"database/sql\"",
+        "\"fmt\"",
+        "\"github.com/jmoiron/sqlx\"",
+        "\"github.com/titpetric/platform/internal\"",
+        "\"github.com/titpetric/platform/module/user/model\"",
+        "\"time\""
+      ],
+      "user.go": [
+        "\"context\"",
+        "\"database/sql\"",
+        "\"errors\"",
+        "\"fmt\"",
+        "\"github.com/jmoiron/sqlx\"",
+        "\"github.com/titpetric/platform/internal\"",
+        "\"github.com/titpetric/platform/module/user/model\"",
+        "\"golang.org/x/crypto/bcrypt\"",
+        "\"time\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "File": "session.go",
+        "SelfContained": false,
+        "Doc": "SessionStorage implements session persistence using MySQL.",
+        "Name": "SessionStorage",
+        "Fields": [
+          {
+            "Name": "db",
+            "Type": "*sqlx.DB",
+            "Path": "SessionStorage.db",
+            "JSONName": "db"
+          }
+        ]
+      },
+      {
+        "Kind": "type",
+        "File": "user.go",
+        "SelfContained": false,
+        "Doc": "UserStorage implements the model.Storage interface using MySQL via sqlx.",
+        "Name": "UserStorage",
+        "Fields": [
+          {
+            "Name": "db",
+            "Type": "*sqlx.DB",
+            "Path": "UserStorage.db",
+            "Doc": "model.UnimplementedStorage",
+            "JSONName": "db"
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "session.go",
+        "SelfContained": false,
+        "Name": "_"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "session.go",
+        "SelfContained": false,
+        "Doc": "NewSessionStorage creates a new SessionStorage.",
+        "Name": "NewSessionStorage",
+        "Arguments": [
+          "*sqlx.DB"
+        ],
+        "Returns": [
+          "*SessionStorage"
+        ],
+        "Signature": "NewSessionStorage (db *sqlx.DB) *SessionStorage",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "Doc": "NewUserStorage returns a new UserStorage backed by the given sqlx.DB.",
+        "Name": "NewUserStorage",
+        "Arguments": [
+          "*sqlx.DB"
+        ],
+        "Returns": [
+          "*UserStorage"
+        ],
+        "Signature": "NewUserStorage (db *sqlx.DB) *UserStorage",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "session.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "model": [
+            "UserSession"
+          ],
+          "time": [
+            "Now",
+            "Hour"
+          ]
+        },
+        "Doc": "Create inserts a new session for the given userID.",
+        "Name": "Create",
+        "Receiver": "*SessionStorage",
+        "Arguments": [
+          "context.Context",
+          "string"
+        ],
+        "Returns": [
+          "*model.UserSession",
+          "error"
+        ],
+        "Signature": "Create (ctx context.Context, userID string) (*model.UserSession, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 22
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "session.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ]
+        },
+        "Doc": "Delete removes a session by sessionID.",
+        "Name": "Delete",
+        "Receiver": "*SessionStorage",
+        "Arguments": [
+          "context.Context",
+          "string"
+        ],
+        "Returns": [
+          "error"
+        ],
+        "Signature": "Delete (ctx context.Context, sessionID string) error",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 10
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "session.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "model": [
+            "UserSession",
+            "ErrSessionExpired"
+          ],
+          "sql": [
+            "ErrNoRows"
+          ],
+          "time": [
+            "Now"
+          ]
+        },
+        "Doc": "Get retrieves a session by sessionID.\nReturns model.ErrSessionExpired if the session has expired.",
+        "Name": "Get",
+        "Receiver": "*SessionStorage",
+        "Arguments": [
+          "context.Context",
+          "string"
+        ],
+        "Returns": [
+          "*model.UserSession",
+          "error"
+        ],
+        "Signature": "Get (ctx context.Context, sessionID string) (*model.UserSession, error)",
+        "Complexity": {
+          "Cognitive": 4,
+          "Cyclomatic": 4,
+          "Lines": 18
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "References": {
+          "bcrypt": [
+            "CompareHashAndPassword",
+            "ErrMismatchedHashAndPassword"
+          ],
+          "fmt": [
+            "Errorf"
+          ],
+          "model": [
+            "UserAuth"
+          ],
+          "sql": [
+            "ErrNoRows"
+          ]
+        },
+        "Doc": "Authenticate verifies a user's credentials using bcrypt and returns the user.",
+        "Name": "Authenticate",
+        "Receiver": "*UserStorage",
+        "Arguments": [
+          "context.Context",
+          "model.UserAuth"
+        ],
+        "Returns": [
+          "*model.User",
+          "error"
+        ],
+        "Signature": "Authenticate (ctx context.Context, auth model.UserAuth) (*model.User, error)",
+        "Complexity": {
+          "Cognitive": 5,
+          "Cyclomatic": 5,
+          "Lines": 28
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "References": {
+          "bcrypt": [
+            "GenerateFromPassword",
+            "DefaultCost"
+          ],
+          "errors": [
+            "New"
+          ],
+          "fmt": [
+            "Errorf"
+          ],
+          "time": [
+            "Now"
+          ]
+        },
+        "Doc": "Create inserts a new user and their authentication credentials.\nReturns an error if authentication information is missing.",
+        "Name": "Create",
+        "Receiver": "*UserStorage",
+        "Arguments": [
+          "context.Context",
+          "*model.User",
+          "*model.UserAuth"
+        ],
+        "Returns": [
+          "*model.User",
+          "error"
+        ],
+        "Signature": "Create (ctx context.Context, u *model.User, userAuth *model.UserAuth) (*model.User, error)",
+        "Complexity": {
+          "Cognitive": 5,
+          "Cyclomatic": 7,
+          "Lines": 42
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "model": [
+            "User"
+          ]
+        },
+        "Doc": "GetUser retrieves a user by ULID.",
+        "Name": "GetUser",
+        "Receiver": "*UserStorage",
+        "Arguments": [
+          "context.Context",
+          "string"
+        ],
+        "Returns": [
+          "*model.User",
+          "error"
+        ],
+        "Signature": "GetUser (ctx context.Context, id string) (*model.User, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 9
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "model": [
+            "UserGroup"
+          ]
+        },
+        "Doc": "GetUserGroups returns all groups the user belongs to.",
+        "Name": "GetUserGroups",
+        "Receiver": "*UserStorage",
+        "Arguments": [
+          "context.Context",
+          "string"
+        ],
+        "Returns": [
+          "[]model.UserGroup",
+          "error"
+        ],
+        "Signature": "GetUserGroups (ctx context.Context, userID string) ([]model.UserGroup, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 14
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "user.go",
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Errorf"
+          ],
+          "time": [
+            "Now"
+          ]
+        },
+        "Doc": "Update modifies an existing user and updates the updated_at timestamp.",
+        "Name": "Update",
+        "Receiver": "*UserStorage",
+        "Arguments": [
+          "context.Context",
+          "*model.User"
+        ],
+        "Returns": [
+          "*model.User",
+          "error"
+        ],
+        "Signature": "Update (ctx context.Context, u *model.User) (*model.User, error)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 15
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module/user",
+    "Package": "user",
+    "ImportPath": "github.com/titpetric/platform/module/user",
+    "Path": "./module/user",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "embed.go": [
+        "\"embed\""
+      ],
+      "handler.go": [
+        "\"github.com/titpetric/platform\"",
+        "\"github.com/titpetric/platform/internal\"",
+        "\"github.com/titpetric/platform/module/user/storage\"",
+        "\"html/template\"",
+        "\"io/fs\"",
+        "\"net/http\"",
+        "\"path\""
+      ],
+      "login.go": [
+        "\"context\"",
+        "\"github.com/titpetric/platform/module/theme\"",
+        "\"github.com/titpetric/platform/module/user/model\"",
+        "\"net/http\""
+      ],
+      "logout.go": [
+        "\"net/http\""
+      ],
+      "register.go": [
+        "\"github.com/titpetric/platform/module/theme\"",
+        "\"github.com/titpetric/platform/module/user/model\"",
+        "\"net/http\""
+      ]
+    },
+    "Types": [
+      {
+        "Kind": "type",
+        "File": "handler.go",
+        "SelfContained": false,
+        "Name": "Handler",
+        "Fields": [
+          {
+            "Name": "UserStorage",
+            "Type": "*storage.UserStorage",
+            "Path": "Handler.UserStorage",
+            "JSONName": "UserStorage"
+          },
+          {
+            "Name": "SessionStorage",
+            "Type": "*storage.SessionStorage",
+            "Path": "Handler.SessionStorage",
+            "JSONName": "SessionStorage"
+          },
+          {
+            "Name": "Templates",
+            "Type": "map[string]*internal.Template",
+            "Path": "Handler.Templates",
+            "JSONName": "Templates"
+          }
+        ]
+      }
+    ],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "embed.go",
+        "SelfContained": false,
+        "Name": "TemplateFS"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "handler.go",
+        "SelfContained": false,
+        "References": {
+          "fs": [
+            "Glob",
+            "ReadFile"
+          ],
+          "path": [
+            "Base"
+          ],
+          "platform": [
+            "Database"
+          ],
+          "storage": [
+            "NewUserStorage",
+            "NewSessionStorage"
+          ],
+          "template": [
+            "Must",
+            "ParseFS"
+          ]
+        },
+        "Name": "NewHandler",
+        "Arguments": [
+          "fs.FS"
+        ],
+        "Returns": [
+          "*Handler",
+          "error"
+        ],
+        "Signature": "NewHandler (themeFS fs.FS) (*Handler, error)",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 4,
+          "Lines": 36
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "handler.go",
+        "SelfContained": false,
+        "Doc": "Close implements a closer for graceful shutdown.",
+        "Name": "Close",
+        "Receiver": "*Handler",
+        "Signature": "Close ()",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "login.go",
+        "SelfContained": false,
+        "References": {
+          "context": [
+            "Background"
+          ],
+          "http": [
+            "Error",
+            "StatusBadRequest",
+            "StatusUnauthorized",
+            "StatusInternalServerError",
+            "Cookie",
+            "SetCookie",
+            "Redirect",
+            "StatusSeeOther"
+          ],
+          "model": [
+            "UserAuth"
+          ]
+        },
+        "Doc": "Login handles user authentication via HTML form submission.",
+        "Name": "Login",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request"
+        ],
+        "Signature": "Login (w http.ResponseWriter, r *http.Request)",
+        "Complexity": {
+          "Cognitive": 5,
+          "Cyclomatic": 6,
+          "Lines": 42
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "login.go",
+        "SelfContained": false,
+        "References": {
+          "model": [
+            "User",
+            "UserSession"
+          ],
+          "theme": [
+            "Options",
+            "NewOptions"
+          ]
+        },
+        "Doc": "LoginView renders login.tpl when no valid session exists,\nor logout.tpl with the full user model when a valid session is found.",
+        "Name": "LoginView",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request"
+        ],
+        "Signature": "LoginView (w http.ResponseWriter, r *http.Request)",
+        "Complexity": {
+          "Cognitive": 7,
+          "Cyclomatic": 5,
+          "Lines": 30
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "logout.go",
+        "SelfContained": false,
+        "References": {
+          "http": [
+            "SetCookie",
+            "Cookie",
+            "Redirect",
+            "StatusSeeOther"
+          ]
+        },
+        "Doc": "Logout deletes the session cookie and optionally the session in storage.",
+        "Name": "Logout",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request"
+        ],
+        "Signature": "Logout (w http.ResponseWriter, r *http.Request)",
+        "Complexity": {
+          "Cognitive": 2,
+          "Cyclomatic": 3,
+          "Lines": 22
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "handler.go",
+        "SelfContained": false,
+        "Doc": "Mount registers login, logout, and register routes.",
+        "Name": "Mount",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "platform.Router"
+        ],
+        "Signature": "Mount (r platform.Router)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 9
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "handler.go",
+        "SelfContained": false,
+        "Doc": "Name returns the name of the containing package.",
+        "Name": "Name",
+        "Receiver": "*Handler",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "Name () string",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 4
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "register.go",
+        "SelfContained": false,
+        "References": {
+          "http": [
+            "Error",
+            "StatusBadRequest",
+            "StatusInternalServerError",
+            "Cookie",
+            "SetCookie",
+            "Redirect",
+            "StatusSeeOther"
+          ],
+          "model": [
+            "User",
+            "UserAuth"
+          ]
+        },
+        "Doc": "Register handles creating a new user and starting a session via HTML form submission.",
+        "Name": "Register",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request"
+        ],
+        "Signature": "Register (w http.ResponseWriter, r *http.Request)",
+        "Complexity": {
+          "Cognitive": 5,
+          "Cyclomatic": 8,
+          "Lines": 52
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "register.go",
+        "SelfContained": false,
+        "References": {
+          "theme": [
+            "Options",
+            "NewOptions"
+          ]
+        },
+        "Doc": "RegisterView renders the registration page.",
+        "Name": "RegisterView",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "*http.Request"
+        ],
+        "Signature": "RegisterView (w http.ResponseWriter, r *http.Request)",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 11
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "handler.go",
+        "SelfContained": false,
+        "Doc": "View is a helper to add modularity to templates. It renders a view with the theme base.tpl.\nThe intent is to override the \"content\" block in the base.tpl with a view.",
+        "Name": "View",
+        "Receiver": "*Handler",
+        "Arguments": [
+          "http.ResponseWriter",
+          "string",
+          "any"
+        ],
+        "Signature": "View (w http.ResponseWriter, name string, data any)",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module",
+    "Package": "module",
+    "ImportPath": "github.com/titpetric/platform/module",
+    "Path": "./module",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "modules.go": [
+        "\"errors\"",
+        "\"github.com/titpetric/platform\"",
+        "\"github.com/titpetric/platform/module/theme\"",
+        "\"github.com/titpetric/platform/module/user\""
+      ]
+    },
+    "Types": [],
+    "Consts": [],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "modules.go",
+        "SelfContained": false,
+        "Doc": "Assert implementation contracts.",
+        "Name": "_"
+      }
+    ],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "modules.go",
+        "SelfContained": false,
+        "References": {
+          "errors": [
+            "Join"
+          ],
+          "platform": [
+            "Module",
+            "AddModule"
+          ],
+          "theme": [
+            "TemplateFS"
+          ],
+          "user": [
+            "NewHandler"
+          ]
+        },
+        "Doc": "LoadModules will load the default modules and add them to the platform.",
+        "Name": "LoadModules",
+        "Returns": [
+          "error"
+        ],
+        "Signature": "LoadModules () error",
+        "Complexity": {
+          "Cognitive": 2,
+          "Cyclomatic": 2,
+          "Lines": 19
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/module/autoload",
+    "Package": "autoload",
+    "ImportPath": "github.com/titpetric/platform/module/autoload",
+    "Path": "./module/autoload",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "autoload.go": [
+        "\"github.com/titpetric/platform/module\"",
+        "\"log\""
+      ]
+    },
+    "Types": [],
+    "Consts": [],
+    "Vars": [],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "autoload.go",
+        "SelfContained": false,
+        "References": {
+          "log": [
+            "Fatalf"
+          ],
+          "module": [
+            "LoadModules"
+          ]
+        },
+        "Name": "init",
+        "Signature": "init ()",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 6
+        }
+      }
+    ]
+  },
+  {
+    "ID": "github.com/titpetric/platform/cmd/platform",
+    "Package": "main",
+    "ImportPath": "github.com/titpetric/platform/cmd/platform",
+    "Path": "./cmd/platform",
+    "TestPackage": false,
+    "Doc": "",
+    "Imports": {
+      "main.go": [
+        "\"github.com/go-chi/chi/v5/middleware\"",
+        "\"github.com/go-sql-driver/mysql\"",
+        "\"github.com/jackc/pgx/v5/stdlib\"",
+        "\"github.com/titpetric/platform\"",
+        "\"github.com/titpetric/platform/module/autoload\"",
+        "\"log\"",
+        "\"modernc.org/sqlite\""
+      ]
+    },
+    "Types": [],
+    "Consts": [],
+    "Vars": [],
+    "Funcs": [
+      {
+        "Kind": "func",
+        "File": "main.go",
+        "SelfContained": false,
+        "References": {
+          "log": [
+            "Fatalf"
+          ],
+          "middleware": [
+            "Logger"
+          ],
+          "platform": [
+            "AddMiddleware",
+            "Start"
+          ]
+        },
+        "Name": "main",
+        "Signature": "main ()",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
+        }
+      }
+    ]
+  }
+]

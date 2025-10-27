@@ -1,0 +1,437 @@
+[
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "init",
+    "Coverage": 100
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "setupConnections",
+    "Coverage": 100
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Stats",
+    "Coverage": 100
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Serve",
+    "Coverage": 90.9
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "StartPlatform",
+    "Coverage": 80
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "NewPlatform",
+    "Coverage": 75
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Close",
+    "Coverage": 72.7
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetEmail",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Mount",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Close",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Add",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "AddModule",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Mount",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "AddMiddleware",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Close",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Clone",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Stats",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/autoload",
+    "Function": "init",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module",
+    "Function": "LoadModules",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/theme",
+    "Function": "NewOptions",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "NewHandler",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Name",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Mount",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Close",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "LoginView",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Login",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Logout",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "String",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "IsActive",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetFirstName",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetLastName",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetDeletedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetDeletedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUserID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "NewPlugin",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetPassword",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "View",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/internal/repository",
+    "Function": "Name",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "String",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetTitle",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetUpdatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUserGroupID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUserID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetJoinedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetJoinedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetUserID",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetExpiresAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetExpiresAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "GetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/model",
+    "Function": "SetCreatedAt",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "RegisterView",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user",
+    "Function": "Register",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "NewSessionStorage",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Create",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Get",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Delete",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "NewUserStorage",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Create",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Update",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "GetUser",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "GetUserGroups",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/module/user/storage",
+    "Function": "Authenticate",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "NewOptions",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "New",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "AddModule",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "AddMiddleware",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Wait",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Context",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "URL",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Start",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform/cmd/platform",
+    "Function": "main",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "JSON",
+    "Coverage": 0
+  },
+  {
+    "Package": "github.com/titpetric/platform",
+    "Function": "Error",
+    "Coverage": 0
+  }
+]

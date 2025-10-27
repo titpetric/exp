@@ -1,0 +1,35 @@
+     _        __  __
+   _| |_   _ / _|/ _|  between go-fsck.json
+ / _' | | | | |_| |_       and go-fsck.json.modified
+| (_| | |_| |  _|  _|
+ \__,_|\__, |_| |_|   returned seven differences
+        |___/
+
+github.com/titpetric/platform.Funcs.NewPlatform.Complexity
+  + one map entry added:
+    Coverage: 75
+
+github.com/titpetric/platform.Funcs.StartPlatform.Complexity
+  + one map entry added:
+    Coverage: 80
+
+github.com/titpetric/platform.Funcs.Close.Complexity
+  + one map entry added:
+    Coverage: 72.7
+
+github.com/titpetric/platform.Funcs.Serve.Complexity
+  + one map entry added:
+    Coverage: 90.9
+
+github.com/titpetric/platform.Funcs.Stats.Complexity
+  + one map entry added:
+    Coverage: 100
+
+github.com/titpetric/platform.Funcs.init.Complexity
+  + one map entry added:
+    Coverage: 100
+
+github.com/titpetric/platform.Funcs.setupConnections.Complexity
+  + one map entry added:
+    Coverage: 100
+

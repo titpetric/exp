@@ -10,6 +10,7 @@ import (
 
 	"golang.org/x/exp/maps"
 
+	"github.com/titpetric/exp/cmd/go-fsck/coverage"
 	"github.com/titpetric/exp/cmd/go-fsck/docs"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
 	"github.com/titpetric/exp/cmd/go-fsck/lint"
@@ -29,14 +30,15 @@ func main() {
 
 func start() (err error) {
 	commands := map[string]func() error{
-		"extract": extract.Run,
-		"restore": restore.Run,
-		"stats":   stats.Run,
-		"lint":    lint.Run,
-		"search":  search.Run,
-		"query":   query.Run,
-		"docs":    docs.Run,
-		"report":  report.Run,
+		"extract":  extract.Run,
+		"coverage": coverage.Run,
+		"restore":  restore.Run,
+		"stats":    stats.Run,
+		"lint":     lint.Run,
+		"search":   search.Run,
+		"query":    query.Run,
+		"docs":     docs.Run,
+		"report":   report.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)
