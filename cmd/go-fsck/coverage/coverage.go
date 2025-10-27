@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/fbiville/markdown-table-formatter/pkg/markdown"
 
@@ -41,9 +42,9 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 }
 
 type CoverageInfo struct {
-	Package, Function string
-	Coverage          float64
-	Cognitive         int
+	File, Package, Function string
+	Coverage                float64
+	Cognitive               int
 }
 
 func loadCoverage(name string) ([]CoverageInfo, error) {
@@ -96,7 +97,7 @@ func coverage(cfg *options) error {
 			if d.Kind != model.FuncKind {
 				return false
 			}
-			return d.Name == info.Function
+			return d.Name == info.Function && d.File == info.File
 		})
 		if f == nil {
 			return fmt.Errorf("Can't find function by name: %s, package: %s", info.Function, info.Package)
@@ -139,7 +140,11 @@ func coverage(cfg *options) error {
 		}
 
 		sort.Slice(result, func(i, j int) bool {
-			return result[i].Coverage > result[j].Coverage
+			var k, v = result[i], result[j]
+			if k.Package != v.Package {
+				return strings.Compare(k.Package, v.Package) < 0
+			}
+			return k.Coverage > v.Coverage
 		})
 
 		if cfg.json {
