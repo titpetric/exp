@@ -10,6 +10,7 @@ func ByFunction(coverageInfos []CoverageInfo) []FunctionInfo {
 	for _, info := range coverageInfos {
 		result = append(result, FunctionInfo{
 			Package:  info.GetPackage(),
+			File:     info.GetFile(),
 			Function: info.Function,
 			Coverage: info.Percent,
 		})

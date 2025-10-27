@@ -18,8 +18,14 @@ func (c *CoverageInfo) GetPackage() string {
 	return path.Dir(c.Filename)
 }
 
+// GetFile returns the filename without the import path.
+func (c *CoverageInfo) GetFile() string {
+	return path.Base(c.Filename)
+}
+
 // FunctionInfo holds coverage info for functions.
 type FunctionInfo struct {
+	File     string
 	Package  string
 	Function string
 	Coverage float64
@@ -27,7 +33,7 @@ type FunctionInfo struct {
 
 // String returns a string representation of a FunctionInfo.
 func (p FunctionInfo) String() string {
-	return fmt.Sprintf("%s, function %s, coverage %.2f%%", p.Package, p.Function, p.Coverage)
+	return fmt.Sprintf("%s, file %s, function %s, coverage %.2f%%", p.Package, p.File, p.Function, p.Coverage)
 }
 
 // PackageInfo represents information about coverage for a package.
