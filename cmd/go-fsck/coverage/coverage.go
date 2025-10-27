@@ -87,6 +87,7 @@ func coverage(cfg *options) error {
 		return nil
 	}
 
+	var total int
 	for _, info := range coverinfo {
 		p := findPackage(defs, info.Package)
 		if p == nil {
@@ -105,6 +106,9 @@ func coverage(cfg *options) error {
 
 		if f.Complexity != nil {
 			f.Complexity.Coverage = info.Coverage
+			if info.Coverage > 0 {
+				total++
+			}
 		}
 	}
 
@@ -118,7 +122,7 @@ func coverage(cfg *options) error {
 			return err
 		}
 
-		fmt.Printf("Wrote coverage information for %d functions to %s\n", len(coverinfo), cfg.outputFile)
+		fmt.Printf("Wrote coverage information for %d/%d functions to %s\n", total, len(coverinfo), cfg.outputFile)
 	} else {
 		var result []CoverageInfo
 		for _, def := range defs {
@@ -155,11 +159,11 @@ func coverage(cfg *options) error {
 
 		// Encode aggregated results as markdown.
 		data := [][]string{}
-		for _, r := range result {
-			data = append(data, []string{r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
+		for idx, r := range result {
+			data = append(data, []string{fmt.Sprint(idx), r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
 		}
 
-		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Package", "Function", "Coverage", "Cognit").Format(data)
+		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("#", "Package", "Function", "Coverage", "Cognit").Format(data)
 		if err != nil {
 			return err
 		}
