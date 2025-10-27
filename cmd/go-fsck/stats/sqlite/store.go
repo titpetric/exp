@@ -107,9 +107,9 @@ func Store(db *sqlx.DB, def *model.Definition) error {
 	for _, f := range def.Funcs {
 		_, err = tx.Exec(`
 			INSERT INTO `+"`funcs`"+`(
-				`+"`package_id`, `path`, `file`, `name`, `receiver`, `signature`, `complexity_cognitive`, `complexity_cyclomatic`, `complexity_lines`"+`
-			) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			def.ID, f.File, f.File, f.Name, f.Receiver, f.Signature, f.Complexity.Cognitive, f.Complexity.Cyclomatic, f.Complexity.Lines,
+				`+"`package_id`, `path`, `file`, `name`, `receiver`, `signature`, `complexity_cognitive`, `complexity_cyclomatic`, `complexity_coverage`, `complexity_lines`"+`
+			) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			def.ID, f.File, f.File, f.Name, f.Receiver, f.Signature, f.Complexity.Cognitive, f.Complexity.Cyclomatic, f.Complexity.Coverage, f.Complexity.Lines,
 		)
 		if err != nil {
 			tx.Rollback()

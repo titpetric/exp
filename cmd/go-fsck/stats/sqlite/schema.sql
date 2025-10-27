@@ -63,6 +63,7 @@ CREATE TABLE `funcs` (
     `signature` TEXT,
     `complexity_cognitive` INTEGER,
     `complexity_cyclomatic` INTEGER,
+    `complexity_coverage` FLOAT,
     `complexity_lines` INTEGER
 );
 CREATE INDEX `idx_funcs_pkg` ON `funcs`(`package_id`);
