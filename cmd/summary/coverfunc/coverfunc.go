@@ -23,44 +23,37 @@ func coverfunc(cfg *options) error {
 
 	parsed := Parse(lines, cfg.SkipUncovered)
 
+	type coverResponse struct {
+		Files     []FileInfo
+		Packages  []PackageInfo
+		Functions []FunctionInfo
+	}
+	response := &coverResponse{}
+	response.Files = ByFile(parsed)
+	response.Packages = ByPackage(parsed)
+	response.Functions = ByFunction(parsed)
+
 	if cfg.GroupByFiles {
-		return coverFiles(parsed, encoder)
+		return printCoverage[FileInfo](response.Files, encoder)
 	}
 	if cfg.GroupByPackage {
-		return coverPackages(parsed, encoder)
+		return printCoverage[PackageInfo](response.Packages, encoder)
 	}
-	return coverFunctions(parsed, encoder)
+	if cfg.GroupByFunction {
+		return printCoverage[FunctionInfo](response.Functions, encoder)
+	}
+
+	encoder = json.NewEncoder(os.Stdout)
+	encoder.SetIndent("", "  ")
+	return encoder.Encode(response)
 }
 
-func coverFunctions(parsed []CoverageInfo, encoder *json.Encoder) error {
-	files := ByFunction(parsed)
+func printCoverage[T fmt.Stringer](data []T, encoder *json.Encoder) error {
 	if encoder != nil {
-		return encoder.Encode(files)
+		return encoder.Encode(data)
 	}
-	for _, f := range files {
+	for _, f := range data {
 		fmt.Println(f.String())
-	}
-	return nil
-}
-
-func coverFiles(parsed []CoverageInfo, encoder *json.Encoder) error {
-	files := ByFile(parsed)
-	if encoder != nil {
-		return encoder.Encode(files)
-	}
-	for _, f := range files {
-		fmt.Println(f.String())
-	}
-	return nil
-}
-
-func coverPackages(parsed []CoverageInfo, encoder *json.Encoder) error {
-	pkgs := ByPackage(parsed)
-	if encoder != nil {
-		return encoder.Encode(pkgs)
-	}
-	for _, pkg := range pkgs {
-		fmt.Println(pkg.String())
 	}
 	return nil
 }

@@ -9,9 +9,11 @@ import (
 )
 
 type options struct {
-	GroupByFiles   bool
-	GroupByPackage bool
-	SkipUncovered  bool
+	GroupByFiles    bool
+	GroupByPackage  bool
+	GroupByFunction bool
+
+	SkipUncovered bool
 
 	RenderJSON bool
 }
