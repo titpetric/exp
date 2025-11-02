@@ -41,6 +41,11 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 	return defs, nil
 }
 
+var (
+	coveragePass = fmt.Sprintf("%c", '\U00002705')
+	coverageFail = fmt.Sprintf("%c", '\U0000274C')
+)
+
 type CoverageInfo struct {
 	File, Package, Function string
 	Coverage                float64
@@ -163,10 +168,16 @@ func coverage(cfg *options) error {
 		// Encode aggregated results as markdown.
 		data := [][]string{}
 		for idx, r := range result {
-			data = append(data, []string{fmt.Sprint(idx), r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
+			pass := r.Cognitive == 0 || r.Coverage > 0
+			passText := coveragePass
+			if !pass {
+				passText = coverageFail
+			}
+
+			data = append(data, []string{fmt.Sprint(idx), passText, r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
 		}
 
-		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("#", "Package", "Function", "Coverage", "Cognit").Format(data)
+		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("#", "Status", "Package", "Function", "Coverage", "Cognit").Format(data)
 		if err != nil {
 			return err
 		}
