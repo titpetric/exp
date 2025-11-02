@@ -19,6 +19,9 @@ type Package struct {
 	// TestPackage is true if this is a test package.
 	TestPackage bool
 
+	// Complexity to collect test coverage on package.
+	Complexity *Complexity `json:",omitempty"`
+
 	// Pkg serves to carry ast package information, preventing a double Load().
 	// It's used during analysis and merging and discarded for the result.
 	Pkg *packages.Package `json:"-"`

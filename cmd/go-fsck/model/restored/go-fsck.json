@@ -407,6 +407,14 @@
             "JSONName": "TestPackage"
           },
           {
+            "Name": "Complexity",
+            "Type": "*Complexity",
+            "Path": "Package.Complexity",
+            "Doc": "Complexity to collect test coverage on package.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Complexity"
+          },
+          {
             "Name": "Pkg",
             "Type": "*packages.Package",
             "Path": "Package.Pkg",
@@ -415,7 +423,7 @@
             "JSONName": ""
           }
         ],
-        "Source": "// Package holds go package information.\ntype Package struct {\n\t// ID is the ID of the package as x/tools packages loads it.\n\tID\tstring\n\t// Package is the name of the package.\n\tPackage\tstring\n\t// ImportPath contains the import path (github...).\n\tImportPath\tstring\n\t// Path is sanitized to contain the relative location (folder).\n\tPath\tstring\n\t// TestPackage is true if this is a test package.\n\tTestPackage\tbool\n\n\t// Pkg serves to carry ast package information, preventing a double Load().\n\t// It's used during analysis and merging and discarded for the result.\n\tPkg\t*packages.Package\t`json:\"-\"`\n}"
+        "Source": "// Package holds go package information.\ntype Package struct {\n\t// ID is the ID of the package as x/tools packages loads it.\n\tID\tstring\n\t// Package is the name of the package.\n\tPackage\tstring\n\t// ImportPath contains the import path (github...).\n\tImportPath\tstring\n\t// Path is sanitized to contain the relative location (folder).\n\tPath\tstring\n\t// TestPackage is true if this is a test package.\n\tTestPackage\tbool\n\n\t// Complexity to collect test coverage on package.\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n\n\t// Pkg serves to carry ast package information, preventing a double Load().\n\t// It's used during analysis and merging and discarded for the result.\n\tPkg\t*packages.Package\t`json:\"-\"`\n}"
       },
       {
         "Kind": "type",
@@ -950,6 +958,23 @@
           "Cognitive": 3,
           "Cyclomatic": 3,
           "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "declaration_list.go",
+        "SelfContained": false,
+        "Name": "Walk",
+        "Receiver": "DeclarationList",
+        "Arguments": [
+          "func(d *Declaration)"
+        ],
+        "Signature": "Walk (matchfn func(d *Declaration))",
+        "Source": "func (p DeclarationList) Walk(matchfn func(d *Declaration)) {\n\tfor _, decl := range p {\n\t\tmatchfn(decl)\n\t}\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 5
         }
       },
       {

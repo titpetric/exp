@@ -1,11 +1,13 @@
 package coverage
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/fbiville/markdown-table-formatter/pkg/markdown"
 
@@ -107,9 +109,6 @@ func coverage(cfg *options) error {
 	var total int
 	for _, info := range coverinfo.Functions {
 		p := findPackage(defs, info.Package)
-		if p == nil {
-			return fmt.Errorf("Can't find package by name: %s", info.Package)
-		}
 
 		f := p.Funcs.Find(func(d *model.Declaration) bool {
 			if d.Kind != model.FuncKind {
@@ -123,9 +122,42 @@ func coverage(cfg *options) error {
 
 		if f.Complexity != nil {
 			f.Complexity.Coverage = info.Coverage
-			if info.Coverage > 0 {
-				total++
+		} else {
+			f.Complexity = &model.Complexity{
+				Coverage: info.Coverage,
 			}
+		}
+		if info.Coverage > 0 {
+			total++
+		}
+	}
+
+	var totalPackages int
+	for _, info := range coverinfo.Packages {
+		p := findPackage(defs, info.Package)
+		if p == nil {
+			return fmt.Errorf("Can't find package by name: %s", info.Package)
+		}
+
+		if p.Complexity != nil {
+			p.Complexity.Coverage = info.Coverage
+		} else {
+			p.Complexity = &model.Complexity{
+				Coverage: info.Coverage,
+			}
+		}
+
+		p.Funcs.Walk(func(d *model.Declaration) {
+			if d.Kind != model.FuncKind {
+				return
+			}
+			p.Complexity.Cognitive += d.Complexity.Cognitive
+			p.Complexity.Cyclomatic += d.Complexity.Cyclomatic
+			p.Complexity.Lines += d.Complexity.Lines
+		})
+
+		if info.Coverage > 0 {
+			totalPackages++
 		}
 	}
 
@@ -139,8 +171,23 @@ func coverage(cfg *options) error {
 			return err
 		}
 
-		fmt.Printf("Wrote coverage information for %d/%d functions to %s\n", total, len(coverinfo.Functions), cfg.outputFile)
+		fmt.Printf("Wrote function coverage %d/%d, package coverage %d/%d to %s\n", total, len(coverinfo.Functions), totalPackages, len(coverinfo.Packages), cfg.outputFile)
 	} else {
+		packages := func(defs []*model.Definition) []model.Package {
+			var result []model.Package
+			for _, def := range defs {
+				result = append(result, def.Package)
+			}
+			sort.Slice(result, func(i, j int) bool {
+				var k, v = result[i], result[j]
+				if k.ImportPath != v.ImportPath {
+					return strings.Compare(k.ImportPath, v.ImportPath) < 0
+				}
+				return false
+			})
+			return result
+		}(defs)
+
 		var result []CoverageInfo
 		for _, def := range defs {
 			fns := def.Funcs.Filter(func(d *model.Declaration) bool {
@@ -177,31 +224,74 @@ func coverage(cfg *options) error {
 			return encoder.Encode(result)
 		}
 
-		// Encode aggregated results as markdown.
-		data := [][]string{}
-		for idx, r := range result {
-			pass := r.Cognitive == 0 || r.Coverage > 0
-			passText := coveragePass
-			if !pass {
-				passText = coverageFail
+		type templateData struct {
+			Packages  string
+			Functions string
+		}
+		data := &templateData{}
+
+		{
+			vars := [][]string{}
+			for _, r := range result {
+				coverage := r.Coverage
+				cognit := r.Cognitive
+				pass := cognit == 0 || coverage > 80 || (coverage > 0 && cognit <= 5)
+				passText := coveragePass
+				if !pass {
+					passText = coverageFail
+				}
+
+				vars = append(vars, []string{passText, r.Package, r.Function, fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit)})
 			}
 
-			data = append(data, []string{fmt.Sprint(idx), passText, r.Package, r.Function, fmt.Sprintf("%.2f%%", r.Coverage), fmt.Sprint(r.Cognitive)})
+			table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Status", "Package", "Function", "Coverage", "Cognitive").Format(vars)
+			if err != nil {
+				return err
+			}
+			data.Functions = strings.TrimSpace(fmt.Sprint(table))
 		}
 
-		table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("#", "Status", "Package", "Function", "Coverage", "Cognit").Format(data)
-		if err != nil {
-			return err
+		{
+			vars := [][]string{}
+
+			for _, r := range packages {
+				if r.Complexity == nil {
+					r.Complexity = &model.Complexity{}
+				}
+				coverage := r.Complexity.Coverage
+				cognit := r.Complexity.Cognitive
+				lines := r.Complexity.Lines
+				pass := cognit == 0 || coverage > 80 || (coverage > 0 && cognit <= 5)
+				passText := coveragePass
+				if !pass {
+					passText = coverageFail
+				}
+
+				vars = append(vars, []string{passText, r.ImportPath, fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit), fmt.Sprint(lines)})
+			}
+
+			table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Status", "Package", "Coverage", "Cognitive", "Lines").Format(vars)
+			if err != nil {
+				return err
+			}
+			data.Packages = strings.TrimSpace(fmt.Sprint(table))
 		}
 
-		if cfg.title != "" && cfg.lead != "" {
-			fmt.Println("#", cfg.title)
-			fmt.Println()
-			fmt.Println(cfg.lead)
-			fmt.Println()
-		}
+		if cfg.template != "" {
+			tmpl, err := template.ParseFiles(cfg.template)
+			if err != nil {
+				return err
+			}
 
-		fmt.Println(table)
+			var buf bytes.Buffer
+			if err := tmpl.Execute(&buf, data); err != nil {
+				return err
+			}
+
+			fmt.Println(buf.String())
+		} else {
+			fmt.Println(data.Functions)
+		}
 	}
 
 	return nil

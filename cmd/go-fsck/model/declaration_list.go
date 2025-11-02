@@ -39,6 +39,12 @@ func (p DeclarationList) Exported() (result []*Declaration) {
 	return
 }
 
+func (p DeclarationList) Walk(matchfn func(d *Declaration)) {
+	for _, decl := range p {
+		matchfn(decl)
+	}
+}
+
 func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
 	for _, decl := range p {
 		if matchfn(decl) {

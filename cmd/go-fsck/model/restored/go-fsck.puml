@@ -36,6 +36,7 @@ class DeclarationList {
   + Exported () []*Declaration
   + Filter (matchfn func(d *Declaration) bool) []*Declaration
   + Find (matchfn func(d *Declaration) bool) *Declaration
+  + Walk (matchfn func(d *Declaration))
 }
 
 class Definition {
@@ -68,6 +69,7 @@ class Package {
   + ImportPath: string
   + Path: string
   + TestPackage: bool
+  + Complexity: *Complexity
   + Pkg: *packages.Package
   + Equal (in Package) bool
   + Name () string
@@ -132,6 +134,7 @@ FieldList contains all struct fields.
 end note
 
 
+Package --> Complexity : Complexity
 
 note top of Package
 Package holds go package information.
