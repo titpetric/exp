@@ -1,6 +1,9 @@
 package coverfunc
 
-import "sort"
+import (
+	"path"
+	"sort"
+)
 
 // ByFile summarizes coverage info by file.
 func ByFile(coverageInfos []CoverageInfo) []FileInfo {
@@ -11,7 +14,7 @@ func ByFile(coverageInfos []CoverageInfo) []FileInfo {
 		if _, ok := fileMap[info.Filename]; !ok {
 			fileMap[info.Filename] = []float64{}
 		}
-		fileMap[info.Filename] = append(fileMap[info.Filename], info.Percent)
+		fileMap[info.Filename] = append(fileMap[info.Filename], info.Coverage)
 		functionsMap[info.Filename]++
 	}
 
@@ -25,6 +28,8 @@ func ByFile(coverageInfos []CoverageInfo) []FileInfo {
 		avgCoverage := sum / float64(len(percentages))
 		fileInfos = append(fileInfos, FileInfo{
 			Filename:  filename,
+			File:      path.Base(filename),
+			Package:   path.Dir(filename),
 			Functions: functionsMap[filename],
 			Coverage:  avgCoverage,
 		})

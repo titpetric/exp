@@ -1,6 +1,7 @@
 package coverfunc
 
 import (
+	"path"
 	"strconv"
 	"strings"
 )
@@ -20,12 +21,14 @@ func Parse(data [][]string, skipUncovered bool) []CoverageInfo {
 		lineNumber, _ := strconv.Atoi(filenameAndLine[1])
 
 		info := CoverageInfo{
+			File:     path.Base(filename),
 			Filename: filename,
+			Package:  path.Dir(filename),
 			Line:     lineNumber,
 			Function: line[1],
 		}
 		percent, _ := strconv.ParseFloat(strings.TrimSuffix(line[2], "%"), 64)
-		info.Percent = percent
+		info.Coverage = percent
 
 		if percent <= 0 && skipUncovered {
 			continue

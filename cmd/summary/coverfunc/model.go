@@ -2,57 +2,32 @@ package coverfunc
 
 import (
 	"fmt"
-	"path"
 )
 
 // CoverageInfo represents information about coverage for a specific function.
 type CoverageInfo struct {
-	Filename string
-	Line     int
-	Function string
-	Percent  float64
-}
-
-// GetPackage returns the package location from the filename.
-func (c *CoverageInfo) GetPackage() string {
-	return path.Dir(c.Filename)
-}
-
-// GetFile returns the filename without the import path.
-func (c *CoverageInfo) GetFile() string {
-	return path.Base(c.Filename)
+	File      string `json:",omitempty"`
+	Filename  string `json:",omitempty"`
+	Package   string
+	Line      int    `json:",omitempty"`
+	Function  string `json:",omitempty"`
+	Functions int    `json:",omitempty"`
+	Coverage  float64
 }
 
 // FunctionInfo holds coverage info for functions.
-type FunctionInfo struct {
-	File     string
-	Package  string
-	Function string
-	Coverage float64
-}
+type FunctionInfo CoverageInfo
+type PackageInfo CoverageInfo
+type FileInfo CoverageInfo
 
 // String returns a string representation of a FunctionInfo.
 func (p FunctionInfo) String() string {
-	return fmt.Sprintf("%s, file %s, function %s, coverage %.2f%%", p.Package, p.File, p.Function, p.Coverage)
-}
-
-// PackageInfo represents information about coverage for a package.
-type PackageInfo struct {
-	Package   string
-	Functions int
-	Coverage  float64
+	return fmt.Sprintf("%s, file %s, function %s, coverage %.2f%%", p.Package, p.Filename, p.Function, p.Coverage)
 }
 
 // String returns a string representation of a PackageInfo.
 func (p PackageInfo) String() string {
 	return fmt.Sprintf("%s, symbols %d, coverage %.2f%%", p.Package, p.Functions, p.Coverage)
-}
-
-// FileInfo represents information about coverage for a file.
-type FileInfo struct {
-	Filename  string
-	Functions int
-	Coverage  float64
 }
 
 // String returns a string representation of a FileInfo.

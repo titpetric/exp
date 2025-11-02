@@ -15,7 +15,7 @@ func ByPackage(coverageInfos []CoverageInfo) []PackageInfo {
 		if _, ok := packageMap[packageName]; !ok {
 			packageMap[packageName] = []float64{}
 		}
-		packageMap[packageName] = append(packageMap[packageName], info.Percent)
+		packageMap[packageName] = append(packageMap[packageName], info.Coverage)
 		functionsMap[packageName]++
 	}
 

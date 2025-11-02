@@ -9,10 +9,12 @@ func ByFunction(coverageInfos []CoverageInfo) []FunctionInfo {
 
 	for _, info := range coverageInfos {
 		result = append(result, FunctionInfo{
-			Package:  info.GetPackage(),
-			File:     info.GetFile(),
+			File:     info.File,
+			Filename: info.Filename,
+			Line:     info.Line,
+			Package:  info.Package,
 			Function: info.Function,
-			Coverage: info.Percent,
+			Coverage: info.Coverage,
 		})
 	}
 
