@@ -135,7 +135,7 @@ func coverage(cfg *options) error {
 			for _, fn := range fns {
 				info := CoverageInfo{
 					Package:   def.Package.ImportPath,
-					Function:  fn.Name,
+					Function:  combined(fn.Receiver, fn.Name),
 					Coverage:  fn.Complexity.Coverage,
 					Cognitive: fn.Complexity.Cognitive,
 				}
@@ -147,6 +147,9 @@ func coverage(cfg *options) error {
 			var k, v = result[i], result[j]
 			if k.Package != v.Package {
 				return strings.Compare(k.Package, v.Package) < 0
+			}
+			if k.Function != v.Function {
+				return strings.Compare(k.Function, v.Function) < 0
 			}
 			return k.Coverage > v.Coverage
 		})
@@ -172,4 +175,11 @@ func coverage(cfg *options) error {
 	}
 
 	return nil
+}
+
+func combined(receiver, name string) string {
+	if receiver != "" {
+		return strings.TrimLeft(receiver, "*") + "." + name
+	}
+	return name
 }
