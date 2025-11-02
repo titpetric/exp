@@ -47,13 +47,26 @@ var (
 )
 
 type CoverageInfo struct {
-	File, Package, Function string
-	Coverage                float64
-	Cognitive               int
+	// copy of github.com/titpetric/exp/cmd/summary/coverfunc.CoverageInfo
+	File      string `json:",omitempty"`
+	Filename  string `json:",omitempty"`
+	Package   string
+	Line      int    `json:",omitempty"`
+	Function  string `json:",omitempty"`
+	Functions int    `json:",omitempty"`
+	Coverage  float64
+
+	Cognitive int
 }
 
-func loadCoverage(name string) ([]CoverageInfo, error) {
-	var result []CoverageInfo
+type Coverage struct {
+	Files     []CoverageInfo
+	Packages  []CoverageInfo
+	Functions []CoverageInfo
+}
+
+func loadCoverage(name string) (*Coverage, error) {
+	result := &Coverage{}
 
 	// We can just print coverage.
 	if name == "" {
@@ -68,7 +81,6 @@ func loadCoverage(name string) ([]CoverageInfo, error) {
 	if err := json.Unmarshal(b, &result); err != nil {
 		return nil, fmt.Errorf("Error decoding %s: %w", name, err)
 	}
-
 	return result, err
 }
 
@@ -93,7 +105,7 @@ func coverage(cfg *options) error {
 	}
 
 	var total int
-	for _, info := range coverinfo {
+	for _, info := range coverinfo.Functions {
 		p := findPackage(defs, info.Package)
 		if p == nil {
 			return fmt.Errorf("Can't find package by name: %s", info.Package)
@@ -127,7 +139,7 @@ func coverage(cfg *options) error {
 			return err
 		}
 
-		fmt.Printf("Wrote coverage information for %d/%d functions to %s\n", total, len(coverinfo), cfg.outputFile)
+		fmt.Printf("Wrote coverage information for %d/%d functions to %s\n", total, len(coverinfo.Functions), cfg.outputFile)
 	} else {
 		var result []CoverageInfo
 		for _, def := range defs {
