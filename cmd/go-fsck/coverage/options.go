@@ -13,6 +13,9 @@ type options struct {
 	outputFile   string
 	coverageFile string
 
+	title string
+	lead  string
+
 	json    bool
 	verbose bool
 }
@@ -25,6 +28,9 @@ func NewOptions() *options {
 	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
 	flag.StringVarP(&cfg.outputFile, "output-file", "o", cfg.outputFile, "output file")
 	flag.StringVarP(&cfg.coverageFile, "coverage-file", "c", cfg.coverageFile, "summary coverage file")
+
+	flag.StringVar(&cfg.title, "title", cfg.title, "Title for the report")
+	flag.StringVar(&cfg.lead, "lead", cfg.lead, "Lead paragraph for the report")
 
 	flag.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
 	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")

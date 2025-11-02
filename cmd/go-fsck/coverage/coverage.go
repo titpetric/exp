@@ -182,6 +182,13 @@ func coverage(cfg *options) error {
 			return err
 		}
 
+		if cfg.title != "" && cfg.lead != "" {
+			fmt.Println("#", cfg.title)
+			fmt.Println()
+			fmt.Println(cfg.lead)
+			fmt.Println()
+		}
+
 		fmt.Println(table)
 	}
 
