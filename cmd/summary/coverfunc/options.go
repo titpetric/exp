@@ -21,8 +21,10 @@ type options struct {
 func NewOptions() *options {
 	cfg := &options{}
 
-	flag.BoolVarP(&cfg.GroupByFiles, "files", "f", cfg.GroupByFiles, "Group coverage by file")
-	flag.BoolVarP(&cfg.GroupByPackage, "packages", "p", cfg.GroupByPackage, "Group coverage by package")
+	flag.BoolVar(&cfg.GroupByFiles, "files", cfg.GroupByFiles, "Group coverage by file")
+	flag.BoolVar(&cfg.GroupByPackage, "packages", cfg.GroupByPackage, "Group coverage by package")
+	flag.BoolVar(&cfg.GroupByFunction, "functions", cfg.GroupByFunction, "Group coverage by function")
+
 	flag.BoolVar(&cfg.SkipUncovered, "skip-uncovered", cfg.SkipUncovered, "Skip uncovered files")
 	flag.BoolVar(&cfg.RenderJSON, "json", false, "Render output as json")
 	flag.Parse()
