@@ -5,6 +5,7 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Path": ".",
     "TestPackage": false,
+    "References": null,
     "Doc": "",
     "Imports": {
       "declaration.go": [
@@ -238,6 +239,12 @@
             "JSONName": ""
           },
           {
+            "Name": "References",
+            "Type": "StringSet",
+            "Path": "Definition.References",
+            "JSONName": "References"
+          },
+          {
             "Name": "Doc",
             "Type": "string",
             "Path": "Definition.Doc",
@@ -274,7 +281,7 @@
             "JSONName": "Funcs"
           }
         ],
-        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
+        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tReferences\tStringSet\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
       },
       {
         "Kind": "type",
@@ -807,11 +814,11 @@
           "*Definition"
         ],
         "Signature": "Merge (in *Definition)",
-        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
+        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\tfor k, v := range in.References {\n\t\td.References.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
         "Complexity": {
-          "Cognitive": 2,
-          "Cyclomatic": 3,
-          "Lines": 19
+          "Cognitive": 3,
+          "Cyclomatic": 4,
+          "Lines": 22
         }
       },
       {

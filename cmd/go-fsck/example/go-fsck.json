@@ -5,6 +5,7 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example",
     "Path": ".",
     "TestPackage": false,
+    "References": null,
     "Doc": "Example package doc.",
     "Imports": {
       "example.go": [
@@ -231,6 +232,7 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
+    "References": null,
     "Doc": "Example package doc.",
     "Imports": {
       "example_test.go": [
@@ -272,6 +274,7 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
+    "References": null,
     "Doc": "",
     "Imports": {
       "printer_test.go": [

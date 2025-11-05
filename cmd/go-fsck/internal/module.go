@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"golang.org/x/mod/modfile"
+
+	"github.com/titpetric/exp/cmd/go-fsck/internal/telemetry"
 )
 
 type Module struct {
@@ -29,6 +31,9 @@ func (m Module) String() string {
 
 // ListModules finds all go.mod files under root and returns a slice of Modules.
 func ListModules(root string) ([]Module, error) {
+	span := telemetry.Start("internal.ListModules")
+	defer span.End()
+
 	if root == "" {
 		root = "."
 	}
@@ -57,7 +62,8 @@ func ListModules(root string) ([]Module, error) {
 
 // parseGoMod reads the go.mod file using x/mod/modfile
 func parseGoMod(filename string, rootPath string) (result Module) {
-	dir := strings.TrimPrefix(filepath.Dir(filename), rootPath)
+	dir := filepath.Dir(filename)
+	cleanDir := strings.TrimPrefix(dir, rootPath)
 
 	result.Filename = filename
 	result.Dir = dir
@@ -87,11 +93,14 @@ func parseGoMod(filename string, rootPath string) (result Module) {
 		return
 	}
 
-	if dir != "" && !strings.HasSuffix(importPath, dir) {
-		result.Error = fmt.Errorf("invalid import path: %s, want suffix: %s", importPath, dir)
+	if cleanDir != "" && !strings.HasSuffix(importPath, cleanDir) {
+		result.Error = fmt.Errorf("invalid import path: %s, want suffix: %s", importPath, cleanDir)
 		return
 	}
 
-	result.Valid = true
+	// prevent scanning the root module as handled outside
+	if cleanDir == "" {
+		result.Valid = false
+	}
 	return
 }

@@ -17,7 +17,8 @@ func TestLoad(t *testing.T) {
 
 	defs, err := loader.Load(&model.Package{
 		Path: ".",
-	}, true)
+	}, true, true)
+
 	assert.NoError(t, err)
 	assert.NotNil(t, defs)
 

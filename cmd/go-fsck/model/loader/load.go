@@ -17,7 +17,11 @@ import (
 )
 
 // Load definitions from package located in sourcePath.
-func Load(in *model.Package, verbose bool) ([]*model.Definition, error) {
+func Load(in *model.Package, includeTests bool, verbose bool) ([]*model.Definition, error) {
+	if in.Pkg == nil {
+		return nil, fmt.Errorf("No pkg present in package: %s", in)
+	}
+
 	pkg := in.Pkg
 	sourcePath := in.Path
 
@@ -26,7 +30,7 @@ func Load(in *model.Package, verbose bool) ([]*model.Definition, error) {
 
 	cfg := &packages.Config{
 		Mode:  packages.LoadAllSyntax,
-		Tests: true,
+		Tests: includeTests,
 		Fset:  fset,
 	}
 	_ = cfg

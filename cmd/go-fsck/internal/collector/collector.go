@@ -45,8 +45,8 @@ func (v *collector) Clean(verbose bool) []*Definition {
 		for _, fv := range def.Funcs {
 			for k, v := range fv.References {
 				if _, ok := importMap[k]; !ok {
-					if verbose {
-						fmt.Printf("Function %s reference doesn't exist in imports: %s: [%v]\n", fv.Name, k, v)
+					for _, p := range v {
+						def.References.Add(fmt.Sprintf("%s.%s", k, p), fv.Name)
 					}
 					delete(fv.References, k)
 				}

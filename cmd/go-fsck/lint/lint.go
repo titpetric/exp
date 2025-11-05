@@ -32,7 +32,7 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 	}
 
 	for _, pkg := range packages {
-		d, err := loader.Load(pkg, cfg.verbose)
+		d, err := loader.Load(pkg, false, cfg.verbose)
 		if err != nil {
 			return nil, err
 		}

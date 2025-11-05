@@ -8,6 +8,8 @@ import (
 type Definition struct {
 	Package
 
+	References StringSet
+
 	Doc string
 
 	Imports StringSet
@@ -59,6 +61,9 @@ func (d *Definition) Merge(in *Definition) {
 
 	for k, v := range in.Imports {
 		d.Imports.Add(k, v...)
+	}
+	for k, v := range in.References {
+		d.References.Add(k, v...)
 	}
 
 	d.Types.AppendUnique(in.Types...)

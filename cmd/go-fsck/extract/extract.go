@@ -1,36 +1,108 @@
 package extract
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/signal"
+	"runtime"
 	"strings"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/exp/cmd/go-fsck/internal/telemetry"
 	"github.com/titpetric/exp/cmd/go-fsck/model"
 	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
 
+func loadModuleTree(ctx context.Context, cfg *options, modules []internal.Module, pattern string) ([]*model.Definition, error) {
+	result := []*model.Definition{}
+	for _, m := range modules {
+		if !m.Valid || m.Dir == "" {
+			continue
+		}
+		defs, err := walkPackage(ctx, m.Dir, pattern, cfg.includeTests, cfg.verbose)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, defs...)
+	}
+	return result, nil
+}
+
 func getDefinitions(cfg *options) ([]*model.Definition, error) {
-	// list current local packages
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
 	var pattern string
 	if pattern = "."; cfg.recursive {
 		pattern = "./..."
 	}
 
-	packages, err := internal.ListPackages(cfg.sourcePath, pattern)
+	defs := []*model.Definition{}
+
+	{
+		modules, err := internal.ListModules(cfg.sourcePath)
+		if err != nil {
+			return nil, err
+		}
+
+		d, err := loadModuleTree(ctx, cfg, modules, "./...")
+		if err != nil {
+			return nil, err
+		}
+		defs = append(defs, d...)
+	}
+
+	{
+		d, err := walkPackage(ctx, cfg.sourcePath, pattern, cfg.includeTests, cfg.verbose)
+		if err != nil {
+			return nil, err
+		}
+		defs = append(defs, d...)
+	}
+
+	defs = unique(defs)
+
+	for _, def := range defs {
+		if !cfg.includeSources {
+			def.ClearSource()
+		}
+		if !def.TestPackage || !cfg.includeTests {
+			def.ClearTestFiles()
+		}
+		if def.TestPackage {
+			def.ClearNonTestFiles()
+		}
+	}
+
+	return defs, nil
+}
+
+func walkPackage(ctx context.Context, sourcePath string, pattern string, includeTests bool, verbose bool) ([]*model.Definition, error) {
+	defer telemetry.Start("extract.walkPackage " + sourcePath).End()
+	defer runtime.GC()
+
+	// fmt.Println("walking:", sourcePath, pattern, "tests", includeTests, "verbose", verbose)
+	packages, err := internal.ListPackages(sourcePath, pattern)
 	if err != nil {
 		return nil, err
 	}
-
 	defs := []*model.Definition{}
-
 	for _, pkg := range packages {
-		if !cfg.includeTests && pkg.TestPackage {
-			continue
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
 		}
 
-		d, err := loader.Load(pkg, cfg.verbose)
+		if !includeTests {
+			if pkg.TestPackage {
+				continue
+			}
+		}
+
+		//span := telemetry.Start("extract.walkPackage " + pkg.ImportPath)
+
+		d, err := loader.Load(pkg, includeTests, false)
 		if err != nil {
 			return nil, err
 		}
@@ -52,22 +124,11 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 		}
 
 		defs = append(defs, d...)
+
+		runtime.GC() // add some gc pressure
+
+		//span.End()
 	}
-
-	defs = unique(defs)
-
-	for _, def := range defs {
-		if !cfg.includeSources {
-			def.ClearSource()
-		}
-		if !def.TestPackage || !cfg.includeTests {
-			def.ClearTestFiles()
-		}
-		if def.TestPackage {
-			def.ClearNonTestFiles()
-		}
-	}
-
 	return defs, nil
 }
 

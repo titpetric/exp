@@ -40,6 +40,7 @@ class DeclarationList {
 }
 
 class Definition {
+  + References: StringSet
   + Doc: string
   + Imports: StringSet
   + Types: DeclarationList
@@ -110,6 +111,7 @@ DeclarationList --> Declaration : Exported()
 DeclarationList --> Declaration : Filter()
 DeclarationList --> Declaration : Find()
 Package --|> Definition : embeded by
+Definition --> StringSet : References
 Definition --> StringSet : Imports
 Definition --> DeclarationList : Types
 Definition --> DeclarationList : Consts

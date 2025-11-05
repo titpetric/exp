@@ -8,12 +8,16 @@ import (
 
 	"golang.org/x/tools/go/packages"
 
+	"github.com/titpetric/exp/cmd/go-fsck/internal/telemetry"
 	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
 // ListPackages returns a slice of local packages in the specified root directory.
 // The second argument is either `.` or `./...` (recursive).
 func ListPackages(rootPath string, pattern string) ([]*model.Package, error) {
+	span := telemetry.Start("internal.ListPackages")
+	defer span.End()
+
 	if err := os.Chdir(rootPath); err != nil {
 		return nil, err
 	}
@@ -80,7 +84,7 @@ func cleanPackages(pkgs []*packages.Package, workDir string) []*model.Package {
 
 func listPackages(pattern string) ([]*packages.Package, error) {
 	cfg := &packages.Config{
-		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedModule | packages.LoadAllSyntax,
+		Mode:  packages.NeedName | packages.NeedFiles | packages.NeedCompiledGoFiles | packages.NeedModule | packages.LoadSyntax,
 		Tests: true,
 	}
 
