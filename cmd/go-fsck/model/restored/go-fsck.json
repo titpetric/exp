@@ -39,6 +39,7 @@
       {
         "Kind": "type",
         "File": "complexity.go",
+        "Line": 3,
         "SelfContained": true,
         "Name": "Complexity",
         "Fields": [
@@ -74,6 +75,7 @@
       {
         "Kind": "type",
         "File": "declaration.go",
+        "Line": 9,
         "SelfContained": true,
         "Doc": "Declaration holds information about a go symbol.",
         "Name": "Declaration",
@@ -96,6 +98,13 @@
             "Type": "string",
             "Path": "Declaration.File",
             "JSONName": "File"
+          },
+          {
+            "Name": "Line",
+            "Type": "int",
+            "Path": "Declaration.Line",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Line"
           },
           {
             "Name": "SelfContained",
@@ -196,12 +205,13 @@
             "JSONName": "Complexity"
           }
         ],
-        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\t// This is not encoded to json, it's computed on load.\n\tImports\t[]string\t`json:\"-\"`\n\n\tReferences\tStringSet\t`json:\",omitempty\"`\n\tGlobals\t\tStringSet\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
+        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\tLine\tint\t`json:\",omitempty\"`\n\n\tSelfContained\tbool\n\n\t// This is not encoded to json, it's computed on load.\n\tImports\t[]string\t`json:\"-\"`\n\n\tReferences\tStringSet\t`json:\",omitempty\"`\n\tGlobals\t\tStringSet\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
         "Type": "string",
         "File": "declaration_kind.go",
+        "Line": 4,
         "SelfContained": false,
         "Doc": "DeclarationKind is an enum of go symbol types.",
         "Name": "DeclarationKind",
@@ -219,6 +229,7 @@
         "Kind": "type",
         "Type": "[]*Declaration",
         "File": "declaration_list.go",
+        "Line": 10,
         "SelfContained": false,
         "Doc": "DeclarationList holds a list of Go symbols.",
         "Name": "DeclarationList",
@@ -235,6 +246,7 @@
       {
         "Kind": "type",
         "File": "definition.go",
+        "Line": 6,
         "SelfContained": true,
         "Doc": "Definition holds all symbols defined for a Package.",
         "Name": "Definition",
@@ -287,6 +299,7 @@
       {
         "Kind": "type",
         "File": "field.go",
+        "Line": 4,
         "SelfContained": true,
         "Doc": "Field holds details about a field definition.",
         "Name": "Field",
@@ -359,6 +372,7 @@
         "Kind": "type",
         "Type": "[]*Field",
         "File": "field_list.go",
+        "Line": 4,
         "SelfContained": false,
         "Doc": "FieldList contains all struct fields.",
         "Name": "FieldList",
@@ -375,6 +389,7 @@
       {
         "Kind": "type",
         "File": "package.go",
+        "Line": 10,
         "SelfContained": false,
         "Doc": "Package holds go package information.",
         "Name": "Package",
@@ -437,6 +452,7 @@
         "Kind": "type",
         "Type": "map[string][]string",
         "File": "string_set.go",
+        "Line": 13,
         "SelfContained": false,
         "Doc": "StringSet provides a key based unique string slice.",
         "Name": "StringSet",
@@ -455,6 +471,7 @@
       {
         "Kind": "const",
         "File": "declaration_kind.go",
+        "Line": 6,
         "SelfContained": false,
         "Names": [
           "StructKind",
@@ -473,6 +490,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
+        "Line": 15,
         "SelfContained": false,
         "Name": "NewStringSet",
         "Returns": [
@@ -489,6 +507,7 @@
       {
         "Kind": "func",
         "File": "type_ref.go",
+        "Line": 8,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -516,6 +535,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 71,
         "SelfContained": false,
         "Name": "Equal",
         "Receiver": "*Declaration",
@@ -536,6 +556,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 49,
         "SelfContained": false,
         "Name": "HasName",
         "Receiver": "*Declaration",
@@ -556,6 +577,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 58,
         "SelfContained": false,
         "References": {
           "ast": [
@@ -578,6 +600,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 78,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -600,6 +623,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 45,
         "SelfContained": false,
         "Name": "ReceiverTypeRef",
         "Receiver": "*Declaration",
@@ -617,6 +641,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
+        "Line": 41,
         "SelfContained": false,
         "Name": "TypeRef",
         "Receiver": "*Declaration",
@@ -634,6 +659,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 12,
         "SelfContained": false,
         "Name": "Append",
         "Receiver": "*DeclarationList",
@@ -651,6 +677,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 16,
         "SelfContained": false,
         "Name": "AppendUnique",
         "Receiver": "*DeclarationList",
@@ -668,6 +695,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 83,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -687,6 +715,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 66,
         "SelfContained": false,
         "Name": "ClearSource",
         "Receiver": "*DeclarationList",
@@ -701,6 +730,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 72,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -720,6 +750,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 94,
         "SelfContained": false,
         "References": {
           "ast": [
@@ -742,6 +773,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 56,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -761,6 +793,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 37,
         "SelfContained": false,
         "Name": "ClearSource",
         "Receiver": "*Definition",
@@ -775,6 +808,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 44,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -794,6 +828,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 68,
         "SelfContained": false,
         "Name": "Fill",
         "Receiver": "*Definition",
@@ -808,6 +843,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 74,
         "SelfContained": false,
         "Name": "Merge",
         "Receiver": "*Definition",
@@ -825,6 +861,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 26,
         "SelfContained": false,
         "Name": "Order",
         "Receiver": "*Definition",
@@ -842,6 +879,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 19,
         "SelfContained": false,
         "Doc": "Sort will sort the inner types so they have a stable order.",
         "Name": "Sort",
@@ -857,6 +895,7 @@
       {
         "Kind": "func",
         "File": "field.go",
+        "Line": 31,
         "SelfContained": false,
         "Name": "TypeRef",
         "Receiver": "*Field",
@@ -874,6 +913,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
+        "Line": 19,
         "SelfContained": false,
         "References": {
           "slices": [
@@ -897,6 +937,7 @@
       {
         "Kind": "func",
         "File": "declaration_kind.go",
+        "Line": 16,
         "SelfContained": false,
         "Name": "String",
         "Receiver": "DeclarationKind",
@@ -914,6 +955,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 33,
         "SelfContained": false,
         "Name": "Exported",
         "Receiver": "DeclarationList",
@@ -931,6 +973,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 57,
         "SelfContained": false,
         "Name": "Filter",
         "Receiver": "DeclarationList",
@@ -951,6 +994,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 48,
         "SelfContained": false,
         "Name": "Find",
         "Receiver": "DeclarationList",
@@ -971,6 +1015,7 @@
       {
         "Kind": "func",
         "File": "declaration_list.go",
+        "Line": 42,
         "SelfContained": false,
         "Name": "Walk",
         "Receiver": "DeclarationList",
@@ -988,6 +1033,7 @@
       {
         "Kind": "func",
         "File": "package.go",
+        "Line": 38,
         "SelfContained": false,
         "Name": "Equal",
         "Receiver": "Package",
@@ -1008,6 +1054,7 @@
       {
         "Kind": "func",
         "File": "package.go",
+        "Line": 30,
         "SelfContained": false,
         "Name": "Name",
         "Receiver": "Package",
@@ -1025,6 +1072,7 @@
       {
         "Kind": "func",
         "File": "package.go",
+        "Line": 34,
         "SelfContained": false,
         "References": {
           "fmt": [
@@ -1047,6 +1095,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
+        "Line": 47,
         "SelfContained": false,
         "Name": "All",
         "Receiver": "StringSet",
@@ -1064,6 +1113,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
+        "Line": 39,
         "SelfContained": false,
         "References": {
           "sort": [
@@ -1089,6 +1139,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
+        "Line": 57,
         "SelfContained": false,
         "References": {
           "fmt": [
@@ -1126,6 +1177,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
+        "Line": 94,
         "SelfContained": false,
         "Name": "getImports",
         "Receiver": "*Definition",

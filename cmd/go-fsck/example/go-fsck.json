@@ -18,6 +18,7 @@
       {
         "Kind": "type",
         "File": "generic.go",
+        "Line": 13,
         "SelfContained": false,
         "Doc": "Allocator holds a sync.Pool of objects of type T.",
         "Name": "Allocator",
@@ -34,6 +35,7 @@
       {
         "Kind": "type",
         "File": "example.go",
+        "Line": 21,
         "SelfContained": true,
         "Doc": "Body represends a decoded body",
         "Name": "Body",
@@ -51,6 +53,7 @@
         "Kind": "type",
         "Type": "string",
         "File": "example.go",
+        "Line": 18,
         "SelfContained": false,
         "Doc": "File represents a filename",
         "Name": "File",
@@ -68,6 +71,7 @@
         "Kind": "type",
         "Type": "any",
         "File": "generic.go",
+        "Line": 8,
         "SelfContained": true,
         "Doc": "Reseter is the interface that types must implement to be managed by Allocator.",
         "Name": "Reseter",
@@ -84,6 +88,7 @@
       {
         "Kind": "type",
         "File": "internal.go",
+        "Line": 3,
         "SelfContained": true,
         "Name": "logger",
         "Fields": [
@@ -101,6 +106,7 @@
       {
         "Kind": "const",
         "File": "example.go",
+        "Line": 26,
         "SelfContained": true,
         "Doc": "Const comment",
         "Name": "E_WARNING",
@@ -111,6 +117,7 @@
       {
         "Kind": "var",
         "File": "example.go",
+        "Line": 8,
         "SelfContained": true,
         "Names": [
           "exampleGroup1",
@@ -121,6 +128,7 @@
       {
         "Kind": "var",
         "File": "example.go",
+        "Line": 15,
         "SelfContained": true,
         "Doc": "Comment outer",
         "Name": "exampleGroup3",
@@ -131,6 +139,7 @@
       {
         "Kind": "func",
         "File": "example.go",
+        "Line": 29,
         "SelfContained": false,
         "Doc": "Global func comment",
         "Name": "GlobalFunc",
@@ -148,6 +157,7 @@
       {
         "Kind": "func",
         "File": "generic.go",
+        "Line": 18,
         "SelfContained": false,
         "References": {
           "sync": [
@@ -173,6 +183,7 @@
       {
         "Kind": "func",
         "File": "generic.go",
+        "Line": 29,
         "SelfContained": false,
         "Doc": "Get retrieves an object from the internal pool.",
         "Name": "Get",
@@ -191,6 +202,7 @@
       {
         "Kind": "func",
         "File": "generic.go",
+        "Line": 34,
         "SelfContained": false,
         "Doc": "Put returns an object to the pool after resetting it.",
         "Name": "Put",
@@ -209,6 +221,7 @@
       {
         "Kind": "func",
         "File": "internal.go",
+        "Line": 7,
         "SelfContained": false,
         "Name": "Log",
         "Receiver": "*logger",
@@ -245,6 +258,7 @@
       {
         "Kind": "func",
         "File": "example_test.go",
+        "Line": 9,
         "SelfContained": false,
         "References": {
           "assert": [
@@ -293,6 +307,7 @@
       {
         "Kind": "func",
         "File": "printer_test.go",
+        "Line": 17,
         "SelfContained": false,
         "References": {
           "printer": [
@@ -319,6 +334,7 @@
       {
         "Kind": "func",
         "File": "printer_test.go",
+        "Line": 21,
         "SelfContained": false,
         "References": {
           "assert": [

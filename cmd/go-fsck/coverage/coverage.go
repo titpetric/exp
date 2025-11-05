@@ -106,18 +106,26 @@ func coverage(cfg *options) error {
 		return nil
 	}
 
-	var total int
+	var total, skipped int
 	for _, info := range coverinfo.Functions {
+		// init may show up multiple times in one package
+		if info.Function == "init" {
+			skipped++
+			continue
+		}
+
 		p := findPackage(defs, info.Package)
 
 		f := p.Funcs.Find(func(d *model.Declaration) bool {
 			if d.Kind != model.FuncKind {
 				return false
 			}
-			return d.Name == info.Function && d.File == info.File
+			return d.Name == info.Function && d.File == info.File && d.Line == info.Line
 		})
 		if f == nil {
-			return fmt.Errorf("Can't find function by name: %s, package: %s", info.Function, info.Package)
+			skipped++
+			continue
+			// return fmt.Errorf("Can't find function by name: %v", info)
 		}
 
 		if f.Complexity != nil {
@@ -171,7 +179,7 @@ func coverage(cfg *options) error {
 			return err
 		}
 
-		fmt.Printf("Wrote function coverage %d/%d, package coverage %d/%d to %s\n", total, len(coverinfo.Functions), totalPackages, len(coverinfo.Packages), cfg.outputFile)
+		fmt.Printf("Wrote function coverage %d/%d (skipped %d funcs), package coverage %d/%d to %s\n", total, len(coverinfo.Functions), skipped, totalPackages, len(coverinfo.Packages), cfg.outputFile)
 	} else {
 		packages := func(defs []*model.Definition) []model.Package {
 			var result []model.Package

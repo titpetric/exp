@@ -11,6 +11,7 @@ type Declaration struct {
 	Type string `json:",omitempty"`
 
 	File string
+	Line int `json:",omitempty"`
 
 	SelfContained bool
 

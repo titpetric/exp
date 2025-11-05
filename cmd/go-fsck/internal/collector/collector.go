@@ -202,6 +202,7 @@ func (v *collector) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 		def := &Declaration{
 			Names:         names,
 			File:          filepath.Base(filename),
+			Line:          v.fset.Position(node.Pos()).Line,
 			SelfContained: IsSelfContainedType(node),
 			Source:        v.getSource(file, node),
 		}
@@ -303,6 +304,7 @@ func (v *collector) collectFuncDeclaration(file *ast.File, decl *ast.FuncDecl, f
 		Doc:        strings.TrimSpace(v.getSource(file, decl.Doc)),
 		Kind:       model.FuncKind,
 		File:       filepath.Base(filename),
+		Line:       v.fset.Position(decl.Pos()).Line,
 		Name:       decl.Name.Name,
 		Arguments:  args,
 		Returns:    returns,

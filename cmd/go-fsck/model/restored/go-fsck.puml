@@ -11,6 +11,7 @@ class Declaration {
   + Kind: DeclarationKind
   + Type: string
   + File: string
+  + Line: int
   + SelfContained: bool
   + Imports: []string
   + References: StringSet
