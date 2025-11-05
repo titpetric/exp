@@ -13,7 +13,8 @@ class Declaration {
   + File: string
   + SelfContained: bool
   + Imports: []string
-  + References: map[string][]string
+  + References: StringSet
+  + Globals: StringSet
   + Doc: string
   + Name: string
   + Names: []string
@@ -40,7 +41,6 @@ class DeclarationList {
 }
 
 class Definition {
-  + References: StringSet
   + Doc: string
   + Imports: StringSet
   + Types: DeclarationList
@@ -86,6 +86,8 @@ class StringSet {
 
 
 Declaration --> DeclarationKind : Kind
+Declaration --> StringSet : References
+Declaration --> StringSet : Globals
 Declaration --> FieldList : Fields
 Declaration --> Complexity : Complexity
 
@@ -111,7 +113,6 @@ DeclarationList --> Declaration : Exported()
 DeclarationList --> Declaration : Filter()
 DeclarationList --> Declaration : Find()
 Package --|> Definition : embeded by
-Definition --> StringSet : References
 Definition --> StringSet : Imports
 Definition --> DeclarationList : Types
 Definition --> DeclarationList : Consts

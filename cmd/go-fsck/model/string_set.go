@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"path"
+	"regexp"
 	"slices"
 	"sort"
 	"strings"
@@ -89,6 +90,12 @@ func (i StringSet) Map() (map[string]string, []error) {
 
 		if short == "C" {
 			continue
+		}
+
+		// trim imported semver link
+		re := regexp.MustCompile(`/v[0-9]+$`)
+		if re.MatchString(long) {
+			short = path.Base(re.ReplaceAllString(long, ""))
 		}
 
 		if strings.HasSuffix(short, "_test") {

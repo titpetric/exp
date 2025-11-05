@@ -17,7 +17,8 @@ type Declaration struct {
 	// This is not encoded to json, it's computed on load.
 	Imports []string `json:"-"`
 
-	References map[string][]string `json:",omitempty"`
+	References StringSet `json:",omitempty"`
+	Globals    StringSet `json:",omitempty"`
 
 	Doc string `json:",omitempty"`
 

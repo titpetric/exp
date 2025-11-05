@@ -5,7 +5,6 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Path": ".",
     "TestPackage": false,
-    "References": null,
     "Doc": "",
     "Imports": {
       "declaration.go": [
@@ -27,6 +26,7 @@
       "string_set.go": [
         "\"fmt\"",
         "\"path\"",
+        "\"regexp\"",
         "\"slices\"",
         "\"sort\"",
         "\"strings\""
@@ -113,10 +113,17 @@
           },
           {
             "Name": "References",
-            "Type": "map[string][]string",
+            "Type": "StringSet",
             "Path": "Declaration.References",
             "Tag": "json:\",omitempty\"",
             "JSONName": "References"
+          },
+          {
+            "Name": "Globals",
+            "Type": "StringSet",
+            "Path": "Declaration.Globals",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Globals"
           },
           {
             "Name": "Doc",
@@ -189,7 +196,7 @@
             "JSONName": "Complexity"
           }
         ],
-        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\t// This is not encoded to json, it's computed on load.\n\tImports\t[]string\t`json:\"-\"`\n\n\tReferences\tmap[string][]string\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
+        "Source": "// Declaration holds information about a go symbol.\ntype Declaration struct {\n\tKind\tDeclarationKind\n\tType\tstring\t`json:\",omitempty\"`\n\n\tFile\tstring\n\n\tSelfContained\tbool\n\n\t// This is not encoded to json, it's computed on load.\n\tImports\t[]string\t`json:\"-\"`\n\n\tReferences\tStringSet\t`json:\",omitempty\"`\n\tGlobals\t\tStringSet\t`json:\",omitempty\"`\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tName\t\tstring\t\t`json:\",omitempty\"`\n\tNames\t\t[]string\t`json:\",omitempty\"`\n\tReceiver\tstring\t\t`json:\",omitempty\"`\n\n\tFields\tFieldList\t`json:\",omitempty\"`\n\n\tArguments\t[]string\t`json:\",omitempty\"`\n\tReturns\t\t[]string\t`json:\",omitempty\"`\n\n\tSignature\tstring\t`json:\",omitempty\"`\n\tSource\t\tstring\t`json:\",omitempty\"`\n\n\tComplexity\t*Complexity\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -239,12 +246,6 @@
             "JSONName": ""
           },
           {
-            "Name": "References",
-            "Type": "StringSet",
-            "Path": "Definition.References",
-            "JSONName": "References"
-          },
-          {
             "Name": "Doc",
             "Type": "string",
             "Path": "Definition.Doc",
@@ -281,7 +282,7 @@
             "JSONName": "Funcs"
           }
         ],
-        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tReferences\tStringSet\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
+        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
       },
       {
         "Kind": "type",
@@ -814,11 +815,11 @@
           "*Definition"
         ],
         "Signature": "Merge (in *Definition)",
-        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\tfor k, v := range in.References {\n\t\td.References.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
+        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
         "Complexity": {
-          "Cognitive": 3,
-          "Cyclomatic": 4,
-          "Lines": 22
+          "Cognitive": 2,
+          "Cyclomatic": 3,
+          "Lines": 19
         }
       },
       {
@@ -1096,6 +1097,9 @@
           "path": [
             "Base"
           ],
+          "regexp": [
+            "MustCompile"
+          ],
           "strings": [
             "ReplaceAll",
             "Contains",
@@ -1112,11 +1116,11 @@
           "[]error"
         ],
         "Signature": "Map () (map[string]string, []error)",
-        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map() (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\timports := i.All()\n\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
+        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map() (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\timports := i.All()\n\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\t// trim imported semver link\n\t\tre := regexp.MustCompile(`/v[0-9]+$`)\n\t\tif re.MatchString(long) {\n\t\t\tshort = path.Base(re.ReplaceAllString(long, \"\"))\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
         "Complexity": {
-          "Cognitive": 22,
-          "Cyclomatic": 11,
-          "Lines": 72
+          "Cognitive": 24,
+          "Cyclomatic": 12,
+          "Lines": 78
         }
       },
       {

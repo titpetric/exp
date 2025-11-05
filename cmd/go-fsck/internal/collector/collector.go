@@ -45,9 +45,7 @@ func (v *collector) Clean(verbose bool) []*Definition {
 		for _, fv := range def.Funcs {
 			for k, v := range fv.References {
 				if _, ok := importMap[k]; !ok {
-					for _, p := range v {
-						def.References.Add(fmt.Sprintf("%s.%s", k, p), fv.Name)
-					}
+					fv.Globals.Add(k, v...)
 					delete(fv.References, k)
 				}
 			}
