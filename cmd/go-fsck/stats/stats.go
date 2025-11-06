@@ -38,11 +38,14 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 }
 
 func report(title string, value any) {
-	j, _ := json.MarshalIndent(value, "", "  ")
-
-	fmt.Println(title)
+	fmt.Println("##", title)
 	fmt.Println()
-	fmt.Println(string(j))
+	if v, ok := value.(fmt.Stringer); ok {
+		fmt.Println(v.String())
+	} else {
+		j, _ := json.MarshalIndent(value, "", "  ")
+		fmt.Println(string(j))
+	}
 	fmt.Println()
 }
 
@@ -52,10 +55,14 @@ func stats(cfg *options) error {
 		return err
 	}
 
+	report("Documentation", modules.Documentation(defs))
+	report("Package stats", modules.PackageStats(defs))
+	report("Import usage", modules.ImportStats(defs))
+
 	for _, def := range defs {
+		fmt.Println("#", def.ImportPath)
+		fmt.Println()
 		report("File stats", modules.NewFileStats(def))
-		report("Package usage", modules.NewPackagePollution(def))
-		report("Package stats", modules.NewPackageStats(def))
 		report("Reverse usage", modules.NewReverseUsage(def))
 	}
 

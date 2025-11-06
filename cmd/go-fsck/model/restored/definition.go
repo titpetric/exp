@@ -50,6 +50,16 @@ func (d *Definition) ClearTestFiles() {
 	d.Funcs.ClearTestFiles()
 }
 
+// DeclarationList merges all the declarations together.
+func (d *Definition) DeclarationList() DeclarationList {
+	allDecls := DeclarationList{}
+	allDecls.Append(d.Consts...)
+	allDecls.Append(d.Vars...)
+	allDecls.Append(d.Types...)
+	allDecls.Append(d.Funcs...)
+	return allDecls
+}
+
 func (d *Definition) Fill() {
 	for _, decl := range d.Order() {
 		decl.Imports = d.getImports(decl)
@@ -76,7 +86,7 @@ func (d *Definition) Merge(in *Definition) {
 	// d.Sort()
 }
 
-func (d *Definition) Order() []*Declaration {
+func (d *Definition) Order() DeclarationList {
 	count := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)
 	result := make([]*Declaration, 0, count)
 
@@ -84,7 +94,7 @@ func (d *Definition) Order() []*Declaration {
 	result = append(result, d.Funcs...)
 	result = append(result, d.Vars...)
 	result = append(result, d.Consts...)
-	return result
+	return DeclarationList(result)
 }
 
 // Sort will sort the inner types so they have a stable order.
@@ -93,6 +103,24 @@ func (d *Definition) Sort() {
 	d.Vars.Sort()
 	d.Consts.Sort()
 	d.Funcs.Sort()
+}
+
+func (p DeclarationList) Exported() (result DeclarationList) {
+	for _, decl := range p {
+		if decl.IsExported() {
+			result = append(result, decl)
+		}
+	}
+	return
+}
+
+func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
+	for _, decl := range p {
+		if matchfn(decl) {
+			result.Append(decl)
+		}
+	}
+	return
 }
 
 func (d *Definition) getImports(decl *Declaration) []string {

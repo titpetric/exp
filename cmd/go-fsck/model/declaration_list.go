@@ -30,7 +30,7 @@ func (p *DeclarationList) AppendUnique(in ...*Declaration) {
 	p.Sort()
 }
 
-func (p DeclarationList) Exported() (result []*Declaration) {
+func (p DeclarationList) Exported() (result DeclarationList) {
 	for _, decl := range p {
 		if decl.IsExported() {
 			result = append(result, decl)
@@ -54,10 +54,10 @@ func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
 	return nil
 }
 
-func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result []*Declaration) {
+func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
 	for _, decl := range p {
 		if matchfn(decl) {
-			result = append(result, decl)
+			result.Append(decl)
 		}
 	}
 	return

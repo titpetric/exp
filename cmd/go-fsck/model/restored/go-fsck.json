@@ -310,6 +310,24 @@
       },
       {
         "Kind": "type",
+        "Type": "[]*Definition",
+        "File": "definition_list.go",
+        "Line": 4,
+        "SelfContained": false,
+        "Doc": "DefinitionList holds a list of Go packages.",
+        "Name": "DefinitionList",
+        "Fields": [
+          {
+            "Name": "type",
+            "Type": "[]*Definition",
+            "Path": "",
+            "JSONName": ""
+          }
+        ],
+        "Source": "// DefinitionList holds a list of Go packages.\ntype DefinitionList []*Definition"
+      },
+      {
+        "Kind": "type",
         "File": "field.go",
         "Line": 4,
         "SelfContained": true,
@@ -500,6 +518,28 @@
     "Funcs": [
       {
         "Kind": "func",
+        "File": "definition_list.go",
+        "Line": 31,
+        "SelfContained": false,
+        "Doc": "Map over a DefinitionList",
+        "Name": "Map",
+        "Arguments": [
+          "DefinitionList",
+          "func(*Definition) T"
+        ],
+        "Returns": [
+          "[]T"
+        ],
+        "Signature": "Map (defs DefinitionList, fn func(*Definition) T) []T",
+        "Source": "// Map over a DefinitionList\nfunc Map[T any](defs DefinitionList, fn func(*Definition) T) []T {\n\tout := make([]T, 0, len(defs))\n\tfor _, d := range defs {\n\t\tout = append(out, fn(d))\n\t}\n\treturn out\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
         "File": "string_set.go",
         "Line": 15,
         "SelfContained": false,
@@ -513,6 +553,29 @@
           "Cognitive": 0,
           "Cyclomatic": 1,
           "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "definition_list.go",
+        "Line": 40,
+        "SelfContained": false,
+        "Doc": "Reduce over a DefinitionList",
+        "Name": "Reduce",
+        "Arguments": [
+          "DefinitionList",
+          "R",
+          "func(R, *Definition) R"
+        ],
+        "Returns": [
+          "R"
+        ],
+        "Signature": "Reduce (defs DefinitionList, acc R, fn func(R, *Definition) R) R",
+        "Source": "// Reduce over a DefinitionList\nfunc Reduce[T any, R any](defs DefinitionList, acc R, fn func(R, *Definition) R) R {\n\tfor _, d := range defs {\n\t\tacc = fn(acc, d)\n\t}\n\treturn acc\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 7
         }
       },
       {
@@ -784,7 +847,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 58,
+        "Line": 68,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -804,7 +867,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 39,
+        "Line": 49,
         "SelfContained": false,
         "Name": "ClearSource",
         "Receiver": "*Definition",
@@ -819,7 +882,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 46,
+        "Line": 56,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -839,7 +902,26 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 70,
+        "Line": 21,
+        "SelfContained": false,
+        "Doc": "DeclarationList merges all the declarations together.",
+        "Name": "DeclarationList",
+        "Receiver": "*Definition",
+        "Returns": [
+          "DeclarationList"
+        ],
+        "Signature": "DeclarationList () DeclarationList",
+        "Source": "// DeclarationList merges all the declarations together.\nfunc (d *Definition) DeclarationList() DeclarationList {\n\tallDecls := DeclarationList{}\n\tallDecls.Append(d.Consts...)\n\tallDecls.Append(d.Vars...)\n\tallDecls.Append(d.Types...)\n\tallDecls.Append(d.Funcs...)\n\treturn allDecls\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 9
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "definition.go",
+        "Line": 80,
         "SelfContained": false,
         "Name": "Fill",
         "Receiver": "*Definition",
@@ -854,7 +936,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 76,
+        "Line": 86,
         "SelfContained": false,
         "Name": "Merge",
         "Receiver": "*Definition",
@@ -872,15 +954,15 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 28,
+        "Line": 38,
         "SelfContained": false,
         "Name": "Order",
         "Receiver": "*Definition",
         "Returns": [
-          "[]*Declaration"
+          "DeclarationList"
         ],
-        "Signature": "Order () []*Declaration",
-        "Source": "func (d *Definition) Order() []*Declaration {\n\tcount := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)\n\tresult := make([]*Declaration, 0, count)\n\n\tresult = append(result, d.Types...)\n\tresult = append(result, d.Funcs...)\n\tresult = append(result, d.Vars...)\n\tresult = append(result, d.Consts...)\n\treturn result\n}",
+        "Signature": "Order () DeclarationList",
+        "Source": "func (d *Definition) Order() DeclarationList {\n\tcount := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)\n\tresult := make([]*Declaration, 0, count)\n\n\tresult = append(result, d.Types...)\n\tresult = append(result, d.Funcs...)\n\tresult = append(result, d.Vars...)\n\tresult = append(result, d.Consts...)\n\treturn DeclarationList(result)\n}",
         "Complexity": {
           "Cognitive": 0,
           "Cyclomatic": 1,
@@ -890,7 +972,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 21,
+        "Line": 31,
         "SelfContained": false,
         "Doc": "Sort will sort the inner types so they have a stable order.",
         "Name": "Sort",
@@ -971,10 +1053,10 @@
         "Name": "Exported",
         "Receiver": "DeclarationList",
         "Returns": [
-          "[]*Declaration"
+          "DeclarationList"
         ],
-        "Signature": "Exported () []*Declaration",
-        "Source": "func (p DeclarationList) Exported() (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif decl.IsExported() {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
+        "Signature": "Exported () DeclarationList",
+        "Source": "func (p DeclarationList) Exported() (result DeclarationList) {\n\tfor _, decl := range p {\n\t\tif decl.IsExported() {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
         "Complexity": {
           "Cognitive": 3,
           "Cyclomatic": 3,
@@ -992,10 +1074,10 @@
           "func(d *Declaration) bool"
         ],
         "Returns": [
-          "[]*Declaration"
+          "DeclarationList"
         ],
-        "Signature": "Filter (matchfn func(d *Declaration) bool) []*Declaration",
-        "Source": "func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result []*Declaration) {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
+        "Signature": "Filter (matchfn func(d *Declaration) bool) DeclarationList",
+        "Source": "func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\tresult.Append(decl)\n\t\t}\n\t}\n\treturn\n}",
         "Complexity": {
           "Cognitive": 3,
           "Cyclomatic": 3,
@@ -1035,6 +1117,66 @@
         ],
         "Signature": "Walk (matchfn func(d *Declaration))",
         "Source": "func (p DeclarationList) Walk(matchfn func(d *Declaration)) {\n\tfor _, decl := range p {\n\t\tmatchfn(decl)\n\t}\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 5
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "definition_list.go",
+        "Line": 21,
+        "SelfContained": false,
+        "Name": "Filter",
+        "Receiver": "DefinitionList",
+        "Arguments": [
+          "func(d *Definition) bool"
+        ],
+        "Returns": [
+          "[]*Definition"
+        ],
+        "Signature": "Filter (matchfn func(d *Definition) bool) []*Definition",
+        "Source": "func (p DefinitionList) Filter(matchfn func(d *Definition) bool) (result []*Definition) {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\tresult = append(result, decl)\n\t\t}\n\t}\n\treturn\n}",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 3,
+          "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "definition_list.go",
+        "Line": 12,
+        "SelfContained": false,
+        "Name": "Find",
+        "Receiver": "DefinitionList",
+        "Arguments": [
+          "func(d *Definition) bool"
+        ],
+        "Returns": [
+          "*Definition"
+        ],
+        "Signature": "Find (matchfn func(d *Definition) bool) *Definition",
+        "Source": "func (p DefinitionList) Find(matchfn func(d *Definition) bool) *Definition {\n\tfor _, decl := range p {\n\t\tif matchfn(decl) {\n\t\t\treturn decl\n\t\t}\n\t}\n\treturn nil\n}",
+        "Complexity": {
+          "Cognitive": 3,
+          "Cyclomatic": 3,
+          "Lines": 8
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "definition_list.go",
+        "Line": 6,
+        "SelfContained": false,
+        "Name": "Walk",
+        "Receiver": "DefinitionList",
+        "Arguments": [
+          "func(d *Definition)"
+        ],
+        "Signature": "Walk (matchfn func(d *Definition))",
+        "Source": "func (p DefinitionList) Walk(matchfn func(d *Definition)) {\n\tfor _, decl := range p {\n\t\tmatchfn(decl)\n\t}\n}",
         "Complexity": {
           "Cognitive": 1,
           "Cyclomatic": 2,
@@ -1173,22 +1315,25 @@
         "Doc": "Map returns a map with the short package name as the key\nand the full import path as the value.",
         "Name": "Map",
         "Receiver": "StringSet",
+        "Arguments": [
+          "[]string"
+        ],
         "Returns": [
           "map[string]string",
           "[]error"
         ],
-        "Signature": "Map () (map[string]string, []error)",
-        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map() (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\timports := i.All()\n\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\t// trim imported semver link\n\t\tre := regexp.MustCompile(`/v[0-9]+$`)\n\t\tif re.MatchString(long) {\n\t\t\tshort = path.Base(re.ReplaceAllString(long, \"\"))\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
+        "Signature": "Map (imports []string) (map[string]string, []error)",
+        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map(imports []string) (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\t// trim imported semver link\n\t\tre := regexp.MustCompile(`/v[0-9]+$`)\n\t\tif re.MatchString(long) {\n\t\t\tshort = path.Base(re.ReplaceAllString(long, \"\"))\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
         "Complexity": {
           "Cognitive": 24,
           "Cyclomatic": 12,
-          "Lines": 78
+          "Lines": 76
         }
       },
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 96,
+        "Line": 106,
         "SelfContained": false,
         "Name": "getImports",
         "Receiver": "*Definition",

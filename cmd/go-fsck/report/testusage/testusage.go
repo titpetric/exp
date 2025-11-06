@@ -81,7 +81,7 @@ func isTestFunction(funcDecl *model.Declaration) bool {
 func getFunctionNames(def *model.Definition) ([]*FuncRef, error) {
 	var funcRefs []*FuncRef
 
-	importMap, _ := def.Imports.Map()
+	importMap, _ := def.Imports.Map(def.Imports.All())
 
 	for _, funcDecl := range def.Funcs {
 		if isTestFunction(funcDecl) || strings.HasSuffix(funcDecl.File, "_test.go") {
@@ -123,7 +123,7 @@ func resolveExternalDependencies(funcRefs []*FuncRef, definitions []*model.Defin
 		symbolPackage := ref.ReferencedPackage
 
 		// First, try to resolve within the same definition
-		imported, _ := ref.Definition.Imports.Map()
+		imported, _ := ref.Definition.Imports.Map(ref.Definition.Imports.All())
 		if len(imported) == 0 {
 			continue
 		}

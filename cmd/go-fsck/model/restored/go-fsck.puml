@@ -35,8 +35,8 @@ class DeclarationKind {
 
 class DeclarationList {
   - type: []*Declaration
-  + Exported () []*Declaration
-  + Filter (matchfn func(d *Declaration) bool) []*Declaration
+  + Exported () DeclarationList
+  + Filter (matchfn func(d *Declaration) bool) DeclarationList
   + Find (matchfn func(d *Declaration) bool) *Declaration
   + Walk (matchfn func(d *Declaration))
 }
@@ -49,6 +49,13 @@ class Definition {
   + Consts: DeclarationList
   + Vars: DeclarationList
   + Funcs: DeclarationList
+}
+
+class DefinitionList {
+  - type: []*Definition
+  + Filter (matchfn func(d *Definition) bool) []*Definition
+  + Find (matchfn func(d *Definition) bool) *Definition
+  + Walk (matchfn func(d *Definition))
 }
 
 class Field {
@@ -83,7 +90,7 @@ class StringSet {
   - type: map[string][]string
   + All () []string
   + Get (key string) []string
-  + Map () (map[string]string, []error)
+  + Map (imports []string) (map[string]string, []error)
 }
 
 
@@ -111,8 +118,8 @@ DeclarationList holds a list of Go symbols.
 end note
 
 
-DeclarationList --> Declaration : Exported()
-DeclarationList --> Declaration : Filter()
+DeclarationList --> DeclarationList : Exported()
+DeclarationList --> DeclarationList : Filter()
 DeclarationList --> Declaration : Find()
 Package --|> Definition : embeded by
 Definition --> StringSet : Imports
@@ -126,6 +133,15 @@ Definition holds all symbols defined for a Package.
 end note
 
 
+DefinitionList --> Definition : type
+
+note top of DefinitionList
+DefinitionList holds a list of Go packages.
+end note
+
+
+DefinitionList --> Definition : Filter()
+DefinitionList --> Definition : Find()
 
 note top of Field
 Field holds details about a field definition.

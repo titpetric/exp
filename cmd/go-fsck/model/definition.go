@@ -17,6 +17,16 @@ type Definition struct {
 	Funcs  DeclarationList `json:",omitempty"`
 }
 
+// DeclarationList merges all the declarations together.
+func (d *Definition) DeclarationList() DeclarationList {
+	allDecls := DeclarationList{}
+	allDecls.Append(d.Consts...)
+	allDecls.Append(d.Vars...)
+	allDecls.Append(d.Types...)
+	allDecls.Append(d.Funcs...)
+	return allDecls
+}
+
 // Sort will sort the inner types so they have a stable order.
 func (d *Definition) Sort() {
 	d.Types.Sort()
@@ -25,7 +35,7 @@ func (d *Definition) Sort() {
 	d.Funcs.Sort()
 }
 
-func (d *Definition) Order() []*Declaration {
+func (d *Definition) Order() DeclarationList {
 	count := len(d.Types) + len(d.Funcs) + len(d.Vars) + len(d.Consts)
 	result := make([]*Declaration, 0, count)
 
@@ -33,7 +43,7 @@ func (d *Definition) Order() []*Declaration {
 	result = append(result, d.Funcs...)
 	result = append(result, d.Vars...)
 	result = append(result, d.Consts...)
-	return result
+	return DeclarationList(result)
 }
 
 func (d *Definition) ClearSource() {

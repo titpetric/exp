@@ -40,7 +40,7 @@ func NewCollector(fset *token.FileSet) *collector {
 
 func (v *collector) Clean(verbose bool) []*Definition {
 	for _, def := range v.definition {
-		importMap, _ := def.Imports.Map()
+		importMap, _ := def.Imports.Map(def.Imports.All())
 
 		for _, fv := range def.Funcs {
 			for k, v := range fv.References {

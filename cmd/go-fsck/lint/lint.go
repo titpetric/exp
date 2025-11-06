@@ -59,7 +59,7 @@ func lint(cfg *options) error {
 	}
 
 	for _, def := range defs {
-		_, importCollisions := def.Imports.Map()
+		_, importCollisions := def.Imports.Map(def.Imports.All())
 		for _, err := range importCollisions {
 			lintErrors = append(lintErrors, err)
 		}

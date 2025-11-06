@@ -1,4 +1,4 @@
-package stats
+package sqlite
 
 import (
 	"context"
@@ -6,8 +6,6 @@ import (
 	"os"
 
 	"github.com/go-bridget/mig/db"
-
-	"github.com/titpetric/exp/cmd/go-fsck/stats/sqlite"
 )
 
 func storeDefinitions(cfg *options) error {
@@ -35,18 +33,18 @@ func storeDefinitions(cfg *options) error {
 	}
 
 	if create {
-		for _, stmt := range sqlite.Statements() {
+		for _, stmt := range Statements() {
 			conn.MustExec(stmt)
 		}
 
 		for _, def := range defs {
-			if err := sqlite.Store(conn, def); err != nil {
+			if err := Store(conn, def); err != nil {
 				return err
 			}
 		}
 	}
 
-	if err := sqlite.Stats(conn); err != nil {
+	if err := Stats(conn); err != nil {
 		return err
 	}
 

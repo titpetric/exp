@@ -13,11 +13,7 @@ type ReverseUsage struct {
 func NewReverseUsage(def *model.Definition) ReverseUsage {
 	result := make(map[string]map[string]int)
 
-	allDecls := model.DeclarationList{}
-	allDecls.Append(def.Funcs...)
-	allDecls.Append(def.Types...)
-	allDecls.Append(def.Vars...)
-	allDecls.Append(def.Consts...)
+	allDecls := def.DeclarationList()
 
 	for _, d := range allDecls {
 		for pkg, symbols := range d.References {

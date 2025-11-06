@@ -54,7 +54,7 @@ func (i StringSet) Get(key string) []string {
 
 // Map returns a map with the short package name as the key
 // and the full import path as the value.
-func (i StringSet) Map() (map[string]string, []error) {
+func (i StringSet) Map(imports []string) (map[string]string, []error) {
 	warnings := []error{}
 	warningSeen := map[string]bool{}
 
@@ -73,8 +73,6 @@ func (i StringSet) Map() (map[string]string, []error) {
 	}
 
 	result := map[string]string{}
-	imports := i.All()
-
 	for _, imported := range imports {
 		var short, long string
 
