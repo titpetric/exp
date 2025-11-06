@@ -44,6 +44,7 @@ class DeclarationList {
 class Definition {
   + Doc: string
   + Imports: StringSet
+  + InitCount: int
   + Types: DeclarationList
   + Consts: DeclarationList
   + Vars: DeclarationList

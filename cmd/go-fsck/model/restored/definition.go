@@ -8,13 +8,15 @@ import (
 type Definition struct {
 	Package
 
-	Doc string
+	Doc string `json:",omitempty"`
 
-	Imports StringSet
-	Types   DeclarationList
-	Consts  DeclarationList
-	Vars    DeclarationList
-	Funcs   DeclarationList
+	Imports   StringSet `json:",omitempty"`
+	InitCount int       `json:",omitempty"`
+
+	Types  DeclarationList `json:",omitempty"`
+	Consts DeclarationList `json:",omitempty"`
+	Vars   DeclarationList `json:",omitempty"`
+	Funcs  DeclarationList `json:",omitempty"`
 }
 
 func (d *Definition) ClearNonTestFiles() {

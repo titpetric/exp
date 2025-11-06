@@ -106,15 +106,16 @@ func coverage(cfg *options) error {
 		return nil
 	}
 
-	var total, skipped int
+	var total, skipped, inits int
 	for _, info := range coverinfo.Functions {
+		p := findPackage(defs, info.Package)
+
 		// init may show up multiple times in one package
 		if info.Function == "init" {
-			skipped++
+			inits++
+			p.InitCount++
 			continue
 		}
-
-		p := findPackage(defs, info.Package)
 
 		f := p.Funcs.Find(func(d *model.Declaration) bool {
 			if d.Kind != model.FuncKind {
@@ -179,7 +180,7 @@ func coverage(cfg *options) error {
 			return err
 		}
 
-		fmt.Printf("Wrote function coverage %d/%d (skipped %d funcs), package coverage %d/%d to %s\n", total, len(coverinfo.Functions), skipped, totalPackages, len(coverinfo.Packages), cfg.outputFile)
+		fmt.Printf("Wrote function coverage %d/%d (skipped %d funcs, %d init()), package coverage %d/%d to %s\n", total, len(coverinfo.Functions), skipped, inits, totalPackages, len(coverinfo.Packages), cfg.outputFile)
 	} else {
 		packages := func(defs []*model.Definition) []model.Package {
 			var result []model.Package

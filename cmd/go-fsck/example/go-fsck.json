@@ -251,9 +251,6 @@
         "\"github.com/stretchr/testify/assert\""
       ]
     },
-    "Types": [],
-    "Consts": [],
-    "Vars": [],
     "Funcs": [
       {
         "Kind": "func",
@@ -286,7 +283,6 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
-    "Doc": "",
     "Imports": {
       "printer_test.go": [
         "\"fmt\"",
@@ -300,9 +296,6 @@
         "\"github.com/titpetric/exp/cmd/go-fsck/internal/ast\""
       ]
     },
-    "Types": [],
-    "Consts": [],
-    "Vars": [],
     "Funcs": [
       {
         "Kind": "func",

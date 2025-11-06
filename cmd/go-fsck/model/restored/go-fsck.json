@@ -5,7 +5,6 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Path": ".",
     "TestPackage": false,
-    "Doc": "",
     "Imports": {
       "declaration.go": [
         "\"go/ast\"",
@@ -261,40 +260,53 @@
             "Name": "Doc",
             "Type": "string",
             "Path": "Definition.Doc",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Doc"
           },
           {
             "Name": "Imports",
             "Type": "StringSet",
             "Path": "Definition.Imports",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Imports"
+          },
+          {
+            "Name": "InitCount",
+            "Type": "int",
+            "Path": "Definition.InitCount",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "InitCount"
           },
           {
             "Name": "Types",
             "Type": "DeclarationList",
             "Path": "Definition.Types",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Types"
           },
           {
             "Name": "Consts",
             "Type": "DeclarationList",
             "Path": "Definition.Consts",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Consts"
           },
           {
             "Name": "Vars",
             "Type": "DeclarationList",
             "Path": "Definition.Vars",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Vars"
           },
           {
             "Name": "Funcs",
             "Type": "DeclarationList",
             "Path": "Definition.Funcs",
+            "Tag": "json:\",omitempty\"",
             "JSONName": "Funcs"
           }
         ],
-        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\n\n\tImports\tStringSet\n\tTypes\tDeclarationList\n\tConsts\tDeclarationList\n\tVars\tDeclarationList\n\tFuncs\tDeclarationList\n}"
+        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tImports\t\tStringSet\t`json:\",omitempty\"`\n\tInitCount\tint\t\t`json:\",omitempty\"`\n\n\tTypes\tDeclarationList\t`json:\",omitempty\"`\n\tConsts\tDeclarationList\t`json:\",omitempty\"`\n\tVars\tDeclarationList\t`json:\",omitempty\"`\n\tFuncs\tDeclarationList\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -485,7 +497,6 @@
         "Source": "const (\n\tStructKind\tDeclarationKind\t= \"struct\"\n\tImportKind\t\t\t= \"import\"\n\tConstKind\t\t\t= \"const\"\n\tTypeKind\t\t\t= \"type\"\n\tFuncKind\t\t\t= \"func\"\n\tVarKind\t\t\t\t= \"var\"\n\tCommentKind\t\t\t= \"comment\"\n)"
       }
     ],
-    "Vars": [],
     "Funcs": [
       {
         "Kind": "func",
@@ -773,7 +784,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 56,
+        "Line": 58,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -793,7 +804,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 37,
+        "Line": 39,
         "SelfContained": false,
         "Name": "ClearSource",
         "Receiver": "*Definition",
@@ -808,7 +819,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 44,
+        "Line": 46,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -828,7 +839,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 68,
+        "Line": 70,
         "SelfContained": false,
         "Name": "Fill",
         "Receiver": "*Definition",
@@ -843,7 +854,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 74,
+        "Line": 76,
         "SelfContained": false,
         "Name": "Merge",
         "Receiver": "*Definition",
@@ -861,7 +872,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 26,
+        "Line": 28,
         "SelfContained": false,
         "Name": "Order",
         "Receiver": "*Definition",
@@ -879,7 +890,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 19,
+        "Line": 21,
         "SelfContained": false,
         "Doc": "Sort will sort the inner types so they have a stable order.",
         "Name": "Sort",
@@ -1177,7 +1188,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 94,
+        "Line": 96,
         "SelfContained": false,
         "Name": "getImports",
         "Receiver": "*Definition",
