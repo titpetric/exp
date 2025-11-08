@@ -20,26 +20,53 @@ func ImportStatsForDefinition(def *model.Definition) ImportStatsResponse {
 	result := NewImportStatsResponse()
 	decls := def.DeclarationList()
 
+	seen := map[string]bool{}
+
+	pkg := def.Package.ImportPath
+	if !strings.Contains(pkg, ".") {
+		return result
+	}
+
+	// exclude known prefix
+	if strings.HasPrefix(pkg, "github.com/dolthub/dolt/go") {
+		return result
+	}
+
+	// a file has multiple declarations
 	for _, d := range decls {
 		imports := def.Imports.Get(d.File)
 		importMap, _ := def.Imports.Map(imports)
 
-		for pkg, refs := range d.References {
-			pkgName, ok := importMap[pkg]
-			if ok {
-				// don't count standard library use
-				if !strings.Contains(pkgName, ".") {
-					continue
-				}
-				// exclude known prefix
-				if strings.HasPrefix(pkgName, "github.com/dolthub/dolt/go") {
-					continue
-				}
+		for _, d := range decls {
+			imports := def.Imports.Get(d.File)
+			importMap, _ := def.Imports.Map(imports)
 
-				result.Imported[pkgName] += len(refs)
-			} else {
-				result.Imported[pkg] += len(refs)
+			if _, ok := seen[d.File]; !ok {
+				result.Imported[pkg] = 1
+				for _, pkg := range importMap {
+					result.ImportedFromFiles[pkg]++
+				}
+				seen[d.File] = true
 			}
+		}
+
+		for short, symbols := range d.References {
+			pkg, ok := importMap[short]
+			if !ok {
+				pkg = short
+			}
+
+			// don't count standard library use
+			if !strings.Contains(pkg, ".") {
+				continue
+			}
+
+			// exclude known prefix
+			if strings.HasPrefix(pkg, "github.com/dolthub/dolt/go") {
+				continue
+			}
+
+			result.Referenced[pkg] += len(symbols)
 		}
 	}
 

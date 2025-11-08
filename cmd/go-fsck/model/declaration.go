@@ -87,6 +87,7 @@ func (d *Declaration) Keys() []string {
 		for k, v := range d.Names {
 			result[k] = strings.Trim(d.Receiver+"."+v, trimPath)
 		}
+		return result
 	}
 	return nil
 }

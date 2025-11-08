@@ -58,13 +58,7 @@ func stats(cfg *options) error {
 	report("Documentation", modules.Documentation(defs))
 	report("Package stats", modules.PackageStats(defs))
 	report("Import usage", modules.ImportStats(defs))
-
-	for _, def := range defs {
-		fmt.Println("#", def.ImportPath)
-		fmt.Println()
-		report("File stats", modules.NewFileStats(def))
-		report("Reverse usage", modules.NewReverseUsage(def))
-	}
+	report("Reverse symbol usage", modules.ReverseUsage(defs))
 
 	return nil
 }

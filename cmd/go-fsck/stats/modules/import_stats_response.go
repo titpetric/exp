@@ -8,7 +8,12 @@ import (
 
 // ImportStatsResponse holds the number of references per imported package.
 type ImportStatsResponse struct {
-	Imported map[string]int `json:"imported"`
+	// Holds a map of use from packages
+	Imported map[string]int `json:"imported_from_packages"`
+	// Holds a map of use from files
+	ImportedFromFiles map[string]int `json:"imported_from_files"`
+	// Holds a map of referenced imports
+	Referenced map[string]int `json:"referenced"`
 }
 
 func (i ImportStatsResponse) String() string {
@@ -46,7 +51,9 @@ func (i ImportStatsResponse) String() string {
 	}
 	importsList := make([]string, 0, len(imports))
 	for _, p := range imports {
-		message := fmt.Sprintf("- %s imported %d times", p.name, p.used)
+		fileUse := i.ImportedFromFiles[p.name]
+		refUse := i.Referenced[p.name]
+		message := fmt.Sprintf("- %s, imported from %d packages, imported %d times, referenced %d times", p.name, p.used, fileUse, refUse)
 		importsList = append(importsList, message)
 	}
 
@@ -61,13 +68,21 @@ func (i ImportStatsResponse) String() string {
 }
 
 func (i *ImportStatsResponse) Merge(in ImportStatsResponse) {
+	for k, v := range in.Referenced {
+		i.Referenced[k] += v
+	}
 	for k, v := range in.Imported {
 		i.Imported[k] += v
+	}
+	for k, v := range in.ImportedFromFiles {
+		i.ImportedFromFiles[k] += v
 	}
 }
 
 func NewImportStatsResponse() ImportStatsResponse {
 	return ImportStatsResponse{
-		Imported: make(map[string]int),
+		Referenced:        make(map[string]int),
+		Imported:          make(map[string]int),
+		ImportedFromFiles: make(map[string]int),
 	}
 }
