@@ -554,28 +554,6 @@
     "Funcs": [
       {
         "Kind": "func",
-        "File": "definition_list.go",
-        "Line": 31,
-        "SelfContained": false,
-        "Doc": "Map over a DefinitionList",
-        "Name": "Map",
-        "Arguments": [
-          "DefinitionList",
-          "func(*Definition) T"
-        ],
-        "Returns": [
-          "[]T"
-        ],
-        "Signature": "Map (defs DefinitionList, fn func(*Definition) T) []T",
-        "Source": "// Map over a DefinitionList\nfunc Map[T any](defs DefinitionList, fn func(*Definition) T) []T {\n\tout := make([]T, 0, len(defs))\n\tfor _, d := range defs {\n\t\tout = append(out, fn(d))\n\t}\n\treturn out\n}",
-        "Complexity": {
-          "Cognitive": 1,
-          "Cyclomatic": 2,
-          "Lines": 8
-        }
-      },
-      {
-        "Kind": "func",
         "File": "string_set.go",
         "Line": 15,
         "SelfContained": false,
@@ -589,29 +567,6 @@
           "Cognitive": 0,
           "Cyclomatic": 1,
           "Lines": 3
-        }
-      },
-      {
-        "Kind": "func",
-        "File": "definition_list.go",
-        "Line": 40,
-        "SelfContained": false,
-        "Doc": "Reduce over a DefinitionList",
-        "Name": "Reduce",
-        "Arguments": [
-          "DefinitionList",
-          "R",
-          "func(R, *Definition) R"
-        ],
-        "Returns": [
-          "R"
-        ],
-        "Signature": "Reduce (defs DefinitionList, acc R, fn func(R, *Definition) R) R",
-        "Source": "// Reduce over a DefinitionList\nfunc Reduce[T any, R any](defs DefinitionList, acc R, fn func(R, *Definition) R) R {\n\tfor _, d := range defs {\n\t\tacc = fn(acc, d)\n\t}\n\treturn acc\n}",
-        "Complexity": {
-          "Cognitive": 1,
-          "Cyclomatic": 2,
-          "Lines": 7
         }
       },
       {
@@ -1129,7 +1084,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 28,
+        "Line": 36,
         "SelfContained": false,
         "References": {
           "slices": [
@@ -1166,11 +1121,11 @@
           "[]string"
         ],
         "Signature": "Keys () []string",
-        "Source": "func (i *StringSet) Keys() []string {\n\tkeys := make([]string, 0, len(*i))\n\tfor key := range *i {\n\t\tkeys = append(keys, key)\n\t}\n\tsort.Strings(keys)\n\treturn keys\n}",
+        "Source": "func (i *StringSet) Keys() []string {\n\tkeys := make([]string, 0, len(*i))\n\tfor key := range *i {\n\t\tkeys = append(keys, key)\n\t}\n\n\tvar m = *i\n\n\tfor k, v := range m {\n\t\tsort.Strings(v)\n\t\tm[k] = v\n\t}\n\n\tsort.Strings(keys)\n\treturn keys\n}",
         "Complexity": {
-          "Cognitive": 1,
-          "Cyclomatic": 2,
-          "Lines": 8
+          "Cognitive": 2,
+          "Cyclomatic": 3,
+          "Lines": 16
         }
       },
       {
@@ -1444,7 +1399,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 56,
+        "Line": 64,
         "SelfContained": false,
         "Name": "All",
         "Receiver": "StringSet",
@@ -1462,7 +1417,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 48,
+        "Line": 56,
         "SelfContained": false,
         "References": {
           "sort": [
@@ -1488,7 +1443,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 66,
+        "Line": 74,
         "SelfContained": false,
         "References": {
           "fmt": [

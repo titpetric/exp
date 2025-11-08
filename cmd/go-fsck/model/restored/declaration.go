@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"go/ast"
 	"strings"
 )
@@ -122,11 +121,4 @@ func (f *Declaration) Ref(pkg *Package) []Ref {
 
 func (f *Declaration) TypeRef() string {
 	return TypeRef(f.Type)
-}
-
-func (r Ref) String() string {
-	if r.Receiver != "" {
-		return fmt.Sprintf("%s.%s.%s", r.Package.Name(), TypeRef(r.Receiver), TypeRef(r.Name))
-	}
-	return fmt.Sprintf("%s.%s", r.Package.Name(), TypeRef(r.Name))
 }

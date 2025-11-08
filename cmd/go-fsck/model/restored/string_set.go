@@ -41,6 +41,14 @@ func (i *StringSet) Keys() []string {
 	for key := range *i {
 		keys = append(keys, key)
 	}
+
+	var m = *i
+
+	for k, v := range m {
+		sort.Strings(v)
+		m[k] = v
+	}
+
 	sort.Strings(keys)
 	return keys
 }
