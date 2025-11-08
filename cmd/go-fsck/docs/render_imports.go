@@ -11,21 +11,13 @@ func renderImports(opt *options, defs []*model.Definition) error {
 	pkgs := make(map[string]model.Package)
 	for _, def := range defs {
 		pkgs[def.Package.ImportPath] = def.Package
-		fmt.Println(def.Package.ImportPath)
 	}
 
 	fmt.Println("@startuml")
 
 	imports := model.NewStringSet()
 
-	fmt.Println("' Have", len(defs), "definitions")
-
 	for _, def := range defs {
-		decls := def.DeclarationList()
-
-		fmt.Println("' Have", len(decls), "declarations in", def.Package.ImportPath)
-		fmt.Println()
-
 		importMap, _ := def.Imports.Map(def.Imports.All())
 
 		for _, long := range importMap {

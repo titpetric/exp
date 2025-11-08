@@ -105,6 +105,21 @@ func (d *Definition) Sort() {
 	d.Funcs.Sort()
 }
 
+func (p DeclarationList) Exported() (result DeclarationList) {
+	for _, decl := range p {
+		if decl.IsExported() {
+			result = append(result, decl)
+		}
+	}
+	return
+}
+
+func (p DeclarationList) Walk(matchfn func(d *Declaration)) {
+	for _, decl := range p {
+		matchfn(decl)
+	}
+}
+
 func (d *Definition) getImports(decl *Declaration) []string {
 	return d.Imports.Get(decl.File)
 }

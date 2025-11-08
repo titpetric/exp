@@ -93,15 +93,6 @@ func (p *DeclarationList) Sort() {
 	})
 }
 
-func (p DeclarationList) Exported() (result DeclarationList) {
-	for _, decl := range p {
-		if decl.IsExported() {
-			result = append(result, decl)
-		}
-	}
-	return
-}
-
 func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
 	for _, decl := range p {
 		if matchfn(decl) {
@@ -118,10 +109,4 @@ func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
 		}
 	}
 	return nil
-}
-
-func (p DeclarationList) Walk(matchfn func(d *Declaration)) {
-	for _, decl := range p {
-		matchfn(decl)
-	}
 }
