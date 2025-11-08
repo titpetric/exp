@@ -30,6 +30,9 @@
             "JSONName": "pool"
           }
         ],
+        "Arguments": [
+          "T Reseter"
+        ],
         "Source": "// Allocator holds a sync.Pool of objects of type T.\ntype Allocator[T Reseter] struct {\n\tpool sync.Pool\n}"
       },
       {
@@ -51,25 +54,16 @@
       },
       {
         "Kind": "type",
-        "Type": "string",
         "File": "example.go",
         "Line": 18,
         "SelfContained": false,
         "Doc": "File represents a filename",
         "Name": "File",
-        "Fields": [
-          {
-            "Name": "type",
-            "Type": "string",
-            "Path": "",
-            "JSONName": ""
-          }
-        ],
         "Source": "// File represents a filename\ntype File string"
       },
       {
         "Kind": "type",
-        "Type": "any",
+        "Type": "interface",
         "File": "generic.go",
         "Line": 8,
         "SelfContained": true,
@@ -77,8 +71,8 @@
         "Name": "Reseter",
         "Fields": [
           {
-            "Name": "type",
-            "Type": "any",
+            "Name": "Reset",
+            "Type": "Reset ()",
             "Path": "",
             "JSONName": ""
           }

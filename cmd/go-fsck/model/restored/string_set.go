@@ -36,6 +36,15 @@ func (i *StringSet) Add(key string, lits ...string) {
 	*i = data
 }
 
+func (i *StringSet) Keys() []string {
+	keys := make([]string, 0, len(*i))
+	for key := range *i {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
 func (i StringSet) All() []string {
 	result := []string{}
 	for _, set := range i {
@@ -77,7 +86,7 @@ func (i StringSet) Map(imports []string) (map[string]string, []error) {
 		var short, long string
 
 		// aliased package
-		imported = strings.ReplaceAll(imported, "/go-", "/")
+		// imported = strings.ReplaceAll(imported, "/go-", "/")
 		if strings.Contains(imported, " ") {
 			line := strings.Split(imported, " ")
 			short, long = line[0], strings.Trim(line[1], `"`)

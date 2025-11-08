@@ -425,6 +425,54 @@ func (p *collector) functionDef(fun *ast.FuncDecl) string {
 	return fmt.Sprintf("%s (%s)", name, paramsString)
 }
 
+func (p *collector) functionType(name string, fun *ast.FuncType) string {
+	var fset = p.fset
+	params := make([]string, 0)
+	for _, p := range fun.Params.List {
+		var typeNameBuf bytes.Buffer
+		err := printer.Fprint(&typeNameBuf, fset, p.Type)
+		if err != nil {
+			log.Fatalf("failed printing %s", err)
+		}
+
+		names := make([]string, 0, len(p.Names))
+		for _, name := range p.Names {
+			names = append(names, name.Name)
+		}
+
+		if len(names) > 0 {
+			params = append(params, fmt.Sprintf("%s %s", strings.Join(names, ","), typeNameBuf.String()))
+		} else {
+			// unnamed parameter: parts of interfaces, unused parameter, like `_` but omitted name.
+			params = append(params, typeNameBuf.String())
+		}
+	}
+	returns := make([]string, 0)
+	if fun.Results != nil {
+		for _, r := range fun.Results.List {
+			var typeNameBuf bytes.Buffer
+			err := printer.Fprint(&typeNameBuf, fset, r.Type)
+			if err != nil {
+				log.Fatalf("failed printing %s", err)
+			}
+
+			returns = append(returns, typeNameBuf.String())
+		}
+	}
+	returnString := ""
+	if len(returns) == 1 {
+		returnString = returns[0]
+	} else if len(returns) > 1 {
+		returnString = fmt.Sprintf("(%s)", strings.Join(returns, ", "))
+	}
+
+	paramsString := strings.Join(params, ", ")
+	if returnString != "" {
+		return fmt.Sprintf("%s (%s) %s", name, paramsString, returnString)
+	}
+	return fmt.Sprintf("%s (%s)", name, paramsString)
+}
+
 func appendIfNotExists(slice []string, element string) []string {
 	for _, s := range slice {
 		if s == element {

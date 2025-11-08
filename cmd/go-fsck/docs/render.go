@@ -60,6 +60,8 @@ func render(cfg *options) error {
 	}
 
 	switch cfg.render {
+	case "imports":
+		return renderImports(cfg, defs)
 	case "json":
 		return renderJSON(cfg, defs)
 	case "puml", "plantuml":

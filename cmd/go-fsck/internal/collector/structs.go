@@ -14,7 +14,26 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 		case *ast.TypeSpec:
 			switch val := obj.Type.(type) {
 			case *ast.StructType:
-				p.parseStruct(out, file, val)
+				p.parseStruct(out, file, obj, val)
+			case *ast.InterfaceType:
+				out.Type = "interface"
+				for _, field := range val.Methods.List {
+					if len(field.Names) == 0 {
+						out.Fields = append(out.Fields, &model.Field{
+							Type: "interface",
+						})
+						continue
+					}
+					for _, name := range field.Names {
+						//fmt.Println(name, p.functionType(name.Name, field.Type.(*ast.FuncType)))
+						out.Fields = append(out.Fields, &model.Field{
+							Name: name.Name,
+							Type: p.functionType(name.Name, field.Type.(*ast.FuncType)),
+						})
+					}
+				}
+			case *ast.Ident:
+				// type aliases, e.g. type X string
 			default:
 				out.Type = p.symbolType(file, obj.Type)
 				item := &model.Field{
@@ -28,10 +47,34 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 	}
 }
 
-func (p *collector) parseStruct(structInfo *model.Declaration, file *ast.File, obj *ast.StructType) {
-	var (
-		goPath = structInfo.Name
-	)
+func (p *collector) parseStruct(structInfo *model.Declaration, file *ast.File, spec *ast.TypeSpec, obj *ast.StructType) {
+	goPath := structInfo.Name
+
+	if spec != nil && spec.TypeParams != nil {
+		names := []string{}
+		if spec != nil && spec.TypeParams != nil {
+			for _, field := range spec.TypeParams.List { // loop over all TypeParam fields
+				var constraint string
+				switch t := field.Type.(type) {
+				case *ast.Ident:
+					constraint = t.Name
+				case *ast.SelectorExpr:
+					if x, ok := t.X.(*ast.Ident); ok {
+						constraint = x.Name + "." + t.Sel.Name
+					}
+				default:
+					constraint = "unknown"
+				}
+
+				// combine field names with constraint
+				for _, ident := range field.Names { // loop over Names inside this Field
+					names = append(names, ident.Name+" "+constraint)
+				}
+			}
+		}
+
+		structInfo.Arguments = names
+	}
 
 	for _, field := range obj.Fields.List {
 		//pos := p.fileset.Position(field.Pos())

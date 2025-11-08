@@ -38,12 +38,43 @@ type Declaration struct {
 	Complexity *Complexity `json:",omitempty"`
 }
 
+func (f *Declaration) HasReceiver() bool {
+	return f.Receiver != ""
+}
+
+func (f *Declaration) Ref(pkg *Package) []Ref {
+	receiver := f.ReceiverTypeRef()
+	result := make([]Ref, 0, len(f.Names)+1)
+	for _, name := range f.Names {
+		result = append(result, Ref{
+			Package:  pkg,
+			Name:     name,
+			Receiver: receiver,
+		})
+	}
+
+	result = append(result, Ref{
+		Package:  pkg,
+		Name:     f.Name,
+		Receiver: receiver,
+	})
+
+	return result
+}
+
 func (f *Declaration) TypeRef() string {
 	return TypeRef(f.Type)
 }
 
 func (f *Declaration) ReceiverTypeRef() string {
 	return TypeRef(f.Receiver)
+}
+
+func (d *Declaration) GetNames() []string {
+	if len(d.Names) > 0 {
+		return d.Names
+	}
+	return []string{d.Name}
 }
 
 func (d *Declaration) HasName(find string) bool {

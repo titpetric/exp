@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strings"
 
 	"golang.org/x/tools/go/packages"
 )
@@ -33,6 +34,18 @@ func (p Package) Equal(in Package) bool {
 
 func (p Package) Name() string {
 	return p.Package
+}
+
+func (p Package) Namespace(suffix string) string {
+	var namespace string
+	packagePath := strings.Trim(p.Path, "./")
+	if packagePath != "" {
+		namespace = strings.ReplaceAll(packagePath, "/", ".")
+	}
+	if namespace == "" {
+		namespace = p.Package
+	}
+	return namespace + suffix
 }
 
 func (p Package) String() string {

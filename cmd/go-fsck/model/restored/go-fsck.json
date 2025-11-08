@@ -6,6 +6,9 @@
     "Path": ".",
     "TestPackage": false,
     "Imports": {
+      "built_in_types.go": [
+        "\"strings\""
+      ],
       "declaration.go": [
         "\"go/ast\"",
         "\"strings\""
@@ -20,7 +23,11 @@
       ],
       "package.go": [
         "\"fmt\"",
+        "\"strings\"",
         "\"golang.org/x/tools/go/packages\""
+      ],
+      "ref.go": [
+        "\"fmt\""
       ],
       "string_set.go": [
         "\"fmt\"",
@@ -208,20 +215,11 @@
       },
       {
         "Kind": "type",
-        "Type": "string",
         "File": "declaration_kind.go",
         "Line": 4,
         "SelfContained": false,
         "Doc": "DeclarationKind is an enum of go symbol types.",
         "Name": "DeclarationKind",
-        "Fields": [
-          {
-            "Name": "type",
-            "Type": "string",
-            "Path": "",
-            "JSONName": ""
-          }
-        ],
         "Source": "// DeclarationKind is an enum of go symbol types.\ntype DeclarationKind string"
       },
       {
@@ -419,7 +417,7 @@
       {
         "Kind": "type",
         "File": "package.go",
-        "Line": 10,
+        "Line": 11,
         "SelfContained": false,
         "Doc": "Package holds go package information.",
         "Name": "Package",
@@ -480,6 +478,34 @@
       },
       {
         "Kind": "type",
+        "File": "ref.go",
+        "Line": 7,
+        "SelfContained": true,
+        "Name": "Ref",
+        "Fields": [
+          {
+            "Name": "Package",
+            "Type": "*Package",
+            "Path": "Ref.Package",
+            "JSONName": "Package"
+          },
+          {
+            "Name": "Receiver",
+            "Type": "string",
+            "Path": "Ref.Receiver",
+            "JSONName": "Receiver"
+          },
+          {
+            "Name": "Name",
+            "Type": "string",
+            "Path": "Ref.Name",
+            "JSONName": "Name"
+          }
+        ],
+        "Source": "type Ref struct {\n\tPackage\t\t*Package\n\tReceiver\tstring\n\tName\t\tstring\n}"
+      },
+      {
+        "Kind": "type",
         "Type": "map[string][]string",
         "File": "string_set.go",
         "Line": 13,
@@ -513,6 +539,16 @@
           "CommentKind"
         ],
         "Source": "const (\n\tStructKind\tDeclarationKind\t= \"struct\"\n\tImportKind\t\t\t= \"import\"\n\tConstKind\t\t\t= \"const\"\n\tTypeKind\t\t\t= \"type\"\n\tFuncKind\t\t\t= \"func\"\n\tVarKind\t\t\t\t= \"var\"\n\tCommentKind\t\t\t= \"comment\"\n)"
+      }
+    ],
+    "Vars": [
+      {
+        "Kind": "var",
+        "File": "built_in_types.go",
+        "Line": 40,
+        "SelfContained": true,
+        "Name": "BuiltInTypes",
+        "Source": "var BuiltInTypes = map[string]bool{\n\t\"string\":\ttrue,\n\t\"int\":\t\ttrue,\n\t\"int8\":\t\ttrue,\n\t\"int16\":\ttrue,\n\t\"int32\":\ttrue,\n\t\"int64\":\ttrue,\n\t\"uint\":\t\ttrue,\n\t\"uint8\":\ttrue,\n\t\"uint16\":\ttrue,\n\t\"uint32\":\ttrue,\n\t\"uint64\":\ttrue,\n\t\"uintptr\":\ttrue,\n\t\"float32\":\ttrue,\n\t\"float64\":\ttrue,\n\t\"complex64\":\ttrue,\n\t\"complex128\":\ttrue,\n\t\"byte\":\t\ttrue,\n\t\"rune\":\t\ttrue,\n\t\"bool\":\t\ttrue,\n\t\"error\":\ttrue,\n\t\"interface{}\":\ttrue,\n}"
       }
     ],
     "Funcs": [
@@ -580,6 +616,36 @@
       },
       {
         "Kind": "func",
+        "File": "built_in_types.go",
+        "Line": 8,
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "TrimLeft",
+            "HasPrefix",
+            "Contains",
+            "SplitN"
+          ]
+        },
+        "Doc": "To type returns a sanitized type name.",
+        "Name": "ToType",
+        "Arguments": [
+          "string"
+        ],
+        "Returns": [
+          "string",
+          "bool"
+        ],
+        "Signature": "ToType (s string) (string, bool)",
+        "Source": "// To type returns a sanitized type name.\nfunc ToType(s string) (string, bool) {\n\t// variadic ...\n\ts = strings.TrimLeft(s, \".\")\n\t// functions\n\tif strings.HasPrefix(s, \"func\") {\n\t\treturn \"\u003cfunc\u003e\", false\n\t}\n\t// channels\n\t// implementation gap: anonymous structs\n\tif strings.Contains(s, \" \") {\n\t\tss := strings.SplitN(s, \" \", 2)\n\t\tif strings.Contains(ss[0], \"chan\") {\n\t\t\ts = ss[1]\n\t\t}\n\t}\n\t// maps, slices\n\tfor strings.Contains(s, \"]\") {\n\t\t// Handle:\n\t\t// - `[]` V\n\t\t// - `map[...]` V\n\t\t// - `.*]` V\n\t\tss := strings.SplitN(s, \"]\", 2)\n\t\ts = ss[len(ss)-1]\n\t}\n\t// *T to T\n\ts = strings.TrimLeft(s, \"*\")\n\tif yes, _ := BuiltInTypes[s]; yes {\n\t\treturn s, false\n\t}\n\treturn s, true\n}",
+        "Complexity": {
+          "Cognitive": 6,
+          "Cyclomatic": 6,
+          "Lines": 32
+        }
+      },
+      {
+        "Kind": "func",
         "File": "type_ref.go",
         "Line": 8,
         "SelfContained": false,
@@ -609,7 +675,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 71,
+        "Line": 102,
         "SelfContained": false,
         "Name": "Equal",
         "Receiver": "*Declaration",
@@ -630,7 +696,25 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 49,
+        "Line": 73,
+        "SelfContained": false,
+        "Name": "GetNames",
+        "Receiver": "*Declaration",
+        "Returns": [
+          "[]string"
+        ],
+        "Signature": "GetNames () []string",
+        "Source": "func (d *Declaration) GetNames() []string {\n\tif len(d.Names) \u003e 0 {\n\t\treturn d.Names\n\t}\n\treturn []string{d.Name}\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "declaration.go",
+        "Line": 80,
         "SelfContained": false,
         "Name": "HasName",
         "Receiver": "*Declaration",
@@ -651,7 +735,25 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 58,
+        "Line": 41,
+        "SelfContained": false,
+        "Name": "HasReceiver",
+        "Receiver": "*Declaration",
+        "Returns": [
+          "bool"
+        ],
+        "Signature": "HasReceiver () bool",
+        "Source": "func (f *Declaration) HasReceiver() bool {\n\treturn f.Receiver != \"\"\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "declaration.go",
+        "Line": 89,
         "SelfContained": false,
         "References": {
           "ast": [
@@ -674,7 +776,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 78,
+        "Line": 109,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -697,7 +799,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 45,
+        "Line": 69,
         "SelfContained": false,
         "Name": "ReceiverTypeRef",
         "Receiver": "*Declaration",
@@ -715,7 +817,28 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 41,
+        "Line": 45,
+        "SelfContained": false,
+        "Name": "Ref",
+        "Receiver": "*Declaration",
+        "Arguments": [
+          "*Package"
+        ],
+        "Returns": [
+          "[]Ref"
+        ],
+        "Signature": "Ref (pkg *Package) []Ref",
+        "Source": "func (f *Declaration) Ref(pkg *Package) []Ref {\n\treceiver := f.ReceiverTypeRef()\n\tresult := make([]Ref, 0, len(f.Names)+1)\n\tfor _, name := range f.Names {\n\t\tresult = append(result, Ref{\n\t\t\tPackage:\tpkg,\n\t\t\tName:\t\tname,\n\t\t\tReceiver:\treceiver,\n\t\t})\n\t}\n\n\tresult = append(result, Ref{\n\t\tPackage:\tpkg,\n\t\tName:\t\tf.Name,\n\t\tReceiver:\treceiver,\n\t})\n\n\treturn result\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 19
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "declaration.go",
+        "Line": 65,
         "SelfContained": false,
         "Name": "TypeRef",
         "Receiver": "*Declaration",
@@ -1006,7 +1129,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 19,
+        "Line": 28,
         "SelfContained": false,
         "References": {
           "slices": [
@@ -1025,6 +1148,29 @@
           "Cognitive": 7,
           "Cyclomatic": 5,
           "Lines": 19
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "string_set.go",
+        "Line": 19,
+        "SelfContained": false,
+        "References": {
+          "sort": [
+            "Strings"
+          ]
+        },
+        "Name": "Keys",
+        "Receiver": "*StringSet",
+        "Returns": [
+          "[]string"
+        ],
+        "Signature": "Keys () []string",
+        "Source": "func (i *StringSet) Keys() []string {\n\tkeys := make([]string, 0, len(*i))\n\tfor key := range *i {\n\t\tkeys = append(keys, key)\n\t}\n\tsort.Strings(keys)\n\treturn keys\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 8
         }
       },
       {
@@ -1186,7 +1332,7 @@
       {
         "Kind": "func",
         "File": "package.go",
-        "Line": 38,
+        "Line": 39,
         "SelfContained": false,
         "Name": "Equal",
         "Receiver": "Package",
@@ -1207,7 +1353,7 @@
       {
         "Kind": "func",
         "File": "package.go",
-        "Line": 30,
+        "Line": 31,
         "SelfContained": false,
         "Name": "Name",
         "Receiver": "Package",
@@ -1225,7 +1371,34 @@
       {
         "Kind": "func",
         "File": "package.go",
-        "Line": 34,
+        "Line": 43,
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "Trim",
+            "ReplaceAll"
+          ]
+        },
+        "Name": "Namespace",
+        "Receiver": "Package",
+        "Arguments": [
+          "string"
+        ],
+        "Returns": [
+          "string"
+        ],
+        "Signature": "Namespace (suffix string) string",
+        "Source": "func (p Package) Namespace(suffix string) string {\n\tvar namespace string\n\tpackagePath := strings.Trim(p.Path, \"./\")\n\tif packagePath != \"\" {\n\t\tnamespace = strings.ReplaceAll(packagePath, \"/\", \".\")\n\t}\n\tif namespace == \"\" {\n\t\tnamespace = p.Package\n\t}\n\treturn namespace + suffix\n}",
+        "Complexity": {
+          "Cognitive": 2,
+          "Cyclomatic": 3,
+          "Lines": 11
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "package.go",
+        "Line": 35,
         "SelfContained": false,
         "References": {
           "fmt": [
@@ -1247,8 +1420,31 @@
       },
       {
         "Kind": "func",
+        "File": "ref.go",
+        "Line": 13,
+        "SelfContained": false,
+        "References": {
+          "fmt": [
+            "Sprintf"
+          ]
+        },
+        "Name": "String",
+        "Receiver": "Ref",
+        "Returns": [
+          "string"
+        ],
+        "Signature": "String () string",
+        "Source": "func (r Ref) String() string {\n\tif r.Receiver != \"\" {\n\t\treturn fmt.Sprintf(\"%s.%s.%s\", r.Package.Name(), TypeRef(r.Receiver), TypeRef(r.Name))\n\t}\n\treturn fmt.Sprintf(\"%s.%s\", r.Package.Name(), TypeRef(r.Name))\n}",
+        "Complexity": {
+          "Cognitive": 1,
+          "Cyclomatic": 2,
+          "Lines": 6
+        }
+      },
+      {
+        "Kind": "func",
         "File": "string_set.go",
-        "Line": 47,
+        "Line": 56,
         "SelfContained": false,
         "Name": "All",
         "Receiver": "StringSet",
@@ -1266,7 +1462,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 39,
+        "Line": 48,
         "SelfContained": false,
         "References": {
           "sort": [
@@ -1292,7 +1488,7 @@
       {
         "Kind": "func",
         "File": "string_set.go",
-        "Line": 57,
+        "Line": 66,
         "SelfContained": false,
         "References": {
           "fmt": [
@@ -1323,7 +1519,7 @@
           "[]error"
         ],
         "Signature": "Map (imports []string) (map[string]string, []error)",
-        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map(imports []string) (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\timported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\t// trim imported semver link\n\t\tre := regexp.MustCompile(`/v[0-9]+$`)\n\t\tif re.MatchString(long) {\n\t\t\tshort = path.Base(re.ReplaceAllString(long, \"\"))\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
+        "Source": "// Map returns a map with the short package name as the key\n// and the full import path as the value.\nfunc (i StringSet) Map(imports []string) (map[string]string, []error) {\n\twarnings := []error{}\n\twarningSeen := map[string]bool{}\n\n\taddWarning := func(warning error) {\n\t\tmsg := warning.Error()\n\t\tif _, seen := warningSeen[msg]; !seen {\n\t\t\twarningSeen[msg] = true\n\t\t\twarnings = append(warnings, warning)\n\t\t}\n\t}\n\n\tcleanPackageName := func(name string) (string, bool) {\n\t\tclean := name\n\t\tclean = strings.ReplaceAll(clean, \"_\", \"\")\n\t\treturn clean, name == clean\n\t}\n\n\tresult := map[string]string{}\n\tfor _, imported := range imports {\n\t\tvar short, long string\n\n\t\t// aliased package\n\t\t// imported = strings.ReplaceAll(imported, \"/go-\", \"/\")\n\t\tif strings.Contains(imported, \" \") {\n\t\t\tline := strings.Split(imported, \" \")\n\t\t\tshort, long = line[0], strings.Trim(line[1], `\"`)\n\t\t} else {\n\t\t\tlong = strings.Trim(imported, `\"`)\n\t\t\tshort = path.Base(long)\n\t\t}\n\n\t\tif short == \"C\" {\n\t\t\tcontinue\n\t\t}\n\n\t\t// trim imported semver link\n\t\tre := regexp.MustCompile(`/v[0-9]+$`)\n\t\tif re.MatchString(long) {\n\t\t\tshort = path.Base(re.ReplaceAllString(long, \"\"))\n\t\t}\n\n\t\tif strings.HasSuffix(short, \"_test\") {\n\t\t\tclean, ok := cleanPackageName(short[:len(short)-5])\n\t\t\tif !ok {\n\t\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s_test\", short, clean))\n\t\t\t}\n\t\t\tcontinue\n\t\t}\n\n\t\tclean, ok := cleanPackageName(short)\n\t\tif !ok {\n\t\t\taddWarning(fmt.Errorf(\"Alias %s should be %s\", short, clean))\n\t\t\tcontinue\n\t\t}\n\n\t\tval, ok := result[clean]\n\n\t\tif ok \u0026\u0026 val != long {\n\t\t\twarning := \"Import conflict for %s, \"\n\t\t\t// Sort val/long so shorter is left hand side\n\t\t\tif len(val) \u003c len(long) {\n\t\t\t\twarning += val + \" != \" + long\n\t\t\t} else {\n\t\t\t\twarning += long + \" != \" + val\n\t\t\t}\n\t\t\taddWarning(fmt.Errorf(warning, short))\n\t\t}\n\n\t\tresult[clean] = long\n\t}\n\n\treturn result, warnings\n}",
         "Complexity": {
           "Cognitive": 24,
           "Cyclomatic": 12,

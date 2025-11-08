@@ -1,13 +1,13 @@
 @startuml
 
-class Complexity {
+class "model.Complexity" {
   + Cognitive: int
   + Cyclomatic: int
   + Lines: int
   + Coverage: float64
 }
 
-class Declaration {
+class "model.Declaration" {
   + Kind: DeclarationKind
   + Type: string
   + File: string
@@ -26,22 +26,32 @@ class Declaration {
   + Signature: string
   + Source: string
   + Complexity: *Complexity
+  + Equal (in *Declaration) bool
+  + GetNames () []string
+  + HasName (find string) bool
+  + HasReceiver () bool
+  + IsExported () bool
+  + Keys () []string
+  + ReceiverTypeRef () string
+  + Ref (pkg *Package) []Ref
+  + TypeRef () string
 }
 
-class DeclarationKind {
-  - type: string
-  + String () string
-}
-
-class DeclarationList {
+class "model.DeclarationList" {
   - type: []*Declaration
+  + Append (in ...*Declaration)
+  + AppendUnique (in ...*Declaration)
+  + ClearNonTestFiles ()
+  + ClearSource ()
+  + ClearTestFiles ()
+  + Sort ()
   + Exported () DeclarationList
   + Filter (matchfn func(d *Declaration) bool) DeclarationList
   + Find (matchfn func(d *Declaration) bool) *Declaration
   + Walk (matchfn func(d *Declaration))
 }
 
-class Definition {
+class "model.Definition" {
   + Doc: string
   + Imports: StringSet
   + InitCount: int
@@ -49,16 +59,24 @@ class Definition {
   + Consts: DeclarationList
   + Vars: DeclarationList
   + Funcs: DeclarationList
+  + ClearNonTestFiles ()
+  + ClearSource ()
+  + ClearTestFiles ()
+  + DeclarationList () DeclarationList
+  + Fill ()
+  + Merge (in *Definition)
+  + Order () DeclarationList
+  + Sort ()
 }
 
-class DefinitionList {
+class "model.DefinitionList" {
   - type: []*Definition
   + Filter (matchfn func(d *Definition) bool) []*Definition
   + Find (matchfn func(d *Definition) bool) *Definition
   + Walk (matchfn func(d *Definition))
 }
 
-class Field {
+class "model.Field" {
   + Name: string
   + Type: string
   + Path: string
@@ -67,13 +85,14 @@ class Field {
   + Tag: string
   + JSONName: string
   + MapKey: string
+  + TypeRef () string
 }
 
-class FieldList {
+class "model.FieldList" {
   - type: []*Field
 }
 
-class Package {
+class "model.Package" {
   + ID: string
   + Package: string
   + ImportPath: string
@@ -83,89 +102,50 @@ class Package {
   + Pkg: *packages.Package
   + Equal (in Package) bool
   + Name () string
+  + Namespace (suffix string) string
   + String () string
 }
 
-class StringSet {
+class "model.Ref" {
+  + Package: *Package
+  + Receiver: string
+  + Name: string
+  + String () string
+}
+
+class "model.StringSet" {
   - type: map[string][]string
+  + Add (key string, lits ...string)
+  + Keys () []string
   + All () []string
   + Get (key string) []string
   + Map (imports []string) (map[string]string, []error)
 }
 
 
-Declaration --> DeclarationKind : Kind
-Declaration --> StringSet : References
-Declaration --> StringSet : Globals
-Declaration --> FieldList : Fields
-Declaration --> Complexity : Complexity
+"model.Declaration" --> "model.DeclarationKind" : .Kind
+"model.Declaration" --> "model.StringSet" : .References
+"model.Declaration" --> "model.StringSet" : .Globals
+"model.Declaration" --> "model.FieldList" : .Fields
+"model.Declaration" --> "model.Complexity" : .Complexity
 
-note top of Declaration
-Declaration holds information about a go symbol.
-end note
+"model.DeclarationList" --> "model.Declaration" : .type
 
+"model.Definition" --|> "model.Package" : embeds
+"model.Definition" --> "model.StringSet" : .Imports
+"model.Definition" --> "model.DeclarationList" : .Types
+"model.Definition" --> "model.DeclarationList" : .Consts
+"model.Definition" --> "model.DeclarationList" : .Vars
+"model.Definition" --> "model.DeclarationList" : .Funcs
 
-
-note top of DeclarationKind
-DeclarationKind is an enum of go symbol types.
-end note
-
-
-DeclarationList --> Declaration : type
-
-note top of DeclarationList
-DeclarationList holds a list of Go symbols.
-end note
+"model.DefinitionList" --> "model.Definition" : .type
 
 
-DeclarationList --> DeclarationList : Exported()
-DeclarationList --> DeclarationList : Filter()
-DeclarationList --> Declaration : Find()
-Package --|> Definition : embeded by
-Definition --> StringSet : Imports
-Definition --> DeclarationList : Types
-Definition --> DeclarationList : Consts
-Definition --> DeclarationList : Vars
-Definition --> DeclarationList : Funcs
+"model.FieldList" --> "model.Field" : .type
 
-note top of Definition
-Definition holds all symbols defined for a Package.
-end note
+"model.Package" --> "model.Complexity" : .Complexity
 
-
-DefinitionList --> Definition : type
-
-note top of DefinitionList
-DefinitionList holds a list of Go packages.
-end note
-
-
-DefinitionList --> Definition : Filter()
-DefinitionList --> Definition : Find()
-
-note top of Field
-Field holds details about a field definition.
-end note
-
-
-FieldList --> Field : type
-
-note top of FieldList
-FieldList contains all struct fields.
-end note
-
-
-Package --> Complexity : Complexity
-
-note top of Package
-Package holds go package information.
-end note
-
-
-
-note top of StringSet
-StringSet provides a key based unique string slice.
-end note
+"model.Ref" --> "model.Package" : .Package
 
 
 

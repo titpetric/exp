@@ -8,7 +8,7 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/model"
 )
 
-func renderPlantUML(_ *options, defs []*model.Definition) error {
+func renderPlantUML(opt *options, defs []*model.Definition) error {
 	var links []string
 
 	addLink := func(link string) {
@@ -19,9 +19,11 @@ func renderPlantUML(_ *options, defs []*model.Definition) error {
 	fmt.Println("")
 
 	allTypes := make(map[string]*model.Declaration)
-	allFuncs := model.NewStringSet()
+	allPackages := make(map[string]*model.Package)
+	allFuncs := make(map[string][]*model.Declaration)
 
 	for _, def := range defs {
+		allPackages[def.Package.ImportPath] = &def.Package
 		for _, t := range def.Types {
 			allTypes[t.Name] = t
 		}
@@ -34,29 +36,71 @@ func renderPlantUML(_ *options, defs []*model.Definition) error {
 				continue
 			}
 
-			if _, ok := allTypes[receiver]; ok {
-				allFuncs.Add(receiver, t.Signature)
-			}
+			receiver = def.Package.Namespace(".") + receiver
+
+			allFuncs[receiver] = append(allFuncs[receiver], t)
 		}
 	}
 
 	for _, def := range defs {
+		importMap, _ := def.Imports.Map(def.Imports.All())
+
+		lookup := func(name string) (*model.Package, bool) {
+			importpath, ok := importMap[name]
+			if !ok {
+				return nil, false
+			}
+
+			pkg, ok := allPackages[importpath]
+			return pkg, ok
+		}
+
 		if def.Package.TestPackage || strings.HasSuffix(def.Package.Package, "_test") {
 			continue
 		}
+
+		namespace := def.Package.Namespace(".")
 
 		for _, t := range def.Types {
 			if len(t.Fields) == 0 {
 				continue
 			}
 
-			for _, name := range t.Names {
-				fmt.Println("class", name, "{")
+			for _, name := range t.GetNames() {
+				var token = "class"
+				if strings.HasPrefix(t.Type, "interface") {
+					token = "interface"
+				}
+
+				for _, f := range t.Fields {
+					if strings.HasPrefix(f.Type, "func") {
+						token = "interface"
+					}
+				}
+
+				if len(t.Arguments) > 0 {
+					names := []string{}
+					for _, name := range t.Arguments {
+						names = append(names, name)
+					}
+					t.Arguments = names
+					name += "[" + strings.Join(names, ", ") + "]"
+				}
+
+				fmt.Println(token, fmt.Sprintf("%q", namespace+name), "{")
 				for _, f := range t.Fields {
 					typeRef := f.TypeRef()
 
 					if f.Name == "" {
-						addLink(fmt.Sprintf("%s --|> %s : embeds", name, typeRef))
+						if strings.Contains(typeRef, ".") {
+							parts := strings.SplitN(typeRef, ".", 2)
+							packageName, typeName := parts[0], parts[1]
+							if p, ok := lookup(packageName); ok {
+								addLink(fmt.Sprintf("%q --|> %q : embeds", namespace+name, p.Namespace(".")+typeName))
+							}
+						} else {
+							addLink(fmt.Sprintf("%q --|> %q : embeds", namespace+name, namespace+typeRef))
+						}
 						continue
 					}
 
@@ -72,74 +116,74 @@ func renderPlantUML(_ *options, defs []*model.Definition) error {
 					} else {
 						fmt.Println("  -", f.Name+":", f.Type)
 					}
-					if _, ok := allTypes[typeRef]; ok {
-						addLink(fmt.Sprintf("%s --> %s : %s", name, typeRef, f.Name))
+
+					if token != "interface" {
+						if strings.Contains(typeRef, ".") {
+							parts := strings.SplitN(typeRef, ".", 2)
+							packageName, typeName := parts[0], parts[1]
+							if p, ok := lookup(packageName); ok {
+								addLink(fmt.Sprintf("%q --> %q : .%s", namespace+name, p.Namespace(".")+typeName, f.Name))
+							}
+						} else {
+							if _, ok := model.ToType(typeRef); ok {
+								addLink(fmt.Sprintf("%q --> %q : .%s", namespace+name, namespace+typeRef, f.Name))
+							}
+						}
 					}
 				}
-			}
+				if opt.docs && t.Doc != "" {
+					addLink("")
+					addLink("note top of " + namespace + name)
+					addLink(t.Doc)
+					addLink("end note")
+					addLink("")
+				}
 
-			name := t.Name
+				addLink("")
 
-			fmt.Println("class", name, "{")
-			for _, f := range t.Fields {
-				typeRef := f.TypeRef()
-
-				if f.Name == "" {
-					addLink(fmt.Sprintf("%s --|> %s : embeded by", typeRef, name))
+				if token == "interface" {
 					continue
 				}
 
-				if strings.HasPrefix(f.Type, "struct") {
-					f.Type = "struct"
-				}
-				if strings.HasPrefix(f.Type, "interface") {
-					f.Type = "interface"
-				}
+				funcList := allFuncs[namespace+t.Name]
+				for _, sig := range funcList {
+					funcInfo := sig
+					funcName := sig.Name
 
-				if ast.IsExported(f.Name) {
-					fmt.Println("  +", f.Name+":", f.Type)
-				} else {
-					fmt.Println("  -", f.Name+":", f.Type)
-				}
+					func() {
+						for _, argType := range funcInfo.Returns {
+							typeRef := model.TypeRef(argType)
 
-				if _, ok := allTypes[typeRef]; ok {
-					addLink(fmt.Sprintf("%s --> %s : %s", name, typeRef, f.Name))
-				}
-			}
+							if strings.Contains(typeRef, ".") {
+								parts := strings.SplitN(typeRef, ".", 2)
+								packageName, typeName := parts[0], parts[1]
+								if p, ok := lookup(packageName); ok {
+									addLink(fmt.Sprintf("%q --> %q : .%s()", namespace+name, p.Namespace(".")+typeName, funcName))
+									return
+								}
+							}
+						}
+						for _, argType := range funcInfo.Arguments {
+							typeRef := model.TypeRef(argType)
 
-			if t.Doc != "" {
-				addLink("")
-				addLink("note top of " + name)
-				addLink(t.Doc)
-				addLink("end note")
-				addLink("")
-			}
+							if strings.Contains(typeRef, ".") {
+								parts := strings.SplitN(typeRef, ".", 2)
+								packageName, typeName := parts[0], parts[1]
+								if p, ok := lookup(packageName); ok {
+									addLink(fmt.Sprintf("%q --> %q : .%s()", namespace+name, p.Namespace(".")+typeName, funcName))
+									return
+								}
+							}
+						}
+					}()
 
-			addLink("")
-
-			funcList := allFuncs.Get(t.Name)
-			for _, sig := range funcList {
-				funcName := strings.SplitN(sig, " ", 2)[0]
-				funcInfo := def.Funcs.Find(func(d *model.Declaration) bool {
-					return d.Receiver == t.Name && d.Name == funcName
-				})
-				if funcInfo == nil {
-					continue
-				}
-
-				for _, argType := range funcInfo.Returns {
-					cleanType := model.TypeRef(argType)
-					if _, ok := allTypes[cleanType]; ok {
-						addLink(fmt.Sprintf("%s --> %s : %s", name, cleanType, funcName+"()"))
-						break
+					if ast.IsExported(sig.Signature) {
+						fmt.Println("  +", sig.Signature)
+					} else {
+						// fmt.Println("  -", sig)
 					}
 				}
 
-				if ast.IsExported(sig) {
-					fmt.Println("  +", sig)
-				} else {
-					// fmt.Println("  -", sig)
-				}
 			}
 
 			fmt.Println("}")

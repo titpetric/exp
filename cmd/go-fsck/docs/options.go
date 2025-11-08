@@ -14,6 +14,8 @@ type options struct {
 	render string
 	focus  string
 
+	docs bool
+
 	verbose bool
 	args    []string
 }
@@ -22,6 +24,7 @@ func NewOptions() *options {
 	cfg := &options{
 		inputFile: "go-fsck.json",
 		render:    "markdown",
+		docs:      false,
 	}
 
 	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
