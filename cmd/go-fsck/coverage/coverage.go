@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"sort"
 	"strings"
@@ -109,6 +110,10 @@ func coverage(cfg *options) error {
 	var total, skipped, inits int
 	for _, info := range coverinfo.Functions {
 		p := findPackage(defs, info.Package)
+		if p == nil {
+			log.Println("Warning, can't find package %s, skipping", info.Package)
+			continue
+		}
 
 		// init may show up multiple times in one package
 		if info.Function == "init" {

@@ -57,6 +57,7 @@ func ListModules(root string) ([]Module, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return modules, nil
 }
 
@@ -98,9 +99,6 @@ func parseGoMod(filename string, rootPath string) (result Module) {
 		return
 	}
 
-	// prevent scanning the root module as handled outside
-	if cleanDir == "" {
-		result.Valid = false
-	}
+	result.Valid = true
 	return
 }
