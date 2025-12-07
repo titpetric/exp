@@ -88,6 +88,8 @@ func getTypeDeclarationsForExpr(expr ast.Expr) string {
 		return "struct{}"
 	case *ast.StarExpr:
 		return getTypeDeclarationsForExpr(expr.X)
+	case *ast.FuncType:
+		return "func"
 	default:
 		return fmt.Sprintf("%#v", expr)
 	}
