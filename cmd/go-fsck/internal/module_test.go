@@ -12,7 +12,7 @@ import (
 //
 // Use: `go test -c module_test.go` and then `./internal.test -test.v` from any source tree.
 func TestLoadModules(t *testing.T) {
-	mods, err := internal.ListModules(".")
+	mods, err := internal.ListModules(".", "telemetry")
 	if err != nil {
 		t.Fatalf("ListModules returned error: %v", err)
 	}

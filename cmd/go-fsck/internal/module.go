@@ -16,6 +16,7 @@ import (
 type Module struct {
 	Filename   string
 	Dir        string
+	Path       string
 	ImportPath string
 
 	Valid bool
@@ -30,7 +31,7 @@ func (m Module) String() string {
 }
 
 // ListModules finds all go.mod files under root and returns a slice of Modules.
-func ListModules(root string) ([]Module, error) {
+func ListModules(root string, pattern string) ([]Module, error) {
 	span := telemetry.Start("internal.ListModules")
 	defer span.End()
 
@@ -51,7 +52,9 @@ func ListModules(root string) ([]Module, error) {
 		if d.Name() != "go.mod" {
 			return nil
 		}
-		modules = append(modules, parseGoMod(filename, absRoot))
+		if pattern == "./..." || (pattern == "." && len(modules) == 0) {
+			modules = append(modules, parseGoMod(filename, absRoot))
+		}
 		return nil
 	})
 	if err != nil {
@@ -68,6 +71,7 @@ func parseGoMod(filename string, rootPath string) (result Module) {
 
 	result.Filename = filename
 	result.Dir = dir
+	result.Path = cleanDir
 
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {

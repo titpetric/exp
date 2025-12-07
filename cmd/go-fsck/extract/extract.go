@@ -18,9 +18,6 @@ import (
 func loadModuleTree(ctx context.Context, cfg *options, modules []internal.Module, pattern string) ([]*model.Definition, error) {
 	result := []*model.Definition{}
 	for _, m := range modules {
-		if !m.Valid || m.Dir == "" {
-			continue
-		}
 		defs, err := walkPackage(ctx, m.Dir, pattern, cfg.includeTests, cfg.verbose)
 		if err != nil {
 			return nil, err
@@ -41,20 +38,20 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 
 	defs := []*model.Definition{}
 
-	{
-		modules, err := internal.ListModules(cfg.sourcePath)
+	if pattern == "./..." {
+		modules, err := internal.ListModules(cfg.sourcePath, pattern)
 		if err != nil {
 			return nil, err
 		}
 
-		d, err := loadModuleTree(ctx, cfg, modules, "./...")
+		d, err := loadModuleTree(ctx, cfg, modules, pattern)
 		if err != nil {
 			return nil, err
 		}
 		defs = append(defs, d...)
 	}
 
-	{
+	if pattern == "." {
 		d, err := walkPackage(ctx, cfg.sourcePath, pattern, cfg.includeTests, cfg.verbose)
 		if err != nil {
 			return nil, err
@@ -88,6 +85,7 @@ func walkPackage(ctx context.Context, sourcePath string, pattern string, include
 	if err != nil {
 		return nil, err
 	}
+
 	defs := []*model.Definition{}
 	for _, pkg := range packages {
 		if ctx.Err() != nil {

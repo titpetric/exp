@@ -18,6 +18,7 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/report"
 	"github.com/titpetric/exp/cmd/go-fsck/restore"
 	"github.com/titpetric/exp/cmd/go-fsck/search"
+	"github.com/titpetric/exp/cmd/go-fsck/sqlite"
 	"github.com/titpetric/exp/cmd/go-fsck/stats"
 )
 
@@ -39,6 +40,7 @@ func start() (err error) {
 		"query":    query.Run,
 		"docs":     docs.Run,
 		"report":   report.Run,
+		"sqlite":   sqlite.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)
