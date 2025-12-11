@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -17,11 +18,26 @@ import (
 
 func loadModuleTree(ctx context.Context, cfg *options, modules []internal.Module, pattern string) ([]*model.Definition, error) {
 	result := []*model.Definition{}
+	
+	// Get absolute path of source for comparison
+	absSourcePath, _ := filepath.Abs(cfg.sourcePath)
+	
 	for _, m := range modules {
 		defs, err := walkPackage(ctx, m.Dir, pattern, cfg.includeTests, cfg.verbose)
 		if err != nil {
 			return nil, err
 		}
+		
+		// Adjust paths to be relative to root, not module directory
+		moduleRelPath := strings.TrimPrefix(m.Dir, absSourcePath)
+		if moduleRelPath != "" {
+			moduleRelPath = strings.TrimPrefix(moduleRelPath, string(filepath.Separator))
+			for _, def := range defs {
+				pkgRelPath := strings.TrimPrefix(def.Package.Path, ".")
+				def.Package.Path = "." + filepath.Join(moduleRelPath, pkgRelPath)
+			}
+		}
+		
 		result = append(result, defs...)
 	}
 	return result, nil
