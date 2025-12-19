@@ -1,8 +1,109 @@
 # go-fsck
 
-The `go fmt` for your package layout.
+The code introspection tooling for your package layout.
 
-Currently, `go-fsck extract --pretty-json` will render the schema for a
+```
+Usage: go-fsck <command> help
+Available commands: coverage, docs, extract, lint, query, report, restore, search, sqlite, stats
+```
+
+## Use cases
+
+While the tool outgrew it's use quite quickly, I use it today to cover
+various software development life cycle concerns. You could use it for
+any of the following, and I do, somewhere.
+
+The root of the `go-fsck` tool is it's data model. Extract will scan a
+codebase and produce a data model in .json, with source-accurate detail. It balances
+the complexity of the AST against a typed representation of it's entities.
+
+```
+$ go-fsck extract --help
+Usage of go-fsck:
+      --include-sources      include sources
+      --include-tests        include test files
+  -o, --output-file string   output file (default "go-fsck.json")
+      --pretty-json          print pretty json
+  -r, --recursive            recurse packages
+  -i, --source-path string   source path (default ".")
+  -v, --verbose              verbose output
+```
+
+The data model has rich traversal opportunities, as well as gives
+accessibility to the data. This has proven to be valuable for:
+
+- jsonschema generation from data model structs
+- proto UML generation from data model, database schema model
+- source code generation with naming by policy
+- markdown documentation with godoc API
+- linting of compliance, naming, structure
+- extended cognitive complexity metrics combined with coverage
+
+It's something to build upon. The feature existed first, while others
+have been added or abandoned over time.
+
+- `coverage`: print a coverage report, per function, per package, markdown
+- `docs`: print markdown docs with package godoc, render plantuml diagrams
+- `lint`: test that no package name in a project repeats, fight ambigous short imports
+- `query`: a half-hearted attempt at interface discovery
+- `report`: reporting test naming conventions to match symbols
+- `restore`: the opinionated file grouping (symbol should match filename)
+- `search`: symbol lookup, takes a reference symbol as `oas.OAS`, also with name.
+- `sqlite`: it may scan go-fsck.json into a sqlite database for further querying
+- `stats`: various code coupling stats, imports, reverse symbol usage, docs compliance, package stats, etc.
+
+The errata over time is as follows:
+
+## Linting with `lint`
+
+The `lint` tool has limited use. Arguably it can be replaced with a `go
+test -c ./...`, which will let you know the error concisely:
+
+```shell
+$ go test -c ./...
+cannot write test binary loader.test for multiple packages:
+github.com/titpetric/exp/cmd/go-fsck/model/loader
+github.com/titpetric/exp/cmd/go-fsck/query/loader
+```
+
+The linter protects against ambigous imports, e.g. repetition of `model`
+folders or similar. It's sort of hard to enforce on a repository basis,
+and there is a sweet spot where it's reasonable.
+
+## Interface discovery with `query`
+
+With new codebases, it's almost inevitable that I need to inspect the largest
+package scope. There's usually one or more implementations that are modular
+in some way, if that's a `http.HandlerFunc`, or something else.
+
+The tool has `--show-handlers` and `--middleware` flags that search for
+some particular function signatures.
+
+The attempt is to find code that is grouped by function signatures,
+type returns or otherwise common function API. It's more than common
+that these should be decomposed into a new package.
+
+## Restoring a codebase with `restore`
+
+This is the missing part to `go fmt` for the codebase. The restore rules
+aren't defined well enough, and without deterministic rules, the
+restored code may only be partially usable.
+
+I used the feature exactly once, [forking a rate limiter project](https://github.com/TykTechnologies/exp/tree/main/pkg/limiters).
+
+I've accepted linting may be the only approach to the issue, even if
+fixing could be made deterministic. I tend to follow code grouping
+naturally, but wouldn't mind a sanity check in the pipeline.
+
+You can try the linter:
+
+```go
+go install github.com/titpetric/tools/gofsck
+```
+
+## Schema
+
+Running `go-fsck extract --pretty-json` will render the schema for a
 package into a local `go-fsck.json` file.
 
 Using `go-fsck restore -p package (--save)` will render the schema into a
@@ -11,8 +112,10 @@ grouped var declarations scoped together.
 
 It's intent is mostly as a research tool, and it's not guaranteed to
 handle every possible edge case in terms of how people structure their
-code. Generally the tool requires `goimports -w .` to fix the imports, as
-we don't handle those in a fine grained way (yet). Improvement is
+code.
+
+Generally the tool requires `goimports -w .` to fix the imports, as
+it does not handle those in a fine grained way (yet). Improvement is
 possible, but also, there are tools like goimports that implement this
 logic and we depend on that functionality as a development shortcut.
 
@@ -24,6 +127,9 @@ the package only imports other packages, the behaviour of the
 implementation and the tests is local - does not need other symbols in
 the package scope. This also means it can be moved out to it's own
 package and make other code have local behaviour.
+
+This is in effect a black box test, if there is no shared package scope.
+Test utilities are a common coupling that belongs in a separate package.
 
 - The tool implements --save, but two different models emerge, this tool
   is aimed for DDD schema, mainly grouping by structs. Packages that
@@ -72,7 +178,7 @@ group, the tool will keep these together and group the code into the file
 corresponding to the *shortest* of the type names. The following code
 would be a red flag:
 
-```
+```go
 type FieldName struct {}
 type FieldKind struct {}
 type Field struct {
@@ -84,7 +190,7 @@ type Field struct {
 In order to hint the types are depending on each other, the
 correct way to implement that is:
 
-```
+```go
 type (
      FieldName struct {}
      FieldKind struct {}
@@ -95,46 +201,39 @@ type (
 )
 ```
 
-And this should live in `field.go`. Again, this mostly applies to
-investigate cases of service structs, and not data models. By default,
-go-fsck should be really good at taking a data model package and laying
-it out in go files that are named by the types. It makes a flat 1-1 file
-structure for types, with the grouping behaviour above.
+And this should live in `field.go`.
+
+This mostly applies to investigate cases of service structs, and not data models.
+
+By default, `go-fsck` should be really good at taking a data model package
+and laying it out in go files that are named by the types. It makes a
+flat 1-1 file structure for types, with the grouping behaviour above.
 
 ## Run it on your project
 
 If you want to run it on your project, which is highly not recommended for
 anything resembling production use, you can use this taskfile:
 
-```
+```yaml
 ---
 version: "3"
-
-vars:
-  name: gateway
 
 desc:
   default:
     desc: "Run go-fsck and restore the package"
     cmds:
-      - go-fsck extract --pretty-json
-      - rm *.go
-      - go-fsck restore -p {{.name}} --save
+      - go-fsck extract .
+      - go-fsck restore -p folder --save
 ```
 
-I don't run this, so neither should you. Use judgement until this gets
-more stable. By default, go-fsck should leave `pkg.go` alone, but I have
+I often use `go-fsck extract ./...` to inspect the complete source tree.
+
+By default, go-fsck should leave `pkg.go` alone, but I have
 no idea if it's implemented correctly (QA: none). There are
 implementation gaps and some things are not handled. Mileage may vary.
 Data loss is expected so small packages fit best.
 
 ## Future
-
-The idea is, one day, you could use this. It would probablly work as
-expected for data model packages. For example, if you generate your
-data model from the database into a single db.go or something, this
-could break that apart into individual files making the types easier
-to work with.
 
 The actual granularity between packages with 1, 10, 100 or 1000 types
 inside the package scope is a drastic constraint of feasability. You
@@ -146,22 +245,21 @@ into new packages in multiple projects that have grown too big and make
 it extra difficult to maintain due to that shared package scope, design
 issues and things like global shared state in tests.
 
-It does this by enabling local behaviour tests, essentially having the
-coupling / failure information as a measurable data point for each of the
-types. We get to calculate impact of refactorings.
+Using `go-fsck` acomplishes this by enabling local behaviour tests,
+essentially having the coupling / failure information as a measurable
+data point for each of the types. We get to calculate impact of
+refactorings in many dimensions.
 
-# Historical texts, elder scrolls
+## Initial design notes
 
-## Initial notes
-
-The go/ast package is essentially very simple. There are only a few
-declaration types in the language, `var`, `const`, `type` and `func`, and
-that's about it for possible global symbols an application developer
+The `go/ast` package is essentially very simple. There are only a few
+declaration types in the language, `var`, `const`, `type` and `func`,
+and that's about it for possible global symbols an application developer
 cares about. A special case is the package level documentation, a
 comment. There are a few other edge cases where the declaration may not
 make sense, but for the most part, this encompases the go type system.
 
-### Goals:
+### Naming conventions
 
 - group all `var` declarations into `vars.go`,
   - optional: group `var Err...` into `errors.go`.
@@ -179,6 +277,7 @@ make sense, but for the most part, this encompases the go type system.
 
 - build tags?
 - dot imports
+- multiple `init` functions per package
 - unnamed `_` vars?
 - supporting `./...` to reformat the world (do we need it?)
 
@@ -221,7 +320,7 @@ and this is the main goal of the tool, to enable that analysis and act on
 the data. We often don't know how large problems are due to large package
 scopes and couplings, this gives us data.
 
-# Fidelity
+## Fidelity
 
 As it may produce unwanted results, the way to use the tool is to
 generate it from a package, and output to a new package. Using it
@@ -239,7 +338,7 @@ is expected to have bugs (I am my own QA), but - here's a few caveats:
   expect this to be stable, so control the invocation.
 - i mean, it's in the experimental repo...
 
-# Aggregations
+## Aggregations
 
 A few aggregations of symbols are available below. Using `jq`
 lets us transform our schema into either an array of key value pairs,
@@ -288,7 +387,7 @@ go-fsck restore -p gateway --stats-files --remove-tests | \
 
 Example:
 
-```
+```json
 {
   "api_definition_loader.go": 36,
   "api_spec.go": 21,
