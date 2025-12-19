@@ -111,7 +111,7 @@ func coverage(cfg *options) error {
 	for _, info := range coverinfo.Functions {
 		p := findPackage(defs, info.Package)
 		if p == nil {
-			log.Println("Warning, can't find package %s, skipping", info.Package)
+			log.Printf("Warning, can't find package %s, skipping\n", info.Package)
 			continue
 		}
 

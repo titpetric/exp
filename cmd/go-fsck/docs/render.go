@@ -102,7 +102,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 		fmt.Println()
 		fmt.Println("```go")
 		fmt.Printf("import (\n\t\"%s\"\n}\n", def.Package.ImportPath)
-		fmt.Println("```\n")
+		fmt.Println("```")
 
 		if def.Doc != "" {
 			fmt.Println(strings.TrimSpace(def.Doc))
@@ -110,7 +110,8 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 		}
 
 		if len(types) > 0 {
-			fmt.Println("## Types\n")
+			fmt.Println("## Types")
+			fmt.Println()
 			for _, v := range types {
 				src := strings.TrimSpace(v.Source)
 				fmt.Printf("```go\n%s\n```\n\n", src)
@@ -118,14 +119,16 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 		}
 
 		if len(consts) > 0 {
-			fmt.Println("## Consts\n")
+			fmt.Println("## Consts")
+			fmt.Println()
 			for _, v := range consts {
 				src := strings.TrimSpace(v.Source)
 				fmt.Printf("```go\n%s\n```\n\n", src)
 			}
 		}
 		if len(vars) > 0 {
-			fmt.Println("## Vars\n")
+			fmt.Println("## Vars")
+			fmt.Println()
 			for _, v := range vars {
 				src := strings.TrimSpace(v.Source)
 				fmt.Printf("```go\n%s\n```\n\n", src)
@@ -141,7 +144,8 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 
 		if len(funcs) > 0 {
 			for {
-				fmt.Println("## Function symbols\n")
+				fmt.Println("## Function symbols")
+				fmt.Println()
 
 				for _, fn := range funcs {
 					fmt.Printf("- `%s`\n", symbol(fn))

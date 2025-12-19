@@ -105,12 +105,6 @@ func (d *Definition) Sort() {
 	d.Funcs.Sort()
 }
 
-func (p DeclarationList) Walk(matchfn func(d *Declaration)) {
-	for _, decl := range p {
-		matchfn(decl)
-	}
-}
-
 func (d *Definition) getImports(decl *Declaration) []string {
 	return d.Imports.Get(decl.File)
 }
