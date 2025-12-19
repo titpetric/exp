@@ -6,7 +6,7 @@ import (
 	"github.com/kortschak/utter"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
 	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
 
@@ -15,12 +15,16 @@ func TestLoad(t *testing.T) {
 	utter.Config.OmitZero = true
 	utter.Config.ElideType = true
 
-	defs, err := loader.Load(&model.Package{
-		Path: ".",
-	}, true, true)
-
+	// list current local packages
+	packages, err := internal.ListPackages(".", ".")
 	assert.NoError(t, err)
-	assert.NotNil(t, defs)
+	assert.NotNil(t, packages)
 
-	utter.Dump(defs)
+	for _, p := range packages {
+		defs, err := loader.Load(p, true, true)
+		assert.NoError(t, err)
+		assert.NotNil(t, defs)
+
+		utter.Dump(defs)
+	}
 }

@@ -7,4 +7,5 @@ tasks:
     cmds:
       - goimports -w .
       - go fmt .
-      - go test -v -count=1 ./...
+      - go test -count=1 ./...
+      - go test -c loader_test.go
