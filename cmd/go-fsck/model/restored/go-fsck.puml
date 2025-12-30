@@ -31,6 +31,7 @@ class "model.Declaration" {
   + HasName (find string) bool
   + HasReceiver () bool
   + IsExported () bool
+  + IsTestScope () bool
   + Keys () []string
   + ReceiverTypeRef () string
   + Ref (pkg *Package) []Ref

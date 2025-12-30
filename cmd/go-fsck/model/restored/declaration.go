@@ -79,6 +79,10 @@ func (d *Declaration) IsExported() bool {
 	return ast.IsExported(d.Name)
 }
 
+func (f *Declaration) IsTestScope() bool {
+	return strings.HasSuffix(f.File, "_test.go")
+}
+
 func (d *Declaration) Keys() []string {
 	trimPath := "*."
 	if d.Name != "" {

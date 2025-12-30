@@ -43,6 +43,9 @@ func NewGodocLinter() *GodocLinter {
 // Lint checks the declarations for godoc compliance.
 func (g *GodocLinter) Lint(defs []*model.Definition) {
 	for _, def := range defs {
+		if def.Package.Package == "main" || def.Package.TestPackage {
+			continue
+		}
 		g.checkDeclarationList(def, def.Types)
 		g.checkDeclarationList(def, def.Funcs)
 		g.checkDeclarationList(def, def.Consts)
@@ -57,34 +60,32 @@ func (g *GodocLinter) checkDeclarationList(def *model.Definition, decls model.De
 			continue
 		}
 
-		// Check if godoc exists
-		if decl.Doc == "" {
-			g.issues = append(g.issues, &GodocIssue{
-				File:        decl.File,
-				Line:        decl.Line,
-				Symbol:      decl.Name,
-				Receiver:    decl.Receiver,
-				IssueType:   "missing-godoc",
-				Description: "exported symbol lacks godoc comment",
-			})
+		if decl.IsTestScope() {
 			continue
 		}
 
 		// Validate godoc format
-		g.validateGodoc(decl)
+		g.validateGodoc(def.Package, decl)
 	}
 }
 
-func (g *GodocLinter) validateGodoc(decl *model.Declaration) {
-	doc := strings.TrimSpace(decl.Doc)
-	if doc == "" {
+func (g *GodocLinter) validateGodoc(pkg model.Package, decl *model.Declaration) {
+	// Check if godoc exists
+	decl.Doc = strings.TrimSpace(decl.Doc)
+	if decl.Doc == "" {
+		g.issues = append(g.issues, &GodocIssue{
+			File:        decl.File,
+			Line:        decl.Line,
+			Symbol:      decl.Name,
+			Receiver:    decl.Receiver,
+			IssueType:   "missing-godoc",
+			Description: "exported symbol lacks godoc comment",
+		})
 		return
 	}
 
+	doc := decl.Doc
 	symbol := decl.Name
-	if decl.Receiver != "" {
-		symbol = decl.Receiver + "." + symbol
-	}
 
 	// Check if comment starts with symbol name
 	words := strings.Fields(doc)
@@ -102,6 +103,7 @@ func (g *GodocLinter) validateGodoc(decl *model.Declaration) {
 			IssueType:   "godoc-format",
 			Description: fmt.Sprintf("godoc should start with %q, but starts with %q", symbol, firstWord),
 		})
+		return
 	}
 
 	// Check if comment ends with punctuation
@@ -115,6 +117,7 @@ func (g *GodocLinter) validateGodoc(decl *model.Declaration) {
 			IssueType:   "godoc-format",
 			Description: "godoc should end with punctuation (., !, or ?)",
 		})
+		return
 	}
 
 	// Count newlines (hints at overly verbose docs)
@@ -128,6 +131,7 @@ func (g *GodocLinter) validateGodoc(decl *model.Declaration) {
 			IssueType:   "godoc-verbose",
 			Description: fmt.Sprintf("godoc is lengthy (%d lines) - may indicate code smell", lineCount+1),
 		})
+		return
 	}
 }
 

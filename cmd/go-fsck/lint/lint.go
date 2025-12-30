@@ -61,28 +61,29 @@ func lint(cfg *options) error {
 	var allIssues []interface{}
 	hasErrors := false
 
-	// Check import collisions (always enabled)
-	importsLinter := rules.NewImportsLinter()
-	importsLinter.Lint(defs)
-	importsIssues := importsLinter.Issues()
-	if len(importsIssues) > 0 {
-		hasErrors = true
-		if cfg.jsonOut {
-			allIssues = append(allIssues, map[string]interface{}{
-				"rule":   "import-collision",
-				"issues": importsIssues,
-			})
-		} else {
-			for _, err := range importsIssues {
-				fmt.Println(err)
-			}
-		}
-	}
-
 	// Run enabled linters
 	activeRules := cfg.GetRules()
 	for _, ruleName := range activeRules {
 		switch ruleName {
+		case "imports":
+			// Check import collisions (always enabled)
+			importsLinter := rules.NewImportsLinter()
+			importsLinter.Lint(defs)
+			importsIssues := importsLinter.Issues()
+			if len(importsIssues) > 0 {
+				hasErrors = true
+				if cfg.jsonOut {
+					allIssues = append(allIssues, map[string]interface{}{
+						"rule":   "import-collision",
+						"issues": importsIssues,
+					})
+				} else {
+					for _, err := range importsIssues {
+						fmt.Println(err)
+					}
+				}
+			}
+
 		case "godoc":
 			linter := rules.NewGodocLinter()
 			linter.Lint(defs)

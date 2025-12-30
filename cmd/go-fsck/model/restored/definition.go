@@ -105,30 +105,6 @@ func (d *Definition) Sort() {
 	d.Funcs.Sort()
 }
 
-func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
-	for _, decl := range p {
-		if matchfn(decl) {
-			result.Append(decl)
-		}
-	}
-	return
-}
-
-func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
-	for _, decl := range p {
-		if matchfn(decl) {
-			return decl
-		}
-	}
-	return nil
-}
-
-func (p DeclarationList) Walk(matchfn func(d *Declaration)) {
-	for _, decl := range p {
-		matchfn(decl)
-	}
-}
-
 func (d *Definition) getImports(decl *Declaration) []string {
 	return d.Imports.Get(decl.File)
 }

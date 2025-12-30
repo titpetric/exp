@@ -630,7 +630,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 102,
+        "Line": 106,
         "SelfContained": false,
         "Name": "Equal",
         "Receiver": "*Declaration",
@@ -651,7 +651,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 73,
+        "Line": 77,
         "SelfContained": false,
         "Name": "GetNames",
         "Receiver": "*Declaration",
@@ -669,7 +669,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 80,
+        "Line": 84,
         "SelfContained": false,
         "Name": "HasName",
         "Receiver": "*Declaration",
@@ -690,7 +690,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 41,
+        "Line": 45,
         "SelfContained": false,
         "Name": "HasReceiver",
         "Receiver": "*Declaration",
@@ -708,7 +708,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 89,
+        "Line": 93,
         "SelfContained": false,
         "References": {
           "ast": [
@@ -731,7 +731,30 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 109,
+        "Line": 41,
+        "SelfContained": false,
+        "References": {
+          "strings": [
+            "HasSuffix"
+          ]
+        },
+        "Name": "IsTestScope",
+        "Receiver": "*Declaration",
+        "Returns": [
+          "bool"
+        ],
+        "Signature": "IsTestScope () bool",
+        "Source": "func (f *Declaration) IsTestScope() bool {\n\treturn strings.HasSuffix(f.File, \"_test.go\")\n}",
+        "Complexity": {
+          "Cognitive": 0,
+          "Cyclomatic": 1,
+          "Lines": 3
+        }
+      },
+      {
+        "Kind": "func",
+        "File": "declaration.go",
+        "Line": 113,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -754,7 +777,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 69,
+        "Line": 73,
         "SelfContained": false,
         "Name": "ReceiverTypeRef",
         "Receiver": "*Declaration",
@@ -772,7 +795,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 45,
+        "Line": 49,
         "SelfContained": false,
         "Name": "Ref",
         "Receiver": "*Declaration",
@@ -793,7 +816,7 @@
       {
         "Kind": "func",
         "File": "declaration.go",
-        "Line": 65,
+        "Line": 69,
         "SelfContained": false,
         "Name": "TypeRef",
         "Receiver": "*Declaration",

@@ -38,6 +38,10 @@ type Declaration struct {
 	Complexity *Complexity `json:",omitempty"`
 }
 
+func (f *Declaration) IsTestScope() bool {
+	return strings.HasSuffix(f.File, "_test.go")
+}
+
 func (f *Declaration) HasReceiver() bool {
 	return f.Receiver != ""
 }
