@@ -20,6 +20,7 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/search"
 	"github.com/titpetric/exp/cmd/go-fsck/sqlite"
 	"github.com/titpetric/exp/cmd/go-fsck/stats"
+	"github.com/titpetric/exp/cmd/go-fsck/test"
 )
 
 func main() {
@@ -41,6 +42,7 @@ func start() (err error) {
 		"docs":     docs.Run,
 		"report":   report.Run,
 		"sqlite":   sqlite.Run,
+		"test":     test.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)

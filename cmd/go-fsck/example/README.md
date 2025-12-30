@@ -5,7 +5,6 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/example"
 }
 ```
-
 Example package doc.
 
 ## Types
