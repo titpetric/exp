@@ -260,7 +260,24 @@ func restoreV1(cfg *options) error {
 		add(toFilename(name), t)
 	}
 
+	// Sort functions: those with receivers first (to favor type grouping),
+	// then those without receivers
+	funcsWithReceivers := make([]*model.Declaration, 0)
+	funcsWithoutReceivers := make([]*model.Declaration, 0)
 	for _, t := range def.Funcs {
+		if t.Receiver != "" {
+			funcsWithReceivers = append(funcsWithReceivers, t)
+		} else {
+			funcsWithoutReceivers = append(funcsWithoutReceivers, t)
+		}
+	}
+
+	// Process receivers first, then other functions
+	for _, t := range funcsWithReceivers {
+		filename := classifyFunc(t)
+		add(filename, t)
+	}
+	for _, t := range funcsWithoutReceivers {
 		filename := classifyFunc(t)
 		add(filename, t)
 	}

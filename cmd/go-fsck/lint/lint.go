@@ -1,10 +1,12 @@
 package lint
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/exp/cmd/go-fsck/lint/rules"
 	"github.com/titpetric/exp/cmd/go-fsck/model"
 	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
 )
@@ -51,26 +53,69 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 }
 
 func lint(cfg *options) error {
-	var lintErrors []error
-
 	defs, err := getDefinitions(cfg)
 	if err != nil {
 		return err
 	}
 
-	for _, def := range defs {
-		_, importCollisions := def.Imports.Map(def.Imports.All())
-		for _, err := range importCollisions {
-			lintErrors = append(lintErrors, err)
+	var allIssues []interface{}
+	hasErrors := false
+
+	// Check import collisions (always enabled)
+	importsLinter := rules.NewImportsLinter()
+	importsLinter.Lint(defs)
+	importsIssues := importsLinter.Issues()
+	if len(importsIssues) > 0 {
+		hasErrors = true
+		if cfg.jsonOut {
+			allIssues = append(allIssues, map[string]interface{}{
+				"rule":   "import-collision",
+				"issues": importsIssues,
+			})
+		} else {
+			for _, err := range importsIssues {
+				fmt.Println(err)
+			}
 		}
 	}
 
-	if len(lintErrors) == 0 {
-		return nil
+	// Run enabled linters
+	activeRules := cfg.GetRules()
+	for _, ruleName := range activeRules {
+		switch ruleName {
+		case "godoc":
+			linter := rules.NewGodocLinter()
+			linter.Lint(defs)
+			issues := linter.Issues()
+			if len(issues) > 0 {
+				hasErrors = true
+				if cfg.jsonOut {
+					allIssues = append(allIssues, map[string]interface{}{
+						"rule":   "godoc",
+						"issues": issues,
+					})
+				} else if cfg.summarize {
+					summary := linter.IssueSummary()
+					fmt.Printf("Godoc linter summary:\n")
+					for issueType, count := range summary {
+						fmt.Printf("  - %d %s\n", count, issueType)
+					}
+				} else {
+					for _, issue := range issues {
+						fmt.Println(issue.String())
+					}
+				}
+			}
+		}
 	}
 
-	for _, err := range lintErrors {
-		fmt.Println(err)
+	if cfg.jsonOut && len(allIssues) > 0 {
+		jsonBytes, _ := json.MarshalIndent(allIssues, "", "  ")
+		fmt.Println(string(jsonBytes))
+	}
+
+	if !hasErrors {
+		return nil
 	}
 
 	return errors.New("Linter not passing")
