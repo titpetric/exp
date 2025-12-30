@@ -11,7 +11,7 @@ func Run() (err error) {
 	cfg := NewOptions()
 
 	if slices.Contains(os.Args, "help") {
-		PrintHelp()
+		cfg.PrintHelp()
 		return nil
 	}
 

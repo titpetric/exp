@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	flag "github.com/spf13/pflag"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
 )
 
 type options struct {
@@ -15,20 +15,24 @@ type options struct {
 	rules     []string
 	exclude   []string
 	args      []string
+
+	fs *internal.FlagSet
 }
 
+// NewOptions parses command-line flags and returns the lint options.
 func NewOptions() *options {
 	cfg := &options{
 		rules: []string{"godoc"},
 	}
-	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
-	flag.BoolVarP(&cfg.summarize, "summarize", "", cfg.summarize, "summarize linter issues instead of raw logs")
-	flag.BoolVarP(&cfg.jsonOut, "json", "", cfg.jsonOut, "output results as JSON")
-	flag.StringSliceVarP(&cfg.rules, "rules", "", cfg.rules, "linter rules to run")
-	flag.StringSliceVarP(&cfg.exclude, "exclude", "", cfg.exclude, "linter rules to exclude")
-	flag.Parse()
 
-	cfg.args = flag.Args()
+	cfg.fs = internal.NewFlagSet("lint")
+	cfg.fs.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
+	cfg.fs.BoolVarP(&cfg.summarize, "summarize", "", cfg.summarize, "summarize linter issues instead of raw logs")
+	cfg.fs.BoolVarP(&cfg.jsonOut, "json", "", cfg.jsonOut, "output results as JSON")
+	cfg.fs.StringSliceVarP(&cfg.rules, "rules", "", cfg.rules, "linter rules to run")
+	cfg.fs.StringSliceVarP(&cfg.exclude, "exclude", "", cfg.exclude, "linter rules to exclude")
+
+	cfg.args = internal.ParseArgs(cfg.fs)
 
 	return cfg
 }
@@ -55,7 +59,8 @@ func (o *options) GetRules() []string {
 	return result
 }
 
-func PrintHelp() {
+// PrintHelp displays usage information for the lint command.
+func (o *options) PrintHelp() {
 	fmt.Printf("Usage: %s lint <options>:\n\n", path.Base(os.Args[0]))
-	flag.PrintDefaults()
+	o.fs.PrintDefaults()
 }

@@ -6,6 +6,8 @@ import (
 	"path"
 
 	flag "github.com/spf13/pflag"
+
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
 )
 
 type options struct {
@@ -14,6 +16,8 @@ type options struct {
 	json    bool
 	verbose bool
 	args    []string
+
+	fs *internal.FlagSet
 }
 
 func NewOptions() *options {
@@ -21,12 +25,13 @@ func NewOptions() *options {
 		inputFile: "go-fsck.json",
 	}
 
-	flag.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
-	flag.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
-	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
-	flag.Parse()
+	cfg.fs = internal.NewFlagSet("report")
 
-	cfg.args = flag.Args()
+	cfg.fs.StringVarP(&cfg.inputFile, "input-file", "i", cfg.inputFile, "input file")
+	cfg.fs.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
+	cfg.fs.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
+
+	cfg.args = internal.ParseArgs(cfg.fs)
 
 	return cfg
 }
