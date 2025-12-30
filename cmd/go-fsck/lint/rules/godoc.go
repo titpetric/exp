@@ -43,7 +43,8 @@ func NewGodocLinter() *GodocLinter {
 // Lint checks the declarations for godoc compliance.
 func (g *GodocLinter) Lint(defs []*model.Definition) {
 	for _, def := range defs {
-		if def.Package.Package == "main" || def.Package.TestPackage {
+		isMain := def.Package.Pkg != nil && def.Package.Pkg.Name == "main"
+		if isMain || def.Package.TestPackage {
 			continue
 		}
 		g.checkDeclarationList(def, def.Types)
@@ -72,6 +73,9 @@ func (g *GodocLinter) checkDeclarationList(def *model.Definition, decls model.De
 func (g *GodocLinter) validateGodoc(pkg model.Package, decl *model.Declaration) {
 	// Check if godoc exists
 	decl.Doc = strings.TrimSpace(decl.Doc)
+	doc := decl.Doc
+	symbol := decl.Name
+
 	if decl.Doc == "" {
 		g.issues = append(g.issues, &GodocIssue{
 			File:        decl.File,
@@ -83,9 +87,6 @@ func (g *GodocLinter) validateGodoc(pkg model.Package, decl *model.Declaration) 
 		})
 		return
 	}
-
-	doc := decl.Doc
-	symbol := decl.Name
 
 	// Check if comment starts with symbol name
 	words := strings.Fields(doc)

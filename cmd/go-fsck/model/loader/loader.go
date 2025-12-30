@@ -75,6 +75,13 @@ func Load(in *model.Package, includeTests bool, verbose bool) ([]*model.Definiti
 
 	results := sink.Clean(verbose)
 
+	// Attach the package information to all returned definitions
+	for _, def := range results {
+		def.Pkg = pkg
+		def.ImportPath = in.ImportPath
+		def.ID = in.ID
+	}
+
 	return results, nil
 }
 

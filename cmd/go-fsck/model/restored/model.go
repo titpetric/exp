@@ -11,9 +11,3 @@ type Complexity struct {
 
 // FieldList contains all struct fields.
 type FieldList []*Field
-
-type Ref struct {
-	Package  *Package
-	Receiver string
-	Name     string
-}
