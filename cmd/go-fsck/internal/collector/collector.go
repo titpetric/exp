@@ -28,6 +28,7 @@ type collector struct {
 
 	definition map[string]*Definition
 	seen       map[string]bool
+	pkgPath    string // Current package path for relative file paths
 }
 
 func NewCollector(fset *token.FileSet) *collector {
@@ -83,6 +84,18 @@ func (v *collector) setSeen(key string) {
 func (v *collector) isSeen(key string) bool {
 	_, ok := v.seen[key]
 	return ok
+}
+
+func (v *collector) relativeFile(filename string) string {
+	if v.pkgPath == "" {
+		return filepath.Base(filename)
+	}
+	// Try to make the filename relative to the package path
+	rel, err := filepath.Rel(v.pkgPath, filename)
+	if err != nil {
+		return filepath.Base(filename)
+	}
+	return rel
 }
 
 func (v *collector) collectImports(filename string, decl *ast.GenDecl, def *Definition) {
@@ -165,8 +178,10 @@ func (v *collector) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 	pkg, ok := v.definition[packageName]
 	if !ok {
 		pkg = &Definition{}
-		pkg.Package.Path = filepath.Dir(filename)
+		pkgPath := filepath.Dir(filename)
+		pkg.Package.Path = pkgPath
 		pkg.Package.Package = packageName
+		v.pkgPath = pkgPath
 
 		v.definition[packageName] = pkg
 	}
@@ -201,16 +216,15 @@ func (v *collector) Visit(node ast.Node, push bool, stack []ast.Node) bool {
 
 		def := &Declaration{
 			Names:         names,
-			File:          filepath.Base(filename),
+			File:          v.relativeFile(filename),
 			Line:          v.fset.Position(node.Pos()).Line,
 			SelfContained: IsSelfContainedType(node),
 			Source:        v.getSource(file, node),
+			Doc:           strings.TrimSpace(v.getSource(file, node.Doc)),
 		}
 		if len(def.Names) == 1 {
 			def.Name = def.Names[0]
 			def.Names = nil
-
-			def.Doc = strings.TrimSpace(v.getSource(file, node.Doc))
 		}
 
 		for _, name := range names {
@@ -303,7 +317,7 @@ func (v *collector) collectFuncDeclaration(file *ast.File, decl *ast.FuncDecl, f
 	declaration := &Declaration{
 		Doc:        strings.TrimSpace(v.getSource(file, decl.Doc)),
 		Kind:       model.FuncKind,
-		File:       filepath.Base(filename),
+		File:       v.relativeFile(filename),
 		Line:       v.fset.Position(decl.Pos()).Line,
 		Name:       decl.Name.Name,
 		Arguments:  args,

@@ -93,13 +93,13 @@ func (p *DeclarationList) Sort() {
 	})
 }
 
-func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
+func (p DeclarationList) Find(matchfn func(d *Declaration) bool) *Declaration {
 	for _, decl := range p {
 		if matchfn(decl) {
-			result.Append(decl)
+			return decl
 		}
 	}
-	return
+	return nil
 }
 
 func (p DeclarationList) Walk(matchfn func(d *Declaration)) {

@@ -113,6 +113,7 @@
         "File": "example.go",
         "Line": 8,
         "SelfContained": true,
+        "Doc": "Comment outer",
         "Names": [
           "exampleGroup1",
           "exampleGroup2"
