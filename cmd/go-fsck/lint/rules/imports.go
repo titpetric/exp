@@ -29,9 +29,18 @@ func (l *ImportsLinter) Issues() []error {
 	return l.issues
 }
 
-// IssueSummary returns statistics about the issues.
+// IssueSummary returns statistics about the issues as a map for backward compatibility.
 func (l *ImportsLinter) IssueSummary() map[string]int {
 	return map[string]int{
 		"import-collision": len(l.issues),
+	}
+}
+
+// GetStatistics returns structured statistics for YAML output.
+func (l *ImportsLinter) GetStatistics(totalSymbols int) RuleStatistics {
+	return RuleStatistics{
+		TotalSymbols:     totalSymbols,
+		ReportedIssues:   len(l.issues),
+		ImportCollisions: len(l.issues),
 	}
 }

@@ -114,15 +114,6 @@ func (p DeclarationList) Exported() (result DeclarationList) {
 	return
 }
 
-func (p DeclarationList) Filter(matchfn func(d *Declaration) bool) (result DeclarationList) {
-	for _, decl := range p {
-		if matchfn(decl) {
-			result.Append(decl)
-		}
-	}
-	return
-}
-
 func (d *Definition) getImports(decl *Declaration) []string {
 	return d.Imports.Get(decl.File)
 }

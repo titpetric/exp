@@ -207,11 +207,20 @@ func (g *GodocLinter) Issues() []*GodocIssue {
 	return g.issues
 }
 
-// IssueSummary returns statistics about the issues.
+// IssueSummary returns statistics about the issues as a map for backward compatibility.
 func (g *GodocLinter) IssueSummary() map[string]int {
 	summary := make(map[string]int)
 	for _, issue := range g.issues {
 		summary[issue.IssueType]++
 	}
 	return summary
+}
+
+// GetStatistics returns structured statistics for YAML output.
+func (g *GodocLinter) GetStatistics(totalSymbols int) RuleStatistics {
+	return RuleStatistics{
+		TotalSymbols:   totalSymbols,
+		ReportedIssues: len(g.issues),
+		IssueBreakdown: g.IssueSummary(),
+	}
 }
