@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
 	"github.com/titpetric/exp/cmd/go-fsck/lint/rules"
 	"github.com/titpetric/exp/cmd/go-fsck/model"
@@ -70,6 +72,7 @@ func lint(cfg *options) error {
 			importsLinter := rules.NewImportsLinter()
 			importsLinter.Lint(defs)
 			importsIssues := importsLinter.Issues()
+			totalSymbols := len(defs)
 			if len(importsIssues) > 0 {
 				hasErrors = true
 				if cfg.jsonOut {
@@ -77,6 +80,12 @@ func lint(cfg *options) error {
 						"rule":   "import-collision",
 						"issues": importsIssues,
 					})
+				} else if cfg.summarize {
+					stats := importsLinter.GetStatistics(totalSymbols)
+					yamlData, _ := yaml.Marshal(map[string]interface{}{
+						"imports": stats,
+					})
+					fmt.Print(string(yamlData))
 				} else {
 					for _, err := range importsIssues {
 						fmt.Println(err)
@@ -88,6 +97,7 @@ func lint(cfg *options) error {
 			linter := rules.NewGodocLinter()
 			linter.Lint(defs)
 			issues := linter.Issues()
+			totalSymbols := len(defs) // Count all definitions as symbols for godoc
 			if len(issues) > 0 {
 				hasErrors = true
 				if cfg.jsonOut {
@@ -96,16 +106,42 @@ func lint(cfg *options) error {
 						"issues": issues,
 					})
 				} else if cfg.summarize {
-					summary := linter.IssueSummary()
-					fmt.Printf("Godoc linter summary:\n")
-					for issueType, count := range summary {
-						fmt.Printf("  - %d %s\n", count, issueType)
-					}
+					stats := linter.GetStatistics(totalSymbols)
+					yamlData, _ := yaml.Marshal(map[string]interface{}{
+						"godoc": stats,
+					})
+					fmt.Print(string(yamlData))
 				} else {
 					for _, issue := range issues {
 						fmt.Println(issue.String())
 					}
 				}
+			}
+
+		case "func-args":
+			linter := rules.NewFuncArgsLinter()
+			linter.Lint(defs)
+			issues := linter.Issues()
+			if len(issues) > 0 {
+				hasErrors = true
+				if cfg.jsonOut {
+					allIssues = append(allIssues, map[string]interface{}{
+						"rule":    "func-args",
+						"issues":  issues,
+						"summary": linter.IssueSummary(),
+					})
+				} else if !cfg.summarize {
+					for _, issue := range issues {
+						fmt.Println(issue.String())
+					}
+				}
+			}
+			if cfg.summarize {
+				stats := linter.GetStatistics(len(defs))
+				yamlData, _ := yaml.Marshal(map[string]interface{}{
+					"func-args": stats,
+				})
+				fmt.Print(string(yamlData))
 			}
 		}
 	}
