@@ -67,7 +67,7 @@ func ParseAllPackages(filename string) ([]string, error) {
 	}
 	defer file.Close()
 
-	out, err := exec.Command("go", "list", ".").CombinedOutput()
+	out, _ := exec.Command("go", "list", ".").Output()
 	pkg := strings.TrimSpace(string(out))
 
 	packageSet := make(map[string]bool)

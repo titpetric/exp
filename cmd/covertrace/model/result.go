@@ -11,7 +11,7 @@ type Result struct {
 }
 
 type StructType struct {
-	Struct      string        `yaml:"struct"`
+	Name        string        `yaml:"name"`
 	PackageName string        `yaml:"packageName"`
 	Funcs       []FuncDetails `yaml:"funcs"`
 }
@@ -55,7 +55,7 @@ func (r *Result) PopulateFromMaps(
 			structsCoverage += covStmts
 		}
 		r.Types = append(r.Types, StructType{
-			Struct:      structName,
+			Name:        structName,
 			PackageName: structPackageMap[structName],
 			Funcs:       functions,
 		})
