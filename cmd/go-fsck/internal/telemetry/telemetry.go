@@ -33,5 +33,6 @@ func (s Span) String() string {
 }
 
 func (s Span) End() {
-	fmt.Println(s)
+	// DEBUG: print span details
+	// fmt.Println(s)
 }
