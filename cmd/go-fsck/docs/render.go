@@ -59,6 +59,10 @@ func render(cfg *options) error {
 		return err
 	}
 
+	if cfg.split {
+		return renderSplit(cfg, defs)
+	}
+
 	switch cfg.render {
 	case "imports":
 		return renderImports(cfg, defs)

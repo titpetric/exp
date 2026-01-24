@@ -20,6 +20,9 @@ type options struct {
 	docs bool
 
 	verbose bool
+	split   bool
+	out     string
+	strip   string
 	args    []string
 
 	fs *internal.FlagSet
@@ -31,6 +34,7 @@ func NewOptions() *options {
 		inputFile: "go-fsck.json",
 		render:    "markdown",
 		docs:      false,
+		out:       ".",
 	}
 
 	cfg.fs = internal.NewFlagSet("docs")
@@ -40,6 +44,9 @@ func NewOptions() *options {
 	cfg.fs.BoolVar(&cfg.model, "model", cfg.model, "model mode: skip functions and interfaces")
 	cfg.fs.StringVar(&cfg.hide, "hide", cfg.hide, "comma-separated list of types to hide")
 	cfg.fs.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
+	cfg.fs.BoolVar(&cfg.split, "split", cfg.split, "split output file per package")
+	cfg.fs.StringVar(&cfg.out, "out", cfg.out, "output directory (used with --split)")
+	cfg.fs.StringVar(&cfg.strip, "strip", cfg.strip, "prefix to strip from import path for filename")
 
 	cfg.args = internal.ParseArgs(cfg.fs)
 
