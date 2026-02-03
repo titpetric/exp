@@ -65,11 +65,6 @@ func (fa *FuncArgsLinter) checkDeclarationList(def *model.Definition, decls mode
 	for _, decl := range decls {
 		fa.totalSymbols++
 
-		// Only check exported functions
-		if !decl.IsExported() {
-			continue
-		}
-
 		// Skip test scope
 		if decl.IsTestScope() {
 			continue
