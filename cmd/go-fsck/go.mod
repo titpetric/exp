@@ -9,6 +9,7 @@ require (
 	github.com/go-bridget/mig v0.0.0-20251031175119-16ccaa044a41
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kortschak/utter v1.7.0
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/spf13/pflag v1.0.10
 	github.com/stoewer/go-strcase v1.3.1
 	github.com/stretchr/testify v1.9.0

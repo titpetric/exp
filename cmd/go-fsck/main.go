@@ -12,6 +12,7 @@ import (
 
 	"github.com/titpetric/exp/cmd/go-fsck/coverage"
 	"github.com/titpetric/exp/cmd/go-fsck/docs"
+	"github.com/titpetric/exp/cmd/go-fsck/edges"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
 	"github.com/titpetric/exp/cmd/go-fsck/lint"
 	"github.com/titpetric/exp/cmd/go-fsck/query"
@@ -43,6 +44,7 @@ func start() (err error) {
 		"report":   report.Run,
 		"sqlite":   sqlite.Run,
 		"test":     test.Run,
+		"edges":    edges.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)
