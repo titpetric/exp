@@ -96,6 +96,15 @@ func restoreV1(cfg *options) error {
 		isTestScope := strings.HasSuffix(t.File, "_test.go")
 
 		findFile := func(find string) (string, bool) {
+			// First, look for a type with this name (receiver should match a type)
+			for filename, f := range files {
+				for _, v := range f {
+					if v.Kind == model.TypeKind && v.Name == find {
+						return filename, true
+					}
+				}
+			}
+			// Fallback: look for any declaration with this name
 			for filename, f := range files {
 				for _, v := range f {
 					if v.Name == find {
