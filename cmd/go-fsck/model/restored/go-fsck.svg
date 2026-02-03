@@ -26,7 +26,7 @@ link model.Definition to model.DeclarationList--><path d="M360.6,522.21 C362.52,
 link model.DefinitionList to model.Definition--><path d="M350,170.17 C350,191.6 350,217.42 350,243.61 " fill="none" id="model.DefinitionList-&gt;model.Definition" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="350,248.85,354,239.85,350,243.85,346,239.85,350,248.85" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="30" x="351" y="214.897">.type</text><!--MD5=[b187afb897f7ad9e75fcd4b104603e78]
 link model.FieldList to model.Field--><path d="M562,1539.56 C562,1567.68 562,1610.91 562,1650.6 " fill="none" id="model.FieldList-&gt;model.Field" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="562,1655.92,566,1646.92,562,1650.92,558,1646.92,562,1655.92" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="30" x="563" y="1621.897">.type</text><!--MD5=[91b30de43dec987f7aec1dac24a4d15b]
 link model.Package to model.Complexity--><path d="M670.89,814.12 C678.8,984.65 694.1,1315.01 700.3,1448.72 " fill="none" id="model.Package-&gt;model.Complexity" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="700.53,1453.78,704.1148,1444.6067,700.3017,1448.7852,696.1232,1444.9721,700.53,1453.78" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="71" x="697" y="1131.897">.Complexity</text><!--MD5=[dfbb1dc6b92eaf8303dee9e63b09e57d]
-link model.Ref to model.Package--><path d="M666,439.7 C666,482.05 666,542.78 666,595.6 " fill="none" id="model.Ref-&gt;model.Package" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="666,600.69,670,591.69,666,595.69,662,591.69,666,600.69" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="53" x="667" y="566.897">.Package</text><!--MD5=[fcb89cba11595c1f5bee35dbb4fbf2c6]
+link model.Ref to model.Package--><path d="M666,439.7 C666,482.05 666,542.78 666,595.6 " fill="none" id="model.Ref-&gt;model.Package" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="666,600.69,670,591.69,666,595.69,662,591.69,666,600.69" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="53" x="667" y="566.897">.Package</text><!--MD5=[e26363b472f117f55a1d684f2b5bd820]
 @startuml
 
 class "model.Complexity" {
@@ -185,7 +185,7 @@ PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
 (GPL source distribution)
 Java Runtime: OpenJDK Runtime Environment
 JVM: OpenJDK 64-Bit Server VM
-Java Version: 21.0.9+10-Ubuntu-125.10
+Java Version: 21.0.10+7-Ubuntu-125.10
 Operating System: Linux
 Default Encoding: UTF-8
 Language: en
