@@ -333,8 +333,9 @@ func isMapOrSliceType(arg string) bool {
 }
 
 // isContextType checks if a type is context.Context.
+// It allows other context types (matching suffix).
 func isContextType(arg string) bool {
-	return arg == "context.Context"
+	return strings.HasSuffix(arg, "Context")
 }
 
 // isInterfaceType checks if a type looks like an interface.

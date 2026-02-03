@@ -39,7 +39,7 @@ func TestFuncArgsLinter_ContextNotFirst(t *testing.T) {
 	decl := &model.Declaration{
 		Name:      "Render",
 		Kind:      model.FuncKind,
-		Arguments: []string{"string", "context.Context", "int"},
+		Arguments: []string{"string", "AnyContext", "int"},
 		File:      "test.go",
 		Line:      1,
 	}
