@@ -230,14 +230,6 @@
         "SelfContained": false,
         "Doc": "DeclarationList holds a list of Go symbols.",
         "Name": "DeclarationList",
-        "Fields": [
-          {
-            "Name": "type",
-            "Type": "[]*Declaration",
-            "Path": "",
-            "JSONName": ""
-          }
-        ],
         "Source": "// DeclarationList holds a list of Go symbols.\ntype DeclarationList []*Declaration"
       },
       {
@@ -314,14 +306,6 @@
         "SelfContained": false,
         "Doc": "DefinitionList holds a list of Go packages.",
         "Name": "DefinitionList",
-        "Fields": [
-          {
-            "Name": "type",
-            "Type": "[]*Definition",
-            "Path": "",
-            "JSONName": ""
-          }
-        ],
         "Source": "// DefinitionList holds a list of Go packages.\ntype DefinitionList []*Definition"
       },
       {
@@ -404,15 +388,154 @@
         "SelfContained": false,
         "Doc": "FieldList contains all struct fields.",
         "Name": "FieldList",
+        "Source": "// FieldList contains all struct fields.\ntype FieldList []*Field"
+      },
+      {
+        "Kind": "type",
+        "File": "jsonschema.go",
+        "Line": 5,
+        "SelfContained": false,
+        "Doc": "JSONSchema represents a JSON Schema document according to the draft-07 specification.\nIt includes standard fields used to define types, formats, validations.",
+        "Name": "JSONSchema",
         "Fields": [
           {
-            "Name": "type",
-            "Type": "[]*Field",
-            "Path": "",
-            "JSONName": ""
+            "Name": "Schema",
+            "Type": "string",
+            "Path": "JSONSchema.Schema",
+            "Doc": "Schema specifies the JSON Schema version URL.\nExample: \"http://json-schema.org/draft-07/schema#\"",
+            "Tag": "json:\"$schema,omitempty\"",
+            "JSONName": "$schema"
+          },
+          {
+            "Name": "Ref",
+            "Type": "string",
+            "Path": "JSONSchema.Ref",
+            "Doc": "Ref is used to reference another schema definition.\nExample: \"#/definitions/SomeType\"",
+            "Tag": "json:\"$ref,omitempty\"",
+            "JSONName": "$ref"
+          },
+          {
+            "Name": "Definitions",
+            "Type": "map[string]*JSONSchema",
+            "Path": "JSONSchema.Definitions",
+            "Doc": "Definitions contains subSchema definitions that can be referenced by $ref.",
+            "Tag": "json:\"definitions,omitempty\"",
+            "JSONName": "definitions"
+          },
+          {
+            "Name": "Type",
+            "Type": "string",
+            "Path": "JSONSchema.Type",
+            "Doc": "Type indicates the JSON type of the instance (e.g., \"object\", \"array\", \"string\").",
+            "Tag": "json:\"type,omitempty\"",
+            "JSONName": "type"
+          },
+          {
+            "Name": "Format",
+            "Type": "string",
+            "Path": "JSONSchema.Format",
+            "Doc": "Format provides additional semantic validation for the instance.\nCommon formats include \"date-time\", \"email\", etc.",
+            "Tag": "json:\"format,omitempty\"",
+            "JSONName": "format"
+          },
+          {
+            "Name": "Pattern",
+            "Type": "string",
+            "Path": "JSONSchema.Pattern",
+            "Doc": "Pattern defines a regular expression that a string value must match",
+            "Tag": "json:\"pattern,omitempty\"",
+            "JSONName": "pattern"
+          },
+          {
+            "Name": "Properties",
+            "Type": "map[string]*JSONSchema",
+            "Path": "JSONSchema.Properties",
+            "Doc": "Properties defines the fields of an object and their corresponding schemas",
+            "Tag": "json:\"properties,omitempty\"",
+            "JSONName": "properties"
+          },
+          {
+            "Name": "Items",
+            "Type": "*JSONSchema",
+            "Path": "JSONSchema.Items",
+            "Doc": "Items defines the schema for array elements",
+            "Tag": "json:\"items,omitempty\"",
+            "JSONName": "items"
+          },
+          {
+            "Name": "Enum",
+            "Type": "[]any",
+            "Path": "JSONSchema.Enum",
+            "Doc": "Enum restricts a value to a fixed set of values",
+            "Tag": "json:\"enum,omitempty\"",
+            "JSONName": "enum"
+          },
+          {
+            "Name": "Required",
+            "Type": "[]string",
+            "Path": "JSONSchema.Required",
+            "Doc": "Required lists the properties that must be present in an object",
+            "Tag": "json:\"required,omitempty\"",
+            "JSONName": "required"
+          },
+          {
+            "Name": "Description",
+            "Type": "string",
+            "Path": "JSONSchema.Description",
+            "Doc": "Description provides a human-readable explanation of the schema.",
+            "Tag": "json:\"description,omitempty\"",
+            "JSONName": "description"
+          },
+          {
+            "Name": "Minimum",
+            "Type": "*float64",
+            "Path": "JSONSchema.Minimum",
+            "Doc": "Minimum specifies the minimum numeric value allowed.",
+            "Tag": "json:\"minimum,omitempty\"",
+            "JSONName": "minimum"
+          },
+          {
+            "Name": "Maximum",
+            "Type": "*float64",
+            "Path": "JSONSchema.Maximum",
+            "Doc": "Maximum specifies the maximum numeric value allowed.",
+            "Tag": "json:\"maximum,omitempty\"",
+            "JSONName": "maximum"
+          },
+          {
+            "Name": "ExclusiveMinimum",
+            "Type": "*bool",
+            "Path": "JSONSchema.ExclusiveMinimum",
+            "Doc": "ExclusiveMinimum, if true, requires the instance to be greater than (not equal to) Minimum.",
+            "Tag": "json:\"exclusiveMinimum,omitempty\"",
+            "JSONName": "exclusiveMinimum"
+          },
+          {
+            "Name": "ExclusiveMaximum",
+            "Type": "*bool",
+            "Path": "JSONSchema.ExclusiveMaximum",
+            "Doc": "ExclusiveMaximum, if true, requires the instance to be less than (not equal to) Maximum.",
+            "Tag": "json:\"exclusiveMaximum,omitempty\"",
+            "JSONName": "exclusiveMaximum"
+          },
+          {
+            "Name": "MultipleOf",
+            "Type": "*float64",
+            "Path": "JSONSchema.MultipleOf",
+            "Doc": "MultipleOf indicates that the numeric instance must be a multiple of this value.",
+            "Tag": "json:\"multipleOf,omitempty\"",
+            "JSONName": "multipleOf"
+          },
+          {
+            "Name": "AdditionalProperties",
+            "Type": "any",
+            "Path": "JSONSchema.AdditionalProperties",
+            "Doc": "AdditionalProperties controls whether an object can have properties beyond those defined\nCan be a boolean or a schema that additional properties must conform to",
+            "Tag": "json:\"additionalProperties,omitempty\"",
+            "JSONName": "additionalProperties"
           }
         ],
-        "Source": "// FieldList contains all struct fields.\ntype FieldList []*Field"
+        "Source": "// JSONSchema represents a JSON Schema document according to the draft-07 specification.\n// It includes standard fields used to define types, formats, validations.\ntype JSONSchema struct {\n\t// Schema specifies the JSON Schema version URL.\n\t// Example: \"http://json-schema.org/draft-07/schema#\"\n\tSchema\tstring\t`json:\"$schema,omitempty\"`\n\t// Ref is used to reference another schema definition.\n\t// Example: \"#/definitions/SomeType\"\n\tRef\tstring\t`json:\"$ref,omitempty\"`\n\t// Definitions contains subSchema definitions that can be referenced by $ref.\n\tDefinitions\tmap[string]*JSONSchema\t`json:\"definitions,omitempty\"`\n\t// Type indicates the JSON type of the instance (e.g., \"object\", \"array\", \"string\").\n\tType\tstring\t`json:\"type,omitempty\"`\n\t// Format provides additional semantic validation for the instance.\n\t// Common formats include \"date-time\", \"email\", etc.\n\tFormat\tstring\t`json:\"format,omitempty\"`\n\t// Pattern defines a regular expression that a string value must match\n\tPattern\tstring\t`json:\"pattern,omitempty\"`\n\t// Properties defines the fields of an object and their corresponding schemas\n\tProperties\tmap[string]*JSONSchema\t`json:\"properties,omitempty\"`\n\t// Items defines the schema for array elements\n\tItems\t*JSONSchema\t`json:\"items,omitempty\"`\n\t// Enum restricts a value to a fixed set of values\n\tEnum\t[]any\t`json:\"enum,omitempty\"`\n\t// Required lists the properties that must be present in an object\n\tRequired\t[]string\t`json:\"required,omitempty\"`\n\t// Description provides a human-readable explanation of the schema.\n\tDescription\tstring\t`json:\"description,omitempty\"`\n\t// Minimum specifies the minimum numeric value allowed.\n\tMinimum\t*float64\t`json:\"minimum,omitempty\"`\n\t// Maximum specifies the maximum numeric value allowed.\n\tMaximum\t*float64\t`json:\"maximum,omitempty\"`\n\t// ExclusiveMinimum, if true, requires the instance to be greater than (not equal to) Minimum.\n\tExclusiveMinimum\t*bool\t`json:\"exclusiveMinimum,omitempty\"`\n\t// ExclusiveMaximum, if true, requires the instance to be less than (not equal to) Maximum.\n\tExclusiveMaximum\t*bool\t`json:\"exclusiveMaximum,omitempty\"`\n\t// MultipleOf indicates that the numeric instance must be a multiple of this value.\n\tMultipleOf\t*float64\t`json:\"multipleOf,omitempty\"`\n\t// AdditionalProperties controls whether an object can have properties beyond those defined\n\t// Can be a boolean or a schema that additional properties must conform to\n\tAdditionalProperties\tany\t`json:\"additionalProperties,omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -512,14 +635,6 @@
         "SelfContained": false,
         "Doc": "StringSet provides a key based unique string slice.",
         "Name": "StringSet",
-        "Fields": [
-          {
-            "Name": "type",
-            "Type": "map[string][]string",
-            "Path": "",
-            "JSONName": ""
-          }
-        ],
         "Source": "// StringSet provides a key based unique string slice.\ntype StringSet map[string][]string"
       }
     ],

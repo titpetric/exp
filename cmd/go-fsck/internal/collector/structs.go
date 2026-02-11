@@ -36,11 +36,13 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 				// type aliases, e.g. type X string
 			default:
 				out.Type = p.symbolType(file, obj.Type)
+				/* plantuml may need this, but data is incorrect
 				item := &model.Field{
 					Name: "type",
 					Type: out.Type,
 				}
 				out.Fields = append(out.Fields, item)
+				*/
 			}
 		default:
 		}

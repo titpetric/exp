@@ -14,6 +14,7 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/docs"
 	"github.com/titpetric/exp/cmd/go-fsck/edges"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
+	"github.com/titpetric/exp/cmd/go-fsck/jsonschema"
 	"github.com/titpetric/exp/cmd/go-fsck/lint"
 	"github.com/titpetric/exp/cmd/go-fsck/query"
 	"github.com/titpetric/exp/cmd/go-fsck/report"
@@ -33,18 +34,19 @@ func main() {
 
 func start() (err error) {
 	commands := map[string]func() error{
-		"extract":  extract.Run,
-		"coverage": coverage.Run,
-		"restore":  restore.Run,
-		"stats":    stats.Run,
-		"lint":     lint.Run,
-		"search":   search.Run,
-		"query":    query.Run,
-		"docs":     docs.Run,
-		"report":   report.Run,
-		"sqlite":   sqlite.Run,
-		"test":     test.Run,
-		"edges":    edges.Run,
+		"extract":    extract.Run,
+		"coverage":   coverage.Run,
+		"restore":    restore.Run,
+		"stats":      stats.Run,
+		"lint":       lint.Run,
+		"jsonschema": jsonschema.Run,
+		"search":     search.Run,
+		"query":      query.Run,
+		"docs":       docs.Run,
+		"report":     report.Run,
+		"sqlite":     sqlite.Run,
+		"test":       test.Run,
+		"edges":      edges.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)

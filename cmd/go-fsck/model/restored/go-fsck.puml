@@ -38,20 +38,6 @@ class "model.Declaration" {
   + TypeRef () string
 }
 
-class "model.DeclarationList" {
-  - type: []*Declaration
-  + Append (in ...*Declaration)
-  + AppendUnique (in ...*Declaration)
-  + ClearNonTestFiles ()
-  + ClearSource ()
-  + ClearTestFiles ()
-  + Sort ()
-  + Exported () DeclarationList
-  + Filter (matchfn func(d *Declaration) bool) DeclarationList
-  + Find (matchfn func(d *Declaration) bool) *Declaration
-  + Walk (matchfn func(d *Declaration))
-}
-
 class "model.Definition" {
   + Doc: string
   + Imports: StringSet
@@ -70,13 +56,6 @@ class "model.Definition" {
   + Sort ()
 }
 
-class "model.DefinitionList" {
-  - type: []*Definition
-  + Filter (matchfn func(d *Definition) bool) []*Definition
-  + Find (matchfn func(d *Definition) bool) *Definition
-  + Walk (matchfn func(d *Definition))
-}
-
 class "model.Field" {
   + Name: string
   + Type: string
@@ -89,8 +68,24 @@ class "model.Field" {
   + TypeRef () string
 }
 
-class "model.FieldList" {
-  - type: []*Field
+class "model.JSONSchema" {
+  + Schema: string
+  + Ref: string
+  + Definitions: map[string]*JSONSchema
+  + Type: string
+  + Format: string
+  + Pattern: string
+  + Properties: map[string]*JSONSchema
+  + Items: *JSONSchema
+  + Enum: []any
+  + Required: []string
+  + Description: string
+  + Minimum: *float64
+  + Maximum: *float64
+  + ExclusiveMinimum: *bool
+  + ExclusiveMaximum: *bool
+  + MultipleOf: *float64
+  + AdditionalProperties: any
 }
 
 class "model.Package" {
@@ -114,23 +109,12 @@ class "model.Ref" {
   + String () string
 }
 
-class "model.StringSet" {
-  - type: map[string][]string
-  + Add (key string, lits ...string)
-  + Keys () []string
-  + All () []string
-  + Get (key string) []string
-  + Map (imports []string) (map[string]string, []error)
-}
-
 
 "model.Declaration" --> "model.DeclarationKind" : .Kind
 "model.Declaration" --> "model.StringSet" : .References
 "model.Declaration" --> "model.StringSet" : .Globals
 "model.Declaration" --> "model.FieldList" : .Fields
 "model.Declaration" --> "model.Complexity" : .Complexity
-
-"model.DeclarationList" --> "model.Declaration" : .type
 
 "model.Definition" --|> "model.Package" : embeds
 "model.Definition" --> "model.StringSet" : .Imports
@@ -139,15 +123,16 @@ class "model.StringSet" {
 "model.Definition" --> "model.DeclarationList" : .Vars
 "model.Definition" --> "model.DeclarationList" : .Funcs
 
-"model.DefinitionList" --> "model.Definition" : .type
 
-
-"model.FieldList" --> "model.Field" : .type
+"model.JSONSchema" --> "model.JSONSchema" : .Definitions
+"model.JSONSchema" --> "model.JSONSchema" : .Properties
+"model.JSONSchema" --> "model.JSONSchema" : .Items
+"model.JSONSchema" --> "model.any" : .Enum
+"model.JSONSchema" --> "model.any" : .AdditionalProperties
 
 "model.Package" --> "model.Complexity" : .Complexity
 
 "model.Ref" --> "model.Package" : .Package
-
 
 
 @enduml

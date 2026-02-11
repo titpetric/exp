@@ -1,17 +1,5 @@
 package model
 
-type Complexity struct {
-	Cognitive  int
-	Cyclomatic int
-	Lines      int
-
-	// Coverage is filled out of band (summary coverfunc).
-	Coverage float64 `json:",omitempty"`
-}
-
-// FieldList contains all struct fields.
-type FieldList []*Field
-
 // JSONSchema represents a JSON Schema document according to the draft-07 specification.
 // It includes standard fields used to define types, formats, validations.
 type JSONSchema struct {
