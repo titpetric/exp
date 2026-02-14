@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -16,6 +15,7 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"golang.org/x/mod/modfile"
+	"golang.org/x/mod/module"
 	"golang.org/x/mod/semver"
 )
 
@@ -59,8 +59,8 @@ func loadGoMod(gomodPath string) ([]*Dependency, error) {
 	return load(content)
 }
 
-func loadFromProxy(module string) ([]*Dependency, error) {
-	parts := strings.SplitN(module, "@", 2)
+func loadFromProxy(modulePath string) ([]*Dependency, error) {
+	parts := strings.SplitN(modulePath, "@", 2)
 	name := parts[0]
 	version := "latest"
 	if len(parts) == 2 {
@@ -75,7 +75,12 @@ func loadFromProxy(module string) ([]*Dependency, error) {
 		version = resolved
 	}
 
-	modURL := "https://proxy.golang.org/" + url.QueryEscape(strings.ToLower(name)) + "/@v/" + version + ".mod"
+	escapedName, err := module.EscapePath(name)
+	if err != nil {
+		return nil, fmt.Errorf("escaping module path %s: %w", name, err)
+	}
+
+	modURL := "https://proxy.golang.org/" + escapedName + "/@v/" + version + ".mod"
 	res, err := http.Get(modURL)
 	if err != nil {
 		return nil, err
@@ -95,7 +100,11 @@ func loadFromProxy(module string) ([]*Dependency, error) {
 }
 
 func resolveLatest(name string) (string, error) {
-	res, err := http.Get("https://proxy.golang.org/" + url.QueryEscape(strings.ToLower(name)) + "/@latest")
+	escapedName, err := module.EscapePath(name)
+	if err != nil {
+		return "", fmt.Errorf("escaping module path %s: %w", name, err)
+	}
+	res, err := http.Get("https://proxy.golang.org/" + escapedName + "/@latest")
 	if err != nil {
 		return "", err
 	}
@@ -258,7 +267,11 @@ func start() error {
 func getLatestVersion(name string) (string, error) {
 	var result string
 
-	res, err := http.Get("https://proxy.golang.org/" + url.QueryEscape(strings.ToLower(name)) + "/@v/list")
+	escapedName, err := module.EscapePath(name)
+	if err != nil {
+		return result, fmt.Errorf("escaping module path %s: %w", name, err)
+	}
+	res, err := http.Get("https://proxy.golang.org/" + escapedName + "/@v/list")
 	if err != nil {
 		return result, err
 	}
