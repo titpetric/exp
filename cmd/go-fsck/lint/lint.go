@@ -143,6 +143,31 @@ func lint(cfg *options) error {
 				})
 				fmt.Print(string(yamlData))
 			}
+
+		case "func-returns":
+			linter := rules.NewFuncReturnsLinter()
+			linter.Lint(defs)
+			issues := linter.Issues()
+			if len(issues) > 0 {
+				hasErrors = true
+				if cfg.jsonOut {
+					allIssues = append(allIssues, map[string]interface{}{
+						"rule":   "func-returns",
+						"issues": issues,
+					})
+				} else if !cfg.summarize {
+					for _, issue := range issues {
+						fmt.Println(issue.String())
+					}
+				}
+			}
+			if cfg.summarize {
+				stats := linter.GetStatistics(len(defs))
+				yamlData, _ := yaml.Marshal(map[string]interface{}{
+					"func-returns": stats,
+				})
+				fmt.Print(string(yamlData))
+			}
 		}
 	}
 

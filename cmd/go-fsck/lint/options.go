@@ -22,7 +22,7 @@ type options struct {
 // NewOptions parses command-line flags and returns the lint options.
 func NewOptions() *options {
 	cfg := &options{
-		rules: []string{"imports", "godoc", "func-args"},
+		rules: []string{"imports", "godoc", "func-args", "func-returns"},
 	}
 
 	cfg.fs = internal.NewFlagSet("lint")
