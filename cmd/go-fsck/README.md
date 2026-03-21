@@ -9,13 +9,13 @@ Available commands: coverage, docs, extract, lint, query, report, restore, searc
 
 ## Use cases
 
-While the tool outgrew it's use quite quickly, I use it today to cover
+While the tool outgrew its use quite quickly, I use it today to cover
 various software development life cycle concerns. You could use it for
 any of the following, and I do, somewhere.
 
-The root of the `go-fsck` tool is it's data model. Extract will scan a
+The root of the `go-fsck` tool is its data model. Extract will scan a
 codebase and produce a data model in .json, with source-accurate detail. It balances
-the complexity of the AST against a typed representation of it's entities.
+the complexity of the AST against a typed representation of its entities.
 
 ```
 $ go-fsck extract --help
@@ -44,7 +44,7 @@ have been added or abandoned over time.
 
 - `coverage`: print a coverage report, per function, per package, markdown
 - `docs`: print markdown docs with package godoc, render plantuml diagrams
-- `lint`: test that no package name in a project repeats, fight ambigous short imports
+- `lint`: test that no package name in a project repeats, fight ambiguous short imports
 - `query`: a half-hearted attempt at interface discovery
 - `report`: reporting test naming conventions to match symbols
 - `restore`: the opinionated file grouping (symbol should match filename)
@@ -66,7 +66,7 @@ github.com/titpetric/exp/cmd/go-fsck/model/loader
 github.com/titpetric/exp/cmd/go-fsck/query/loader
 ```
 
-The linter protects against ambigous imports, e.g. repetition of `model`
+The linter protects against ambiguous imports, e.g. repetition of `model`
 folders or similar. It's sort of hard to enforce on a repository basis,
 and there is a sweet spot where it's reasonable.
 
@@ -110,7 +110,7 @@ Using `go-fsck restore -p package (--save)` will render the schema into a
 package on disk. This package groups structs to 1 per file, keeping
 grouped var declarations scoped together.
 
-It's intent is mostly as a research tool, and it's not guaranteed to
+Its intent is mostly as a research tool, and it's not guaranteed to
 handle every possible edge case in terms of how people structure their
 code.
 
@@ -125,7 +125,7 @@ I define local behaviour as the completeness of the implementation, by
 invoking `go test file*.go` it reduces the scope only to these files. If
 the package only imports other packages, the behaviour of the
 implementation and the tests is local - does not need other symbols in
-the package scope. This also means it can be moved out to it's own
+the package scope. This also means it can be moved out to its own
 package and make other code have local behaviour.
 
 This is in effect a black box test, if there is no shared package scope.
@@ -236,7 +236,7 @@ Data loss is expected so small packages fit best.
 ## Future
 
 The actual granularity between packages with 1, 10, 100 or 1000 types
-inside the package scope is a drastic constraint of feasability. You
+inside the package scope is a drastic constraint of feasibility. You
 would not be able to use this process at any kind of package scale.
 
 Go is a package driven language - the main intent of the tool is to
@@ -245,7 +245,7 @@ into new packages in multiple projects that have grown too big and make
 it extra difficult to maintain due to that shared package scope, design
 issues and things like global shared state in tests.
 
-Using `go-fsck` acomplishes this by enabling local behaviour tests,
+Using `go-fsck` accomplishes this by enabling local behaviour tests,
 essentially having the coupling / failure information as a measurable
 data point for each of the types. We get to calculate impact of
 refactorings in many dimensions.
@@ -257,7 +257,7 @@ declaration types in the language, `var`, `const`, `type` and `func`,
 and that's about it for possible global symbols an application developer
 cares about. A special case is the package level documentation, a
 comment. There are a few other edge cases where the declaration may not
-make sense, but for the most part, this encompases the go type system.
+make sense, but for the most part, this encompasses the Go type system.
 
 ### Naming conventions
 
@@ -266,7 +266,7 @@ make sense, but for the most part, this encompases the go type system.
   - any good convention to follow to know ErrSomething belongs to Something{} struct?
 - group all `const` declarations into `const.go`,
 - group all functions without receivers into `funcs.go`,
-  - classify if there's a pattern we can follow to see if some of it belogs to struct internals.
+  - classify if there's a pattern we can follow to see if some of it belongs to struct internals.
 - group all types into `<name>.go`,
 - group all `Test<Name>*` functions into `<name>_test.go`,
 - group remaining functions into `funcs_test.go`,
