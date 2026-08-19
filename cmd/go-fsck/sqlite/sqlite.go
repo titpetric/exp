@@ -53,10 +53,7 @@ func sqliteRun(cfg *options) error {
 	// Aggregations are easier in SQL... the following block of
 	// code uses an sqlite in-memory database to do some math.
 	conn, err := db.ConnectWithOptions(ctx, &db.Options{
-		Credentials: db.Credentials{
-			DSN:    "file:go-fsck.db",
-			Driver: "sqlite",
-		},
+		Credentials: db.NewCredentials("sqlite://file:go-fsck.db"),
 	})
 
 	if err != nil {
