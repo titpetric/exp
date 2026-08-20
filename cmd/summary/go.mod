@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
+	golang.org/x/exp v0.0.0-20260820122028-d6e0b57b1a69
 	golang.org/x/mod v0.40.0
 	modernc.org/sqlite v1.57.0
 )

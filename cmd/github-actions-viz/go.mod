@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/nektos/act v0.2.89
 	github.com/spf13/pflag v1.0.10
-	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
+	golang.org/x/exp v0.0.0-20260820122028-d6e0b57b1a69
 )
 
 require (
