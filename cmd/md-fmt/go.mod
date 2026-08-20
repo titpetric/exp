@@ -1,6 +1,6 @@
 module github.com/titpetric/exp/cmd/md-fmt
 
-go 1.24.4
+go 1.27.0
 
 require (
 	github.com/russross/blackfriday/v2 v2.1.0

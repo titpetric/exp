@@ -1,6 +1,6 @@
 module github.com/titpetric/exp/cmd/go-fsck
 
-go 1.27rc1
+go 1.27.0
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
@@ -9,16 +9,16 @@ require (
 	github.com/go-bridget/mig v0.4.4
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kortschak/utter v1.7.0
-	github.com/mattn/go-sqlite3 v1.14.32
+	github.com/mattn/go-sqlite3 v1.14.50
 	github.com/spf13/pflag v1.0.10
 	github.com/stoewer/go-strcase v1.3.1
 	github.com/stretchr/testify v1.11.1
-	github.com/uudashr/gocognit v1.2.0
-	golang.org/x/exp v0.0.0-20251023183803-a4bb9ffd2546
-	golang.org/x/mod v0.39.0
+	github.com/uudashr/gocognit v1.2.1
+	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
+	golang.org/x/mod v0.40.0
 	golang.org/x/tools v0.49.0
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.56.0
+	modernc.org/sqlite v1.57.0
 )
 
 require (

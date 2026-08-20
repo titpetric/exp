@@ -1,5 +1,5 @@
 module github.com/titpetric/exp/cmd/protoc-gen-template
 
-go 1.24.4
+go 1.27.0
 
-require google.golang.org/protobuf v1.36.6
+require google.golang.org/protobuf v1.36.12

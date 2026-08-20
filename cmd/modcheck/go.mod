@@ -1,14 +1,24 @@
-module github.com/TykTechnologies/exp/cmd/modcheck
+module github.com/titpetric/exp/cmd/modcheck
 
-go 1.20
+go 1.27.0
 
 require (
-	github.com/olekukonko/tablewriter v0.0.6-0.20230925090304-df64c4bbad77
-	github.com/spf13/pflag v1.0.5
-	golang.org/x/mod v0.14.0
+	github.com/olekukonko/tablewriter v1.1.4
+	github.com/spf13/pflag v1.0.10
+	golang.org/x/mod v0.40.0
 )
 
 require (
-	github.com/mattn/go-runewidth v0.0.10 // indirect
-	github.com/rivo/uniseg v0.1.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/clipperhouse/displaywidth v0.11.0 // indirect
+	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
+	github.com/fatih/color v1.19.0 // indirect
+	github.com/goccy/go-json v0.10.6 // indirect
+	github.com/mattn/go-colorable v0.1.15 // indirect
+	github.com/mattn/go-isatty v0.0.24 // indirect
+	github.com/mattn/go-runewidth v0.0.28 // indirect
+	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
+	github.com/olekukonko/errors v1.3.0 // indirect
+	github.com/olekukonko/ll v0.1.8 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 )
