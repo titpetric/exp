@@ -11,8 +11,8 @@ github.com/fbiville/markdown-table-formatter v0.3.0 h1:PIm1UNgJrFs8q1htGTw+wnnNY
 github.com/fbiville/markdown-table-formatter v0.3.0/go.mod h1:q89TDtSEVDdTaufgSbfHpNVdPU/bmfvqNkrC5HagmLY=
 github.com/fzipp/gocyclo v0.6.0 h1:lsblElZG7d3ALtGMx9fmxeTKZaLLpU8mET09yN4BBLo=
 github.com/fzipp/gocyclo v0.6.0/go.mod h1:rXPyn8fnlpa0R2csP/31uerbiVBugk5whMdlyaLkLoA=
-github.com/go-bridget/mig v0.5.0 h1:oFa6A1YudwsKDgFwpTnAn/pn71Nk3viNMrdgJf3d5MU=
-github.com/go-bridget/mig v0.5.0/go.mod h1:RHF7/ELYRIndAGfwO7BR6IL1D3Zpo/9Mc8Vfex0P67s=
+github.com/go-bridget/mig v0.5.1 h1:kgFxVBfqb7rCEhOBtg3/6MadVmclqQiZNY3n3Vpvjvk=
+github.com/go-bridget/mig v0.5.1/go.mod h1:2FCKqAjPsIliG3aVNAMC2oyZgQXShDPSdJ5uQOjuLMc=
 github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/go-sql-driver/mysql v1.10.0 h1:Q+1LV8DkHJvSYAdR83XzuhDaTykuDx0l6fkXxoWCWfw=
 github.com/go-sql-driver/mysql v1.10.0/go.mod h1:M+cqaI7+xxXGG9swrdeUIoPG3Y3KCkF0pZej+SK+nWk=
