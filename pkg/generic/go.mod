@@ -1,6 +1,6 @@
 module github.com/titpetric/exp/pkg/generic
 
-go 1.24.4
+go 1.27.0
 
 require (
 	github.com/huandu/go-clone/generic v1.7.3

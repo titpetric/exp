@@ -1,9 +1,9 @@
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/titpetric/exp/cmd/schema-gen v0.0.0-20250523170717-22a32c8227b9 h1:UDMlCvdheehZpRCx6ZtDjLYiw9f24V6FGWGTFHC05hg=
-github.com/titpetric/exp/cmd/schema-gen v0.0.0-20250523170717-22a32c8227b9/go.mod h1:GNNy+qwtr6+s6KkYFV2WHxcKrX8hO5AGalIWlqcD6tE=
-golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6 h1:y5zboxd6LQAqYIhHnB48p0ByQ/GnQx2BE33L8BOHQkI=
-golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6/go.mod h1:U6Lno4MTRCDY+Ba7aCcauB9T60gsv5s4ralQzP72ZoQ=
+github.com/titpetric/exp/cmd/schema-gen v0.0.0-20260819123241-e8b9a41cd2eb h1:2faLj6kKq6KjHV9gRyPvKV8/CN6TZER9WDn6FxJOe/A=
+github.com/titpetric/exp/cmd/schema-gen v0.0.0-20260819123241-e8b9a41cd2eb/go.mod h1:JujYC9zWxo3CtLaY5+E226h6GSBnWFJ0bpZUIS45uZE=
+golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297 h1:YXnL44eJ77R+ji4/ooy8UsXIhz+lbi2Qgdlc8iRN0gY=
+golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297/go.mod h1:Mkmymgv+uMpSQ/XxJ/7GpdrdYoqm3u72jEbpCLiJmNk=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
