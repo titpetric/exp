@@ -73,8 +73,10 @@ func (fa *FuncArgsLinter) checkDeclarationList(def *model.Definition, decls mode
 		argCount := len(decl.Arguments)
 		fa.argCountStats[argCount]++
 
-		// Functions with 0 or 1 argument are always valid
-		if argCount < 2 {
+		// Only functions with exactly 2 arguments are considered. Ordering of a
+		// single pair is unambiguous; for 3 or more arguments the expected order
+		// is a heuristic sort that produces too many false positives.
+		if argCount != 2 {
 			fa.argCountValid[argCount]++
 			continue
 		}

@@ -30,26 +30,23 @@ func TestFuncArgsLinter_ContextFirst(t *testing.T) {
 
 func TestFuncArgsLinter_ContextNotFirst(t *testing.T) {
 	linter := NewFuncArgsLinter()
-	linter.defs = []*model.Definition{
+	defs := []*model.Definition{
 		{
 			Package: model.Package{Path: "test"},
-			Types:   []*model.Declaration{},
+			Funcs: []*model.Declaration{
+				{
+					Name:      "Render",
+					Kind:      model.FuncKind,
+					Arguments: []string{"int", "AnyContext"},
+					File:      "test.go",
+					Line:      1,
+				},
+			},
 		},
 	}
-	decl := &model.Declaration{
-		Name:      "Render",
-		Kind:      model.FuncKind,
-		Arguments: []string{"string", "AnyContext", "int"},
-		File:      "test.go",
-		Line:      1,
-	}
-	def := &model.Definition{
-		Package: model.Package{Path: "test"},
-		Funcs:   []*model.Declaration{decl},
-	}
-	hasIssue := linter.checkFunctionArgs(def, decl)
-	if !hasIssue {
-		t.Errorf("expected issue for context not first, got none")
+	linter.Lint(defs)
+	if len(linter.Issues()) != 1 {
+		t.Errorf("expected 1 issue for context not first, got %d", len(linter.Issues()))
 	}
 }
 
@@ -62,7 +59,7 @@ func TestFuncArgsLinter_TimeDurationLast(t *testing.T) {
 				{
 					Name:      "Set",
 					Kind:      model.FuncKind,
-					Arguments: []string{"context.Context", "string", "time.Duration"},
+					Arguments: []string{"string", "time.Duration"},
 					File:      "test.go",
 					Line:      1,
 				},
@@ -84,7 +81,7 @@ func TestFuncArgsLinter_TimeDurationNotLast(t *testing.T) {
 				{
 					Name:      "Set",
 					Kind:      model.FuncKind,
-					Arguments: []string{"context.Context", "time.Duration", "string"},
+					Arguments: []string{"time.Duration", "string"},
 					File:      "test.go",
 					Line:      1,
 				},
@@ -178,7 +175,7 @@ func TestFuncArgsLinter_InterfaceBeforeStruct(t *testing.T) {
 				{
 					Name:      "Do",
 					Kind:      model.FuncKind,
-					Arguments: []string{"context.Context", "Reader", "*Config"},
+					Arguments: []string{"Reader", "*Config"},
 					File:      "test.go",
 					Line:      1,
 				},
@@ -206,7 +203,7 @@ func TestFuncArgsLinter_StructBeforeInterface(t *testing.T) {
 				{
 					Name:      "Do",
 					Kind:      model.FuncKind,
-					Arguments: []string{"context.Context", "*Config", "Reader"},
+					Arguments: []string{"*Config", "Reader"},
 					File:      "test.go",
 					Line:      1,
 				},
@@ -260,7 +257,45 @@ func TestFuncArgsLinter_Statistics(t *testing.T) {
 	if summary["total_symbols"] != 4 {
 		t.Errorf("expected total_symbols=4, got %v", summary["total_symbols"])
 	}
-	if summary["considered_funcs"] != 2 { // Only 2+ args
-		t.Errorf("expected considered_funcs=2, got %v", summary["considered_funcs"])
+	if summary["considered_funcs"] != 1 { // Only exactly 2 args
+		t.Errorf("expected considered_funcs=1, got %v", summary["considered_funcs"])
+	}
+}
+
+func TestFuncArgsLinter_MoreThanTwoArgumentsSkipped(t *testing.T) {
+	linter := NewFuncArgsLinter()
+	defs := []*model.Definition{
+		{
+			Package: model.Package{Path: "test"},
+			Types: []*model.Declaration{
+				{
+					Name: "Reader",
+					Type: "interface",
+				},
+			},
+			Funcs: []*model.Declaration{
+				{
+					Name:      "Do",
+					Kind:      model.FuncKind,
+					Arguments: []string{"context.Context", "*Config", "Reader"},
+					File:      "test.go",
+					Line:      1,
+				},
+				{
+					Name:      "Set",
+					Kind:      model.FuncKind,
+					Arguments: []string{"context.Context", "time.Duration", "string"},
+					File:      "test.go",
+					Line:      2,
+				},
+			},
+		},
+	}
+	linter.Lint(defs)
+	if len(linter.Issues()) != 0 {
+		t.Errorf("expected 0 issues for functions with 3 arguments, got %d", len(linter.Issues()))
+	}
+	if got := linter.GetStatistics().ConsideredFuncs; got != 0 {
+		t.Errorf("expected considered_funcs=0, got %d", got)
 	}
 }
