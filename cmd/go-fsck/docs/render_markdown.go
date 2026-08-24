@@ -45,7 +45,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			fmt.Println()
 			for _, v := range types {
 				if src := declaration(v); src != "" {
-					fmt.Printf("```go\n%s\n```\n\n", src)
+					fmt.Print(details(v, src))
 				}
 			}
 		}
@@ -55,7 +55,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			fmt.Println()
 			for _, v := range consts {
 				if src := declaration(v); src != "" {
-					fmt.Printf("```go\n%s\n```\n\n", src)
+					fmt.Print(details(v, src))
 				}
 			}
 		}
@@ -64,7 +64,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			fmt.Println()
 			for _, v := range vars {
 				if src := declaration(v); src != "" {
-					fmt.Printf("```go\n%s\n```\n\n", src)
+					fmt.Print(details(v, src))
 				}
 			}
 		}

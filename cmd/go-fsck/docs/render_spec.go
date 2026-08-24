@@ -32,7 +32,7 @@ func renderSpec(opts *options, defs []*model.Definition) error {
 			funcs = def.Funcs
 		}
 
-		var packageName = def.Package.Path // strings.ReplaceAll(def.Package.ImportPath, "github.com/", "")
+		packageName := def.Package.Path // strings.ReplaceAll(def.Package.ImportPath, "github.com/", "")
 		if packageName == "." {
 			packageName = path.Base(def.Package.ImportPath)
 		}

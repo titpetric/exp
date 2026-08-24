@@ -235,7 +235,7 @@ func renderPlantUML(opt *options, defs []*model.Definition) error {
 			}
 
 			for _, name := range t.GetNames() {
-				var token = "class"
+				token := "class"
 				if strings.HasPrefix(t.Type, "interface") {
 					token = "interface"
 				}

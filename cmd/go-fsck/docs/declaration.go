@@ -17,12 +17,9 @@ func declaration(decl *model.Declaration) string {
 		return source
 	}
 
-	names := decl.Names
+	names := declarationNames(decl)
 	if len(names) == 0 {
-		if decl.Name == "" {
-			return ""
-		}
-		names = []string{decl.Name}
+		return ""
 	}
 
 	var out strings.Builder
@@ -43,4 +40,28 @@ func declaration(decl *model.Declaration) string {
 	}
 
 	return out.String()
+}
+
+// declarationSummary returns the line a reader picks a declaration out by,
+// which is its kind and the names it declares.
+func declarationSummary(decl *model.Declaration) string {
+	names := declarationNames(decl)
+	if len(names) == 0 {
+		return decl.Kind.String()
+	}
+
+	return decl.Kind.String() + " " + strings.Join(names, ", ")
+}
+
+// declarationNames returns the names a declaration carries. A const or var
+// block declares more than one.
+func declarationNames(decl *model.Declaration) []string {
+	if len(decl.Names) > 0 {
+		return decl.Names
+	}
+	if decl.Name != "" {
+		return []string{decl.Name}
+	}
+
+	return nil
 }

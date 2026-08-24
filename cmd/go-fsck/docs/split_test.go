@@ -468,12 +468,12 @@ func TestRenderSplitFilePermissions(t *testing.T) {
 
 	// Verify file is readable
 	require.True(t, info.Mode().IsRegular())
-	require.True(t, (info.Mode()&0444) != 0, "file should be readable")
+	require.True(t, (info.Mode()&0o444) != 0, "file should be readable")
 
 	readmePath := filepath.Join(tmpDir, "README.md")
 	info, err = os.Stat(readmePath)
 	require.NoError(t, err)
-	require.True(t, (info.Mode()&0444) != 0, "README should be readable")
+	require.True(t, (info.Mode()&0o444) != 0, "README should be readable")
 }
 
 func TestRenderSplitSpecialCharactersInPath(t *testing.T) {

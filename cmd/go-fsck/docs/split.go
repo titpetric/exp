@@ -94,7 +94,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 		fmt.Fprint(&buf, "## Types\n\n")
 		for _, v := range types {
 			if src := declaration(v); src != "" {
-				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+				fmt.Fprint(&buf, details(v, src))
 			}
 		}
 	}
@@ -103,7 +103,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 		fmt.Fprint(&buf, "## Consts\n\n")
 		for _, v := range consts {
 			if src := declaration(v); src != "" {
-				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+				fmt.Fprint(&buf, details(v, src))
 			}
 		}
 	}
@@ -112,7 +112,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 		fmt.Fprint(&buf, "## Vars\n\n")
 		for _, v := range vars {
 			if src := declaration(v); src != "" {
-				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+				fmt.Fprint(&buf, details(v, src))
 			}
 		}
 	}
