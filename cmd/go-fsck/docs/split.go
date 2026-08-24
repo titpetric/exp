@@ -87,7 +87,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 	fmt.Fprintf(&buf, "```\n\n")
 
 	if def.Doc != "" {
-		fmt.Fprintf(&buf, "%s\n\n", strings.TrimSpace(def.Doc))
+		fmt.Fprintf(&buf, "%s\n\n", fenceCodeBlocks(strings.TrimSpace(def.Doc)))
 	}
 
 	if len(types) > 0 {
@@ -139,7 +139,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 			}
 
 			fmt.Fprintf(&buf, "### %s\n\n", fn.Name)
-			fmt.Fprintf(&buf, "%s\n\n", strings.TrimSpace(fn.Doc))
+			fmt.Fprintf(&buf, "%s\n\n", fenceCodeBlocks(strings.TrimSpace(fn.Doc)))
 			fmt.Fprintf(&buf, "```go\n%s\n```\n\n", symbol(fn))
 		}
 

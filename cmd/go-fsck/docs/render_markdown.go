@@ -36,7 +36,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 		fmt.Println("```")
 
 		if def.Doc != "" {
-			fmt.Println(strings.TrimSpace(def.Doc))
+			fmt.Println(fenceCodeBlocks(strings.TrimSpace(def.Doc)))
 			fmt.Println()
 		}
 
@@ -93,7 +93,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 					}
 
 					fmt.Printf("### %s\n\n", fn.Name)
-					fmt.Println(strings.TrimSpace(fn.Doc))
+					fmt.Println(fenceCodeBlocks(strings.TrimSpace(fn.Doc)))
 					fmt.Println()
 					fmt.Printf("```go\n%s\n```\n\n", symbol(fn))
 				}
