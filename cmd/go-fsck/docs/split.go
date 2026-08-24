@@ -76,7 +76,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 		funcs  = def.Funcs.Exported()
 	)
 
-	var packageName = def.Package.Path
+	packageName := def.Package.Path
 	if packageName == "." {
 		packageName = filepath.Base(def.Package.ImportPath)
 	}
@@ -93,24 +93,27 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 	if len(types) > 0 {
 		fmt.Fprint(&buf, "## Types\n\n")
 		for _, v := range types {
-			src := strings.TrimSpace(v.Source)
-			fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			if src := declaration(v); src != "" {
+				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			}
 		}
 	}
 
 	if len(consts) > 0 {
 		fmt.Fprint(&buf, "## Consts\n\n")
 		for _, v := range consts {
-			src := strings.TrimSpace(v.Source)
-			fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			if src := declaration(v); src != "" {
+				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			}
 		}
 	}
 
 	if len(vars) > 0 {
 		fmt.Fprint(&buf, "## Vars\n\n")
 		for _, v := range vars {
-			src := strings.TrimSpace(v.Source)
-			fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			if src := declaration(v); src != "" {
+				fmt.Fprintf(&buf, "```go\n%s\n```\n\n", src)
+			}
 		}
 	}
 
@@ -158,7 +161,7 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 // renderSplit splits documentation by package and writes to separate files.
 func renderSplit(cfg *options, defs []*model.Definition) error {
 	// Create output directory if it doesn't exist
-	if err := os.MkdirAll(cfg.out, 0755); err != nil {
+	if err := os.MkdirAll(cfg.out, 0o755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 
@@ -188,7 +191,7 @@ func renderSplit(cfg *options, defs []*model.Definition) error {
 	// Write individual package documentation files
 	for _, pkg := range packageDocs {
 		filepath := filepath.Join(cfg.out, pkg.Filename)
-		if err := os.WriteFile(filepath, []byte(pkg.Content), 0644); err != nil {
+		if err := os.WriteFile(filepath, []byte(pkg.Content), 0o644); err != nil {
 			return fmt.Errorf("failed to write %s: %w", filepath, err)
 		}
 	}
@@ -196,7 +199,7 @@ func renderSplit(cfg *options, defs []*model.Definition) error {
 	// Generate README.md with table of contents
 	readmePath := filepath.Join(cfg.out, "README.md")
 	readmeContent := generateReadme(packageDocs)
-	if err := os.WriteFile(readmePath, []byte(readmeContent), 0644); err != nil {
+	if err := os.WriteFile(readmePath, []byte(readmeContent), 0o644); err != nil {
 		return fmt.Errorf("failed to write README.md: %w", err)
 	}
 

@@ -24,7 +24,7 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			funcs  = def.Funcs.Exported()
 		)
 
-		var packageName = def.Package.Path // strings.ReplaceAll(def.Package.ImportPath, "github.com/", "")
+		packageName := def.Package.Path // strings.ReplaceAll(def.Package.ImportPath, "github.com/", "")
 		if packageName == "." {
 			packageName = path.Base(def.Package.ImportPath)
 		}
@@ -44,8 +44,9 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			fmt.Println("## Types")
 			fmt.Println()
 			for _, v := range types {
-				src := strings.TrimSpace(v.Source)
-				fmt.Printf("```go\n%s\n```\n\n", src)
+				if src := declaration(v); src != "" {
+					fmt.Printf("```go\n%s\n```\n\n", src)
+				}
 			}
 		}
 
@@ -53,16 +54,18 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 			fmt.Println("## Consts")
 			fmt.Println()
 			for _, v := range consts {
-				src := strings.TrimSpace(v.Source)
-				fmt.Printf("```go\n%s\n```\n\n", src)
+				if src := declaration(v); src != "" {
+					fmt.Printf("```go\n%s\n```\n\n", src)
+				}
 			}
 		}
 		if len(vars) > 0 {
 			fmt.Println("## Vars")
 			fmt.Println()
 			for _, v := range vars {
-				src := strings.TrimSpace(v.Source)
-				fmt.Printf("```go\n%s\n```\n\n", src)
+				if src := declaration(v); src != "" {
+					fmt.Printf("```go\n%s\n```\n\n", src)
+				}
 			}
 		}
 
