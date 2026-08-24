@@ -6,7 +6,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/fbiville/markdown-table-formatter v0.3.0
 	github.com/fzipp/gocyclo v0.6.0
-	github.com/go-bridget/mig v0.5.4
+	github.com/go-bridget/mig v0.5.5
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kortschak/utter v1.7.0
 	github.com/mattn/go-sqlite3 v1.14.50
