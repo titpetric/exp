@@ -11,6 +11,7 @@ import (
 	"golang.org/x/exp/maps"
 
 	"github.com/titpetric/exp/cmd/go-fsck/coverage"
+	"github.com/titpetric/exp/cmd/go-fsck/diff"
 	"github.com/titpetric/exp/cmd/go-fsck/docs"
 	"github.com/titpetric/exp/cmd/go-fsck/edges"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
@@ -43,6 +44,7 @@ func start() (err error) {
 		"search":     search.Run,
 		"query":      query.Run,
 		"docs":       docs.Run,
+		"diff":       diff.Run,
 		"report":     report.Run,
 		"sqlite":     sqlite.Run,
 		"test":       test.Run,
