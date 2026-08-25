@@ -43,6 +43,7 @@ It's something to build upon. The feature existed first, while others
 have been added or abandoned over time.
 
 - `coverage`: print a coverage report, per function, per package, markdown
+- `diff`: compare the exported API of two models, report what a release takes away
 - `docs`: print markdown docs with package godoc, render plantuml diagrams
 - `lint`: test that no package name in a project repeats, fight ambiguous short imports
 - `query`: a half-hearted attempt at interface discovery
@@ -74,6 +75,47 @@ go-fsck docs > docs/api.md
 
 Without `--include-sources` there is nothing to print and the heading is left
 out.
+
+## Comparing releases with `diff`
+
+The `diff` command reads two models and reports what happened to the exported
+API between them. It answers the question a release has to answer before it is
+tagged: does this take anything away?
+
+```shell
+git archive v1.2.0 | tar -x -C /tmp/old
+go-fsck extract -i /tmp/old -r -o /tmp/old.json
+go-fsck extract -i . -r -o /tmp/new.json
+go-fsck diff --old /tmp/old.json --new /tmp/new.json
+```
+
+```
+- github.com/go-bridget/mig/migrate.RunWithFS
+~ github.com/go-bridget/mig/migrate.Print
++ github.com/go-bridget/mig/migrate.NewManager
+1 removed, 1 changed, 1 added, breaking
+```
+
+A symbol is keyed by import path, receiver type and name, so moving a
+declaration to another file, or adding a sibling to its `const (...)` block, is
+not a difference. Functions also carry their signature, with parameter names
+removed: renaming a parameter is not a change, changing its type is. `--verbose`
+prints both signatures under a changed symbol.
+
+`--json` writes the same result as `{"removed": [], "added": [], "changed": [],
+"breaking": false}`, where `breaking` covers removed symbols and changed
+signatures, but not added ones. That is the semantic version question: a
+breaking difference earns at least a minor release, anything else a patch.
+
+Test packages, commands and internal packages are left out, since none of them
+are API another module can depend on; `--include-internal` puts internal
+packages back. Note that the loader skips files carrying build constraints, so
+symbols behind a `//go:build` line are invisible to both sides of the
+comparison.
+
+Extraction works on an unbuilt source tree, which is what makes the `git
+archive` above viable: the model is read from the AST and package load errors
+are discarded, so no module cache or build is needed.
 
 ## Linting with `lint`
 
