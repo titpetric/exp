@@ -54,6 +54,27 @@ have been added or abandoned over time.
 
 The errata over time is as follows:
 
+## API reference with `docs`
+
+The `docs` command renders the model as markdown: the package godoc, the
+types, consts and vars it declares, and the signature of every exported
+function. Function bodies are not printed, whether or not the model carries
+sources.
+
+The exception is godoc examples, which are printed whole, under an
+`## Examples` heading, each wrapped in a `<section>` named after the function.
+An example is its body, and it is compiled and run by `go test`, so it is
+usage that can't go stale. They live in a test package, so the model needs
+both flags to hold them:
+
+```shell
+go-fsck extract -i ./migrate --include-sources --include-tests
+go-fsck docs > docs/api.md
+```
+
+Without `--include-sources` there is nothing to print and the heading is left
+out.
+
 ## Linting with `lint`
 
 The `lint` tool has limited use. Arguably it can be replaced with a `go

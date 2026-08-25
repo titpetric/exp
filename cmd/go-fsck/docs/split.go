@@ -59,8 +59,9 @@ func groupDefinitionsByPackage(defs []*model.Definition) map[string][]*model.Def
 	return groups
 }
 
-// renderMarkdownForPackage renders markdown for a single package.
-func renderMarkdownForPackage(defs []*model.Definition) string {
+// renderMarkdownForPackage renders markdown for a single package, followed by
+// the examples written for it, which live in its test package.
+func renderMarkdownForPackage(defs []*model.Definition, examples model.DeclarationList) string {
 	if len(defs) == 0 {
 		return ""
 	}
@@ -155,6 +156,8 @@ func renderMarkdownForPackage(defs []*model.Definition) string {
 		fmt.Fprint(&buf, "\n")
 	}
 
+	fmt.Fprint(&buf, renderExamples(examples))
+
 	return buf.String()
 }
 
@@ -167,6 +170,7 @@ func renderSplit(cfg *options, defs []*model.Definition) error {
 
 	// Group definitions by package
 	groups := groupDefinitionsByPackage(defs)
+	examples := collectExamples(defs)
 
 	// Sort import paths for consistent output
 	var importPaths []string
@@ -179,7 +183,7 @@ func renderSplit(cfg *options, defs []*model.Definition) error {
 	var packageDocs []PackageDoc
 	for _, importPath := range importPaths {
 		filename := generateFilename(importPath, cfg.strip)
-		content := renderMarkdownForPackage(groups[importPath])
+		content := renderMarkdownForPackage(groups[importPath], examples[importPath])
 
 		packageDocs = append(packageDocs, PackageDoc{
 			ImportPath: importPath,

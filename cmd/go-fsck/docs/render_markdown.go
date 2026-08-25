@@ -9,6 +9,8 @@ import (
 )
 
 func renderMarkdown(_ *options, defs []*model.Definition) error {
+	examples := collectExamples(defs)
+
 	// Loop through function definitions and collect referenced
 	// symbols from imported packages. Globals may also reference
 	// imported packages so this is incomplete at the moment.
@@ -111,6 +113,8 @@ func renderMarkdown(_ *options, defs []*model.Definition) error {
 				break
 			}
 		}
+
+		fmt.Print(renderExamples(examples[def.Package.ImportPath]))
 	}
 
 	return nil

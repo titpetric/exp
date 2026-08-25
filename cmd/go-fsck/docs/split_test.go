@@ -324,7 +324,7 @@ func TestRenderMarkdownForPackageBasic(t *testing.T) {
 		},
 	}
 
-	content := renderMarkdownForPackage(defs)
+	content := renderMarkdownForPackage(defs, nil)
 
 	require.Contains(t, content, "# Package ./pkg1")
 	require.Contains(t, content, "import")
@@ -349,7 +349,7 @@ func TestRenderMarkdownForPackageWithTypes(t *testing.T) {
 		},
 	}
 
-	content := renderMarkdownForPackage(defs)
+	content := renderMarkdownForPackage(defs, nil)
 
 	require.Contains(t, content, "## Types")
 	require.Contains(t, content, "MyType")
@@ -375,7 +375,7 @@ func TestRenderMarkdownForPackageWithFunctions(t *testing.T) {
 		},
 	}
 
-	content := renderMarkdownForPackage(defs)
+	content := renderMarkdownForPackage(defs, nil)
 
 	require.Contains(t, content, "## Function symbols")
 	require.Contains(t, content, "DoSomething")
@@ -385,7 +385,7 @@ func TestRenderMarkdownForPackageWithFunctions(t *testing.T) {
 
 func TestRenderMarkdownForPackageEmpty(t *testing.T) {
 	defs := []*model.Definition{}
-	content := renderMarkdownForPackage(defs)
+	content := renderMarkdownForPackage(defs, nil)
 	require.Equal(t, "", content)
 }
 
