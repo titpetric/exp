@@ -9,12 +9,20 @@ Example package doc.
 
 ## Types
 
+<details>
+<summary><code>type Allocator</code></summary>
+
 ```go
 // Allocator holds a sync.Pool of objects of type T.
 type Allocator[T Reseter] struct {
 	pool sync.Pool
 }
 ```
+
+</details>
+
+<details>
+<summary><code>type Body</code></summary>
 
 ```go
 // Body represends a decoded body
@@ -23,10 +31,20 @@ type Body struct {
 }
 ```
 
+</details>
+
+<details>
+<summary><code>type File</code></summary>
+
 ```go
 // File represents a filename
 type File string
 ```
+
+</details>
+
+<details>
+<summary><code>type Reseter</code></summary>
 
 ```go
 // Reseter is the interface that types must implement to be managed by Allocator.
@@ -35,12 +53,19 @@ type Reseter interface {
 }
 ```
 
+</details>
+
 ## Consts
+
+<details>
+<summary><code>const E_WARNING</code></summary>
 
 ```go
 // Const comment
 const E_WARNING = "warning"	// const line comment
 ```
+
+</details>
 
 ## Function symbols
 
