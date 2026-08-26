@@ -50,7 +50,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}},
 		},
 		{
 			title: "renaming a parameter is not a change",
@@ -58,7 +58,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (path string) error"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}},
 		},
 		{
 			title: "added symbol is not breaking",
@@ -66,7 +66,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
 			new: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Names: []string{"Client", "Server"}}})},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{symType("Server", underlyingStruct)}, Changed: []Change{}, Types: []TypeChange{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{symType("Server", underlyingStruct)}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}},
 		},
 		{
 			title: "removed symbol is breaking",
@@ -74,14 +74,14 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "type", Names: []string{"Client", "Server"}}})},
 			new: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
-			want: Result{Removed: []Symbol{symType("Server", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Breaking: true},
+			want: Result{Removed: []Symbol{symType("Server", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}, Breaking: true},
 		},
 		{
 			title: "removed package is breaking",
 			old: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
 			new:  []*model.Definition{},
-			want: Result{Removed: []Symbol{symType("Client", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Breaking: true},
+			want: Result{Removed: []Symbol{symType("Client", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}, Breaking: true},
 		},
 		{
 			title: "a method carries its receiver",
@@ -93,6 +93,7 @@ func TestCompare(t *testing.T) {
 				Added:   []Symbol{sym(kindFunc, "Client.Close", "func (*Client) Close () error")},
 				Changed: []Change{},
 				Types:   []TypeChange{},
+				Modules: []ModuleChange{},
 			},
 		},
 		{
@@ -112,6 +113,7 @@ func TestCompare(t *testing.T) {
 					New:     "Open (string, int) error",
 				}},
 				Types:    []TypeChange{},
+				Modules:  []ModuleChange{},
 				Breaking: true,
 			},
 		},
@@ -121,12 +123,12 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", File: "open.go", Line: 3, Signature: "Open ()"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", File: "x.go", Line: 91, Signature: "Open ()"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Modules: []ModuleChange{}},
 		},
 	}
 
 	for _, test := range tests {
-		got := Compare(test.old, test.new, false)
+		got := Compare(test.old, test.new, false, false)
 		if !reflect.DeepEqual(got, test.want) {
 			t.Errorf("%s: Compare() = %#v, want %#v", test.title, got, test.want)
 		}
@@ -143,7 +145,7 @@ func TestCompareReportsTheKindOfEachSymbol(t *testing.T) {
 	}}
 
 	var got []string
-	for _, symbol := range Compare(nil, new, false).Added {
+	for _, symbol := range Compare(nil, new, false, false).Added {
 		got = append(got, symbol.String())
 	}
 	// Sorted by key, so by name; a struct is declared as one but reads as a
@@ -158,7 +160,7 @@ func TestCompareSortsResults(t *testing.T) {
 	old := []*model.Definition{def("example.com/x", "x", false, nil,
 		model.DeclarationList{{Kind: "type", Names: []string{"C", "A", "B"}}})}
 
-	got := Compare(old, []*model.Definition{}, false)
+	got := Compare(old, []*model.Definition{}, false, false)
 	want := []string{"example.com/x.A", "example.com/x.B", "example.com/x.C"}
 	if !reflect.DeepEqual(keys(got.Removed), want) {
 		t.Fatalf("Compare().Removed = %#v, want %#v", keys(got.Removed), want)
@@ -263,7 +265,7 @@ func TestCompareReportsDataModelChanges(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got := Compare(test.old, test.new, false)
+		got := Compare(test.old, test.new, false, false)
 		if len(test.want) == 0 {
 			if len(got.Types) != 0 {
 				t.Errorf("%s: Compare().Types = %#v, want none", test.title, got.Types)
@@ -288,7 +290,7 @@ func TestCompareReportsDataModelChanges(t *testing.T) {
 }
 
 func TestCompareReportsAChangedUnderlyingTypeAsAChangedSymbol(t *testing.T) {
-	got := Compare(typeDefs("ID", "string"), typeDefs("ID", "int"), false)
+	got := Compare(typeDefs("ID", "string"), typeDefs("ID", "int"), false, false)
 
 	want := []Change{{
 		Key:     "example.com/x.ID",
@@ -311,7 +313,7 @@ func TestCompareReportsAChangedUnderlyingTypeAsAChangedSymbol(t *testing.T) {
 func TestCompareCarriesTheShapeOfAnAddedType(t *testing.T) {
 	got := Compare(nil, typeDefs("Config", underlyingStruct,
 		&model.Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`},
-		&model.Field{Name: "secret", Type: "string"}), false)
+		&model.Field{Name: "secret", Type: "string"}), false, false)
 
 	want := []Symbol{symType("Config", underlyingStruct, Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`})}
 	if !reflect.DeepEqual(got.Added, want) {
@@ -324,7 +326,7 @@ func TestCompareSortsDataModelChanges(t *testing.T) {
 		&model.Field{Name: "C", Type: "int"},
 		&model.Field{Name: "A", Type: "int"},
 		&model.Field{Name: "B", Type: "int"})
-	got := Compare(old, typeDefs("Config", underlyingStruct), false)
+	got := Compare(old, typeDefs("Config", underlyingStruct), false, false)
 
 	if len(got.Types) != 1 {
 		t.Fatalf("Compare().Types = %#v, want one type", got.Types)

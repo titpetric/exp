@@ -142,16 +142,26 @@ type Result struct {
 	// which is the data model the release changes.
 	Types []TypeChange `json:"types"`
 
+	// Modules holds the go.mod changes, which is what the release changes
+	// about depending on the module rather than about calling it.
+	Modules []ModuleChange `json:"modules"`
+
 	// Breaking reports whether the difference takes API away, which is a
 	// removed symbol, a changed signature, or a data model change that costs a
-	// consumer something. Added symbols are not breaking.
+	// consumer something. Added symbols are not breaking, and neither are
+	// module changes: a dependency is not API.
 	Breaking bool `json:"breaking"`
 }
 
-// Compare returns the exported API difference between two sets of definitions.
-// Symbols are keyed by import path, receiver type and name, so a declaration
-// moving to another file, or its group gaining a sibling, is not a difference.
-func Compare(oldDefs, newDefs []*model.Definition, includeInternal bool) Result {
+// Compare returns the difference between two sets of definitions. Symbols are
+// keyed by import path, receiver type and name, so a declaration moving to
+// another file, or its group gaining a sibling, is not a difference.
+//
+// The go.mod of each module is compared alongside the symbols, since a release
+// changes what it costs to depend on a module as much as it changes what the
+// module offers. Indirect requirements are left out unless includeIndirect
+// asks for them.
+func Compare(oldDefs, newDefs []*model.Definition, includeInternal, includeIndirect bool) Result {
 	var (
 		old = symbols(oldDefs, includeInternal)
 		cur = symbols(newDefs, includeInternal)
@@ -162,6 +172,7 @@ func Compare(oldDefs, newDefs []*model.Definition, includeInternal bool) Result 
 		Added:   []Symbol{},
 		Changed: []Change{},
 		Types:   []TypeChange{},
+		Modules: compareModules(modules(oldDefs), modules(newDefs), includeIndirect),
 	}
 
 	for key, was := range old {
@@ -295,7 +306,7 @@ func diff(cfg *options) error {
 		return fmt.Errorf("read %s: %w", cfg.newFile, err)
 	}
 
-	result := Compare(oldDefs, newDefs, cfg.includeInternal)
+	result := Compare(oldDefs, newDefs, cfg.includeInternal, cfg.includeIndirect)
 
 	if cfg.json {
 		b, err := json.Marshal(result)
@@ -338,7 +349,25 @@ func diff(cfg *options) error {
 		}
 	}
 
-	summary := fmt.Sprintf("%d removed, %d changed, %d added, %d fields", len(result.Removed), len(result.Changed), len(result.Added), countFields(result.Types))
+	for _, change := range result.Modules {
+		if cfg.verbose {
+			fmt.Printf("module %s\n", change.Path)
+		}
+		if change.Go != nil {
+			fmt.Printf("~ go %s -> %s\n", change.Go.Old, change.Go.New)
+		}
+		if change.Toolchain != nil {
+			fmt.Printf("~ toolchain %s -> %s\n", change.Toolchain.Old, change.Toolchain.New)
+		}
+		for _, require := range change.Requires {
+			fmt.Printf("%s require %s\n", fieldMarker(require.Change), requireSummary(require))
+		}
+		for _, replace := range change.Replaces {
+			fmt.Printf("%s replace %s\n", fieldMarker(replace.Change), replaceSummary(replace))
+		}
+	}
+
+	summary := fmt.Sprintf("%d removed, %d changed, %d added, %d fields, %d requires", len(result.Removed), len(result.Changed), len(result.Added), countFields(result.Types), countRequires(result.Modules))
 	if result.Breaking {
 		summary += ", breaking"
 	}

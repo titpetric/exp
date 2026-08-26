@@ -13,6 +13,7 @@ type options struct {
 	newFile string
 
 	includeInternal bool
+	includeIndirect bool
 
 	json    bool
 	verbose bool
@@ -25,6 +26,7 @@ func NewOptions() *options {
 	flag.StringVar(&cfg.newFile, "new", cfg.newFile, "go-fsck.json of the newer revision")
 
 	flag.BoolVar(&cfg.includeInternal, "include-internal", cfg.includeInternal, "compare internal packages as well")
+	flag.BoolVar(&cfg.includeIndirect, "include-indirect", cfg.includeIndirect, "compare indirect go.mod requirements as well")
 
 	flag.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
 	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")
