@@ -203,8 +203,8 @@ func TestSymbolsCarriesTheBodyOfATypeOnly(t *testing.T) {
 
 	got := symbols(defs, false)
 
-	// The body keeps every grouped field name, which is what reading it from
-	// the source rather than the decomposed fields is for.
+	// The body is the declaration as it was written, which is a different
+	// thing from the fields it decomposes into.
 	tag := got["example.com/x.Tag"].symbol
 	want := "type Tag struct {\n\tMajor, Minor, Patch uint64\n}"
 	if tag.Definition != want {
@@ -218,5 +218,80 @@ func TestSymbolsCarriesTheBodyOfATypeOnly(t *testing.T) {
 	}
 	if fn.Signature != "func Parse (s string) (Tag, bool)" {
 		t.Errorf("Parse.Signature = %q", fn.Signature)
+	}
+}
+
+func TestSymbolsReadsTheShapeOfAType(t *testing.T) {
+	defs := []*model.Definition{{
+		Package: model.Package{ImportPath: "example.com/x", Package: "x"},
+		Types: model.DeclarationList{
+			// A struct records no type of its own, describing itself by its
+			// fields instead.
+			{Kind: "type", Name: "Config", Fields: model.FieldList{
+				{Name: "Addr", Type: "string", Tag: `yaml:"addr"`},
+				{Name: "secret", Type: "string"},
+				{Name: "", Type: "platform.Module"},
+			}},
+			{Kind: "type", Name: "Store", Type: "interface", Fields: model.FieldList{
+				{Name: "Get", Type: "Get (key string) ([]byte, error)"},
+			}},
+			{Kind: "type", Name: "Mode", Type: "string"},
+		},
+	}}
+
+	got := symbols(defs, false)
+
+	config := got["example.com/x.Config"].symbol
+	if config.Underlying != underlyingStruct {
+		t.Errorf("Config.Underlying = %q, want %q", config.Underlying, underlyingStruct)
+	}
+	// The unexported field is not a promise to anyone, and the embedded one is
+	// reached by the last identifier of the type it embeds.
+	want := []Field{
+		{Name: "Addr", Type: "string", Tag: `yaml:"addr"`},
+		{Name: "Module", Type: "platform.Module", Embedded: true},
+	}
+	if !reflect.DeepEqual(config.Fields, want) {
+		t.Errorf("Config.Fields = %#v, want %#v", config.Fields, want)
+	}
+
+	store := got["example.com/x.Store"].symbol
+	if store.Underlying != underlyingInterface {
+		t.Errorf("Store.Underlying = %q, want %q", store.Underlying, underlyingInterface)
+	}
+	if len(store.Fields) != 1 || store.Fields[0].Name != "Get" {
+		t.Errorf("Store.Fields = %#v, want the Get method", store.Fields)
+	}
+
+	// A named type is compared on the type it is defined as, so moving it is a
+	// changed symbol.
+	if mode := got["example.com/x.Mode"]; mode.symbol.Underlying != "string" {
+		t.Errorf("Mode.Underlying = %q, want string", mode.symbol.Underlying)
+	} else if mode.normalized != "type Mode string" {
+		t.Errorf("Mode normalized = %q, want %q", mode.normalized, "type Mode string")
+	}
+}
+
+func TestFieldName(t *testing.T) {
+	tests := []struct {
+		field    model.Field
+		want     string
+		embedded bool
+	}{
+		{field: model.Field{Name: "Addr", Type: "string"}, want: "Addr"},
+		{field: model.Field{Type: "Base"}, want: "Base", embedded: true},
+		{field: model.Field{Type: "*Base"}, want: "Base", embedded: true},
+		{field: model.Field{Type: "platform.Module"}, want: "Module", embedded: true},
+		{field: model.Field{Type: "*a.b.Module"}, want: "Module", embedded: true},
+		// An embedded anonymous interface has no name to be reached by.
+		{field: model.Field{Type: "interface"}, want: "interface", embedded: true},
+	}
+
+	for _, test := range tests {
+		field := test.field
+		name, embedded := fieldName(&field)
+		if name != test.want || embedded != test.embedded {
+			t.Errorf("fieldName(%#v) = %q, %v, want %q, %v", test.field, name, embedded, test.want, test.embedded)
+		}
 	}
 }

@@ -215,6 +215,7 @@
       },
       {
         "Kind": "type",
+        "Type": "string",
         "File": "declaration_kind.go",
         "Line": 4,
         "SelfContained": false,

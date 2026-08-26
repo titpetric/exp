@@ -3,6 +3,7 @@ package diff
 import (
 	"go/ast"
 	"go/token"
+	"sort"
 	"strings"
 
 	"github.com/titpetric/exp/cmd/go-fsck/model"
@@ -18,13 +19,25 @@ const (
 	kindFunc  = "func"
 )
 
+// The shapes a type is reported under. A struct is the shape the model records
+// nothing for, since it describes it by its fields instead.
+const (
+	underlyingStruct    = "struct"
+	underlyingInterface = "interface"
+)
+
 // entry is one exported declaration, as it is reported and as it is compared.
 type entry struct {
 	symbol Symbol
 
 	// normalized is the signature with parameter names removed, which is what
-	// two revisions of a func are compared on.
+	// two revisions of a func are compared on, and the shape a type is
+	// declared with, which is what two revisions of a type are compared on.
 	normalized string
+
+	// fields are the exported fields of a struct, or the methods of an
+	// interface, by name. It is nil for every other kind.
+	fields map[string]Field
 }
 
 // symbols returns the exported declarations of defs, keyed so that the same
@@ -60,7 +73,10 @@ func symbols(defs []*model.Definition, includeInternal bool) map[string]entry {
 						Name:    name,
 						Kind:    list.kind,
 					}
-					normalized := ""
+					var (
+						normalized string
+						fields     map[string]Field
+					)
 					switch {
 					case list.kind == kindFunc && decl.Signature != "":
 						symbol.Signature = signature(decl)
@@ -70,8 +86,16 @@ func symbols(defs []*model.Definition, includeInternal bool) map[string]entry {
 						// no use to a reader; a type carries its shape, which
 						// is the thing worth printing.
 						symbol.Definition = sourceWithoutDoc(decl.Source)
+						symbol.Underlying = underlying(decl)
+						symbol.Fields = exportedFields(decl)
+
+						// The shape reads as the declaration writes it, so a
+						// type that changes it is reported the way a func that
+						// changes its signature is.
+						normalized = "type " + name + " " + symbol.Underlying
+						fields = fieldIndex(symbol.Fields)
 					}
-					result[symbol.Key] = entry{symbol: symbol, normalized: normalized}
+					result[symbol.Key] = entry{symbol: symbol, normalized: normalized, fields: fields}
 				}
 			}
 		}
@@ -99,6 +123,67 @@ func declNames(decl *model.Declaration) []string {
 		names = append(names, strings.Trim(decl.Receiver+"."+name, "*."))
 	}
 	return names
+}
+
+// underlying returns the shape a type is declared with: the type it is defined
+// as, "interface" for an interface, and "struct" for a struct.
+//
+// The model records no type for a struct, describing it by its fields instead,
+// so an empty one reads as a struct. Every other shape names itself.
+func underlying(decl *model.Declaration) string {
+	if decl.Type == "" {
+		return underlyingStruct
+	}
+	return decl.Type
+}
+
+// exportedFields returns the exported fields of a struct, or the methods of an
+// interface, in name order. Unexported fields are left out: they are not
+// something another module can reach, so they are not a promise to keep.
+func exportedFields(decl *model.Declaration) []Field {
+	var fields []Field
+	for _, field := range decl.Fields {
+		name, embedded := fieldName(field)
+		if !ast.IsExported(name) {
+			continue
+		}
+		fields = append(fields, Field{
+			Name:     name,
+			Type:     field.Type,
+			Tag:      field.Tag,
+			Embedded: embedded,
+		})
+	}
+	sort.Slice(fields, func(i, j int) bool { return fields[i].Name < fields[j].Name })
+	return fields
+}
+
+// fieldName returns the name a field is reached by, and whether it is embedded.
+//
+// An embedded field is recorded with no name of its own, and is reached by the
+// last identifier of the type it embeds: "platform.Module" is reached as
+// "Module". An embedded exported type is part of the API, since it promotes its
+// method set into the one embedding it.
+func fieldName(field *model.Field) (name string, embedded bool) {
+	if field.Name != "" {
+		return field.Name, false
+	}
+
+	name = strings.TrimPrefix(field.Type, "*")
+	if dot := strings.LastIndexByte(name, '.'); dot >= 0 {
+		name = name[dot+1:]
+	}
+	return name, true
+}
+
+// fieldIndex keys a field list by name, which is what two revisions of a type
+// are compared through.
+func fieldIndex(fields []Field) map[string]Field {
+	index := make(map[string]Field, len(fields))
+	for _, field := range fields {
+		index[field.Name] = field
+	}
+	return index
 }
 
 // signature renders a func the way it is declared, which is what a reader

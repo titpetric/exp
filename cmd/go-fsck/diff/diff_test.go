@@ -18,6 +18,15 @@ func sym(kind, name, signature string) Symbol {
 	}
 }
 
+// symType builds the Symbol a type declaration of example.com/x reports, under
+// the shape it is declared with.
+func symType(name, underlying string, fields ...Field) Symbol {
+	symbol := sym(kindType, name, "")
+	symbol.Underlying = underlying
+	symbol.Fields = fields
+	return symbol
+}
+
 // keys reduces a symbol list to the keys it holds, for the cases where the
 // rendering is not what is under test.
 func keys(symbols []Symbol) []string {
@@ -41,7 +50,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
 		},
 		{
 			title: "renaming a parameter is not a change",
@@ -49,7 +58,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (name string) error"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", Signature: "Open (path string) error"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
 		},
 		{
 			title: "added symbol is not breaking",
@@ -57,7 +66,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
 			new: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Names: []string{"Client", "Server"}}})},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{sym(kindType, "Server", "")}, Changed: []Change{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{symType("Server", underlyingStruct)}, Changed: []Change{}, Types: []TypeChange{}},
 		},
 		{
 			title: "removed symbol is breaking",
@@ -65,14 +74,14 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "type", Names: []string{"Client", "Server"}}})},
 			new: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
-			want: Result{Removed: []Symbol{sym(kindType, "Server", "")}, Added: []Symbol{}, Changed: []Change{}, Breaking: true},
+			want: Result{Removed: []Symbol{symType("Server", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Breaking: true},
 		},
 		{
 			title: "removed package is breaking",
 			old: []*model.Definition{def("example.com/x", "x", false, nil,
 				model.DeclarationList{{Kind: "type", Name: "Client"}})},
 			new:  []*model.Definition{},
-			want: Result{Removed: []Symbol{sym(kindType, "Client", "")}, Added: []Symbol{}, Changed: []Change{}, Breaking: true},
+			want: Result{Removed: []Symbol{symType("Client", underlyingStruct)}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}, Breaking: true},
 		},
 		{
 			title: "a method carries its receiver",
@@ -83,6 +92,7 @@ func TestCompare(t *testing.T) {
 				Removed: []Symbol{},
 				Added:   []Symbol{sym(kindFunc, "Client.Close", "func (*Client) Close () error")},
 				Changed: []Change{},
+				Types:   []TypeChange{},
 			},
 		},
 		{
@@ -101,6 +111,7 @@ func TestCompare(t *testing.T) {
 					Old:     "Open (string) error",
 					New:     "Open (string, int) error",
 				}},
+				Types:    []TypeChange{},
 				Breaking: true,
 			},
 		},
@@ -110,7 +121,7 @@ func TestCompare(t *testing.T) {
 				model.DeclarationList{{Kind: "func", Name: "Open", File: "open.go", Line: 3, Signature: "Open ()"}}, nil)},
 			new: []*model.Definition{def("example.com/x", "x", false,
 				model.DeclarationList{{Kind: "func", Name: "Open", File: "x.go", Line: 91, Signature: "Open ()"}}, nil)},
-			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}},
+			want: Result{Removed: []Symbol{}, Added: []Symbol{}, Changed: []Change{}, Types: []TypeChange{}},
 		},
 	}
 
@@ -151,5 +162,178 @@ func TestCompareSortsResults(t *testing.T) {
 	want := []string{"example.com/x.A", "example.com/x.B", "example.com/x.C"}
 	if !reflect.DeepEqual(keys(got.Removed), want) {
 		t.Fatalf("Compare().Removed = %#v, want %#v", keys(got.Removed), want)
+	}
+}
+
+// typeDefs builds a definition holding one type declaration, which is what the
+// data model comparison reads.
+func typeDefs(name, underlying string, fields ...*model.Field) []*model.Definition {
+	decl := &model.Declaration{Kind: "type", Name: name, Fields: fields}
+	if underlying != underlyingStruct {
+		decl.Type = underlying
+	}
+	return []*model.Definition{def("example.com/x", "x", false, nil, model.DeclarationList{decl})}
+}
+
+func TestCompareReportsDataModelChanges(t *testing.T) {
+	tests := []struct {
+		title string
+		old   []*model.Definition
+		new   []*model.Definition
+		want  []FieldChange
+		// breaking is the verdict on the type, which differs between a struct
+		// and an interface for an added field.
+		breaking bool
+	}{
+		{
+			title: "a field added to a struct is not breaking",
+			old:   typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "string"}),
+			new: typeDefs("Config", underlyingStruct,
+				&model.Field{Name: "Addr", Type: "string"},
+				&model.Field{Name: "Port", Type: "int"}),
+			want: []FieldChange{{
+				Name: "Port", Change: fieldAdded, New: &Field{Name: "Port", Type: "int"},
+			}},
+		},
+		{
+			title: "a field taken off a struct is breaking",
+			old: typeDefs("Config", underlyingStruct,
+				&model.Field{Name: "Addr", Type: "string"},
+				&model.Field{Name: "Port", Type: "int"}),
+			new:      typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "string"}),
+			want:     []FieldChange{{Name: "Port", Change: fieldRemoved, Old: &Field{Name: "Port", Type: "int"}}},
+			breaking: true,
+		},
+		{
+			title: "a retyped field is breaking",
+			old:   typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "string"}),
+			new:   typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "[]string"}),
+			want: []FieldChange{{
+				Name: "Addr", Change: fieldChanged,
+				Old: &Field{Name: "Addr", Type: "string"},
+				New: &Field{Name: "Addr", Type: "[]string"},
+			}},
+			breaking: true,
+		},
+		{
+			title: "a renamed tag key is breaking, since a stored document decodes through it",
+			old:   typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`}),
+			new:   typeDefs("Config", underlyingStruct, &model.Field{Name: "Addr", Type: "string", Tag: `yaml:"address"`}),
+			want: []FieldChange{{
+				Name: "Addr", Change: fieldChanged,
+				Old: &Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`},
+				New: &Field{Name: "Addr", Type: "string", Tag: `yaml:"address"`},
+			}},
+			breaking: true,
+		},
+		{
+			title: "an unexported field is nobody's promise",
+			old:   typeDefs("Config", underlyingStruct, &model.Field{Name: "secret", Type: "string"}),
+			new:   typeDefs("Config", underlyingStruct, &model.Field{Name: "secret", Type: "int"}),
+			want:  nil,
+		},
+		{
+			title: "a method added to an interface is breaking, since it stops every implementor compiling",
+			old:   typeDefs("Store", underlyingInterface, &model.Field{Name: "Get", Type: "Get (key string) error"}),
+			new: typeDefs("Store", underlyingInterface,
+				&model.Field{Name: "Get", Type: "Get (key string) error"},
+				&model.Field{Name: "Put", Type: "Put (key string) error"}),
+			want: []FieldChange{{
+				Name: "Put", Change: fieldAdded, New: &Field{Name: "Put", Type: "Put (key string) error"},
+			}},
+			breaking: true,
+		},
+		{
+			title: "renaming the parameter of an interface method is not a change",
+			old:   typeDefs("Store", underlyingInterface, &model.Field{Name: "Get", Type: "Get (key string) error"}),
+			new:   typeDefs("Store", underlyingInterface, &model.Field{Name: "Get", Type: "Get (name string) error"}),
+			want:  nil,
+		},
+		{
+			title: "retyping the parameter of an interface method is a change",
+			old:   typeDefs("Store", underlyingInterface, &model.Field{Name: "Get", Type: "Get (key string) error"}),
+			new:   typeDefs("Store", underlyingInterface, &model.Field{Name: "Get", Type: "Get (key []byte) error"}),
+			want: []FieldChange{{
+				Name: "Get", Change: fieldChanged,
+				Old: &Field{Name: "Get", Type: "Get (key string) error"},
+				New: &Field{Name: "Get", Type: "Get (key []byte) error"},
+			}},
+			breaking: true,
+		},
+	}
+
+	for _, test := range tests {
+		got := Compare(test.old, test.new, false)
+		if len(test.want) == 0 {
+			if len(got.Types) != 0 {
+				t.Errorf("%s: Compare().Types = %#v, want none", test.title, got.Types)
+			}
+			if got.Breaking {
+				t.Errorf("%s: Compare() called it breaking", test.title)
+			}
+			continue
+		}
+
+		if len(got.Types) != 1 {
+			t.Errorf("%s: Compare().Types = %#v, want one type", test.title, got.Types)
+			continue
+		}
+		if !reflect.DeepEqual(got.Types[0].Fields, test.want) {
+			t.Errorf("%s: fields = %#v, want %#v", test.title, got.Types[0].Fields, test.want)
+		}
+		if got.Types[0].Breaking != test.breaking || got.Breaking != test.breaking {
+			t.Errorf("%s: breaking = %v/%v, want %v", test.title, got.Types[0].Breaking, got.Breaking, test.breaking)
+		}
+	}
+}
+
+func TestCompareReportsAChangedUnderlyingTypeAsAChangedSymbol(t *testing.T) {
+	got := Compare(typeDefs("ID", "string"), typeDefs("ID", "int"), false)
+
+	want := []Change{{
+		Key:     "example.com/x.ID",
+		Package: "example.com/x",
+		Name:    "ID",
+		Old:     "type ID string",
+		New:     "type ID int",
+	}}
+	if !reflect.DeepEqual(got.Changed, want) {
+		t.Fatalf("Compare().Changed = %#v, want %#v", got.Changed, want)
+	}
+	if len(got.Types) != 0 {
+		t.Errorf("Compare().Types = %#v, want none: the shape changed, not its fields", got.Types)
+	}
+	if !got.Breaking {
+		t.Error("Compare() did not call a changed underlying type breaking")
+	}
+}
+
+func TestCompareCarriesTheShapeOfAnAddedType(t *testing.T) {
+	got := Compare(nil, typeDefs("Config", underlyingStruct,
+		&model.Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`},
+		&model.Field{Name: "secret", Type: "string"}), false)
+
+	want := []Symbol{symType("Config", underlyingStruct, Field{Name: "Addr", Type: "string", Tag: `yaml:"addr"`})}
+	if !reflect.DeepEqual(got.Added, want) {
+		t.Fatalf("Compare().Added = %#v, want %#v", got.Added, want)
+	}
+}
+
+func TestCompareSortsDataModelChanges(t *testing.T) {
+	old := typeDefs("Config", underlyingStruct,
+		&model.Field{Name: "C", Type: "int"},
+		&model.Field{Name: "A", Type: "int"},
+		&model.Field{Name: "B", Type: "int"})
+	got := Compare(old, typeDefs("Config", underlyingStruct), false)
+
+	if len(got.Types) != 1 {
+		t.Fatalf("Compare().Types = %#v, want one type", got.Types)
+	}
+	var names []string
+	for _, field := range got.Types[0].Fields {
+		names = append(names, field.Name)
+	}
+	if want := []string{"A", "B", "C"}; !reflect.DeepEqual(names, want) {
+		t.Errorf("field order = %#v, want %#v", names, want)
 	}
 }

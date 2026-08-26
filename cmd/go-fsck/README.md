@@ -93,7 +93,8 @@ go-fsck diff --old /tmp/old.json --new /tmp/new.json
 - github.com/go-bridget/mig/migrate.RunWithFS
 ~ github.com/go-bridget/mig/migrate.Print
 + github.com/go-bridget/mig/migrate.NewManager
-1 removed, 1 changed, 1 added, breaking
+~ github.com/go-bridget/mig/migrate.Config.Driver
+1 removed, 1 changed, 1 added, 1 fields, breaking
 ```
 
 A symbol is keyed by import path, receiver type and name, so moving a
@@ -102,10 +103,38 @@ not a difference. Functions also carry their signature, with parameter names
 removed: renaming a parameter is not a change, changing its type is. `--verbose`
 prints both signatures under a changed symbol.
 
+A type carries the shape it is declared with, which is `struct`, `interface`, or
+the type it is defined as. A type that changes shape, `type ID string` becoming
+`type ID int`, is a changed symbol. A type that keeps its shape is compared
+field by field instead, and the fields it gained, lost or reshaped are reported
+under `types` as the data model the release changes.
+
+Only exported fields are compared, since an unexported one is not something
+another module can reach. A struct tag is compared along with the field type: it
+is what a document decodes through, so renaming a `json` or `yaml` key breaks
+every document already written even though the code reading it still compiles.
+An embedded field is reached by the last identifier of the type it embeds, and
+counts because it promotes that type's method set.
+
+What a data model change costs depends on the shape:
+
+| Shape | field added | field reshaped | field removed |
+|-----------|--------------|----------------|---------------|
+| struct | not breaking | breaking | breaking |
+| interface | breaking | breaking | breaking |
+
+Adding a method to an interface stops every implementor compiling, where adding
+a field to a struct costs a consumer nothing.
+
 `--json` writes the same result as `{"removed": [], "added": [], "changed": [],
-"breaking": false}`, where `breaking` covers removed symbols and changed
-signatures, but not added ones. That is the semantic version question: a
-breaking difference earns at least a minor release, anything else a patch.
+"types": [], "breaking": false}`, where `breaking` covers removed symbols,
+changed signatures and the data model changes that cost something, but not
+added ones. That is the semantic version question: a breaking difference earns
+at least a minor release, anything else a patch. Each entry of `types` holds the
+type's `key`, `underlying` shape and its `fields`, each naming the `change`
+(`added`, `changed` or `removed`) and the field on either side of it. An added
+type carries its exported `fields` on the symbol itself, so a reader sees the
+shape without reading the source.
 
 Test packages, commands and internal packages are left out, since none of them
 are API another module can depend on; `--include-internal` puts internal

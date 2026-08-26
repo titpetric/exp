@@ -54,6 +54,7 @@
       },
       {
         "Kind": "type",
+        "Type": "string",
         "File": "example.go",
         "Line": 18,
         "SelfContained": false,

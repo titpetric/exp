@@ -33,7 +33,10 @@ func (p *collector) collectStructFields(out *model.Declaration, file *ast.File, 
 					}
 				}
 			case *ast.Ident:
-				// type aliases, e.g. type X string
+				// A named type, e.g. type X string. Recording the type it is
+				// defined as is what makes a change of it, from string to int,
+				// something a reader of the model can see.
+				out.Type = val.Name
 			default:
 				out.Type = p.symbolType(file, obj.Type)
 				/* plantuml may need this, but data is incorrect
@@ -82,49 +85,66 @@ func (p *collector) parseStruct(structInfo *model.Declaration, file *ast.File, s
 		//pos := p.fileset.Position(field.Pos())
 		//filePos := path.Base(pos.String())
 
-		var goName string
-		if len(field.Names) > 0 {
-			goName = field.Names[0].Name
-
-		}
-
 		tagValue := ""
 		if field.Tag != nil {
 			tagValue = string(field.Tag.Value)
 			tagValue = strings.Trim(tagValue, "`")
 		}
 
-		jsonName := JSONTagName(tagValue)
-		if jsonName == "" {
-			// fields without json tag encode to field name
-			jsonName = goName
-		}
-		if jsonName == "-" {
-			// fields with json `-` don't get encoded
-			jsonName = ""
-		}
+		fieldType := p.symbolType(file, field.Type)
 
-		fieldPath := goName
-		if goPath != "" {
-			fieldPath = goPath
-			if goName != "" {
-				fieldPath += "." + goName
+		// One declaration may name several fields, as in "Major, Minor uint64",
+		// and each of them is a field of its own. An embedded field names none,
+		// and is recorded with an empty name, which is how the renderers tell it
+		// from a named one.
+		for _, goName := range fieldNames(field) {
+			jsonName := JSONTagName(tagValue)
+			if jsonName == "" {
+				// fields without json tag encode to field name
+				jsonName = goName
 			}
+			if jsonName == "-" {
+				// fields with json `-` don't get encoded
+				jsonName = ""
+			}
+
+			fieldPath := goName
+			if goPath != "" {
+				fieldPath = goPath
+				if goName != "" {
+					fieldPath += "." + goName
+				}
+			}
+
+			v := &model.Field{
+				Doc:     TrimSpace(field.Doc),
+				Comment: TrimSpace(field.Comment),
+
+				Name: goName,
+				Path: fieldPath,
+				Type: fieldType,
+				Tag:  tagValue,
+
+				JSONName: jsonName,
+			}
+
+			structInfo.Fields = append(structInfo.Fields, v)
 		}
-
-		v := &model.Field{
-			Doc:     TrimSpace(field.Doc),
-			Comment: TrimSpace(field.Comment),
-
-			Name: goName,
-			Path: fieldPath,
-			Type: p.symbolType(file, field.Type),
-			Tag:  tagValue,
-
-			JSONName: jsonName,
-		}
-
-		structInfo.Fields = append(structInfo.Fields, v)
 	}
 	return
+}
+
+// fieldNames returns the names one field declaration declares. An embedded
+// field declares none, and is reported as the single empty name it is recorded
+// under.
+func fieldNames(field *ast.Field) []string {
+	if len(field.Names) == 0 {
+		return []string{""}
+	}
+
+	names := make([]string, 0, len(field.Names))
+	for _, name := range field.Names {
+		names = append(names, name.Name)
+	}
+	return names
 }
