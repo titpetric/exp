@@ -5,6 +5,156 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/model",
     "Path": ".",
     "TestPackage": false,
+    "Module": {
+      "Path": "github.com/titpetric/exp/cmd/go-fsck",
+      "GoVersion": "1.27.0",
+      "Requires": [
+        {
+          "Path": "github.com/davecgh/go-spew",
+          "Version": "v1.1.2-0.20180830191138-d8f796af33cc"
+        },
+        {
+          "Path": "github.com/dustin/go-humanize",
+          "Version": "v1.0.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/fbiville/markdown-table-formatter",
+          "Version": "v0.3.0"
+        },
+        {
+          "Path": "github.com/fzipp/gocyclo",
+          "Version": "v0.6.0"
+        },
+        {
+          "Path": "github.com/go-bridget/mig",
+          "Version": "v0.6.1"
+        },
+        {
+          "Path": "github.com/google/go-cmp",
+          "Version": "v0.7.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/google/uuid",
+          "Version": "v1.6.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/jmoiron/sqlx",
+          "Version": "v1.4.0"
+        },
+        {
+          "Path": "github.com/kortschak/utter",
+          "Version": "v1.7.0"
+        },
+        {
+          "Path": "github.com/kr/pretty",
+          "Version": "v0.3.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-isatty",
+          "Version": "v0.0.24",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-sqlite3",
+          "Version": "v1.14.50"
+        },
+        {
+          "Path": "github.com/ncruces/go-strftime",
+          "Version": "v1.0.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pkg/errors",
+          "Version": "v0.9.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pmezard/go-difflib",
+          "Version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/remyoudompheng/bigfft",
+          "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/rogpeppe/go-internal",
+          "Version": "v1.14.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/spf13/pflag",
+          "Version": "v1.0.10"
+        },
+        {
+          "Path": "github.com/stoewer/go-strcase",
+          "Version": "v1.3.1"
+        },
+        {
+          "Path": "github.com/stretchr/testify",
+          "Version": "v1.11.1"
+        },
+        {
+          "Path": "github.com/uudashr/gocognit",
+          "Version": "v1.2.1"
+        },
+        {
+          "Path": "golang.org/x/exp",
+          "Version": "v0.0.0-20260824195058-e88cd73687aa"
+        },
+        {
+          "Path": "golang.org/x/mod",
+          "Version": "v0.40.0"
+        },
+        {
+          "Path": "golang.org/x/sync",
+          "Version": "v0.22.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/sys",
+          "Version": "v0.47.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/tools",
+          "Version": "v0.49.0"
+        },
+        {
+          "Path": "gopkg.in/check.v1",
+          "Version": "v1.0.0-20201130134442-10cb98267c6c",
+          "Indirect": true
+        },
+        {
+          "Path": "gopkg.in/yaml.v3",
+          "Version": "v3.0.1"
+        },
+        {
+          "Path": "modernc.org/libc",
+          "Version": "v1.75.5",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/mathutil",
+          "Version": "v1.7.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/memory",
+          "Version": "v1.12.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/sqlite",
+          "Version": "v1.57.0"
+        }
+      ]
+    },
     "Imports": {
       "built_in_types.go": [
         "\"strings\""
@@ -255,6 +405,14 @@
             "JSONName": "Doc"
           },
           {
+            "Name": "Module",
+            "Type": "*Module",
+            "Path": "Definition.Module",
+            "Doc": "Module is the go.mod the package belongs to. It repeats on every\ndefinition of the same module rather than living in one place, because\nthe model is a flat list of packages with no entry to hang it off, and\na definition that travels alone still has to say what it builds against.\nIt is nil for a package extracted from a tree holding no go.mod.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Module"
+          },
+          {
             "Name": "Imports",
             "Type": "StringSet",
             "Path": "Definition.Imports",
@@ -297,7 +455,7 @@
             "JSONName": "Funcs"
           }
         ],
-        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\tImports\t\tStringSet\t`json:\",omitempty\"`\n\tInitCount\tint\t\t`json:\",omitempty\"`\n\n\tTypes\tDeclarationList\t`json:\",omitempty\"`\n\tConsts\tDeclarationList\t`json:\",omitempty\"`\n\tVars\tDeclarationList\t`json:\",omitempty\"`\n\tFuncs\tDeclarationList\t`json:\",omitempty\"`\n}"
+        "Source": "// Definition holds all symbols defined for a Package.\ntype Definition struct {\n\tPackage\n\n\tDoc\tstring\t`json:\",omitempty\"`\n\n\t// Module is the go.mod the package belongs to. It repeats on every\n\t// definition of the same module rather than living in one place, because\n\t// the model is a flat list of packages with no entry to hang it off, and\n\t// a definition that travels alone still has to say what it builds against.\n\t// It is nil for a package extracted from a tree holding no go.mod.\n\tModule\t*Module\t`json:\",omitempty\"`\n\n\tImports\t\tStringSet\t`json:\",omitempty\"`\n\tInitCount\tint\t\t`json:\",omitempty\"`\n\n\tTypes\tDeclarationList\t`json:\",omitempty\"`\n\tConsts\tDeclarationList\t`json:\",omitempty\"`\n\tVars\tDeclarationList\t`json:\",omitempty\"`\n\tFuncs\tDeclarationList\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -540,6 +698,56 @@
       },
       {
         "Kind": "type",
+        "File": "module.go",
+        "Line": 13,
+        "SelfContained": false,
+        "Doc": "Module holds the go.mod of the module a package was extracted from.\n\nA package is only half of what a consumer takes on. The other half is the\ndependency set it drags in, and a release that moves a requirement to\nanother major version, or replaces one with a fork, changes what it costs to\ndepend on the package even though no symbol moved. Carrying the go.mod in\nthe model is what lets two revisions be compared on that.\n\nThe lists are sorted, so a go.mod that only had its blocks reordered\nproduces the same model.",
+        "Name": "Module",
+        "Fields": [
+          {
+            "Name": "Path",
+            "Type": "string",
+            "Path": "Module.Path",
+            "Doc": "Path is the module path, as the module directive declares it.",
+            "JSONName": "Path"
+          },
+          {
+            "Name": "GoVersion",
+            "Type": "string",
+            "Path": "Module.GoVersion",
+            "Doc": "GoVersion is the language version of the go directive. It bounds which\ntoolchains can build the module at all, so raising it drops support for\nevery consumer still on an older one.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "GoVersion"
+          },
+          {
+            "Name": "Toolchain",
+            "Type": "string",
+            "Path": "Module.Toolchain",
+            "Doc": "Toolchain is the toolchain directive, and is empty for a module that\npins none.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Toolchain"
+          },
+          {
+            "Name": "Requires",
+            "Type": "[]Require",
+            "Path": "Module.Requires",
+            "Doc": "Requires are the modules this one depends on.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Requires"
+          },
+          {
+            "Name": "Replaces",
+            "Type": "[]Replace",
+            "Path": "Module.Replaces",
+            "Doc": "Replaces are the replace directives.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Replaces"
+          }
+        ],
+        "Source": "// Module holds the go.mod of the module a package was extracted from.\n//\n// A package is only half of what a consumer takes on. The other half is the\n// dependency set it drags in, and a release that moves a requirement to\n// another major version, or replaces one with a fork, changes what it costs to\n// depend on the package even though no symbol moved. Carrying the go.mod in\n// the model is what lets two revisions be compared on that.\n//\n// The lists are sorted, so a go.mod that only had its blocks reordered\n// produces the same model.\ntype Module struct {\n\t// Path is the module path, as the module directive declares it.\n\tPath\tstring\n\n\t// GoVersion is the language version of the go directive. It bounds which\n\t// toolchains can build the module at all, so raising it drops support for\n\t// every consumer still on an older one.\n\tGoVersion\tstring\t`json:\",omitempty\"`\n\n\t// Toolchain is the toolchain directive, and is empty for a module that\n\t// pins none.\n\tToolchain\tstring\t`json:\",omitempty\"`\n\n\t// Requires are the modules this one depends on.\n\tRequires\t[]Require\t`json:\",omitempty\"`\n\n\t// Replaces are the replace directives.\n\tReplaces\t[]Replace\t`json:\",omitempty\"`\n}"
+      },
+      {
+        "Kind": "type",
         "File": "package.go",
         "Line": 11,
         "SelfContained": false,
@@ -627,6 +835,77 @@
           }
         ],
         "Source": "type Ref struct {\n\tPackage\t\t*Package\n\tReceiver\tstring\n\tName\t\tstring\n}"
+      },
+      {
+        "Kind": "type",
+        "File": "module.go",
+        "Line": 52,
+        "SelfContained": true,
+        "Doc": "Replace is one replace directive of a go.mod.\n\nA replace changes what the build resolves a requirement to without changing\nwhat the requirement says, so it is recorded on its own: a release that\nstarts or stops replacing a module changes what a consumer builds against\nwhile every version in the require block stays put.",
+        "Name": "Replace",
+        "Fields": [
+          {
+            "Name": "Path",
+            "Type": "string",
+            "Path": "Replace.Path",
+            "Doc": "Path is the module being replaced, and Version the single version the\ndirective applies to. An empty Version replaces every version of it.",
+            "JSONName": "Path"
+          },
+          {
+            "Name": "Version",
+            "Type": "string",
+            "Path": "Replace.Version",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Version"
+          },
+          {
+            "Name": "NewPath",
+            "Type": "string",
+            "Path": "Replace.NewPath",
+            "Doc": "NewPath is what the module resolves to, which is either another module\npath or a directory on disk. NewVersion is empty for a directory, which\ncarries no version.",
+            "JSONName": "NewPath"
+          },
+          {
+            "Name": "NewVersion",
+            "Type": "string",
+            "Path": "Replace.NewVersion",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "NewVersion"
+          }
+        ],
+        "Source": "// Replace is one replace directive of a go.mod.\n//\n// A replace changes what the build resolves a requirement to without changing\n// what the requirement says, so it is recorded on its own: a release that\n// starts or stops replacing a module changes what a consumer builds against\n// while every version in the require block stays put.\ntype Replace struct {\n\t// Path is the module being replaced, and Version the single version the\n\t// directive applies to. An empty Version replaces every version of it.\n\tPath\tstring\n\tVersion\tstring\t`json:\",omitempty\"`\n\n\t// NewPath is what the module resolves to, which is either another module\n\t// path or a directory on disk. NewVersion is empty for a directory, which\n\t// carries no version.\n\tNewPath\t\tstring\n\tNewVersion\tstring\t`json:\",omitempty\"`\n}"
+      },
+      {
+        "Kind": "type",
+        "File": "module.go",
+        "Line": 34,
+        "SelfContained": true,
+        "Doc": "Require is one requirement of a go.mod.",
+        "Name": "Require",
+        "Fields": [
+          {
+            "Name": "Path",
+            "Type": "string",
+            "Path": "Require.Path",
+            "Doc": "Path is the required module, and Version the version required of it.",
+            "JSONName": "Path"
+          },
+          {
+            "Name": "Version",
+            "Type": "string",
+            "Path": "Require.Version",
+            "JSONName": "Version"
+          },
+          {
+            "Name": "Indirect",
+            "Type": "bool",
+            "Path": "Require.Indirect",
+            "Doc": "Indirect reports a requirement the module does not import itself, and\ncarries only to pin what a dependency of a dependency resolves to. It is\nthe \"// indirect\" comment go mod tidy writes. An indirect requirement is\nbookkeeping, where a direct one is a decision.",
+            "Tag": "json:\",omitempty\"",
+            "JSONName": "Indirect"
+          }
+        ],
+        "Source": "// Require is one requirement of a go.mod.\ntype Require struct {\n\t// Path is the required module, and Version the version required of it.\n\tPath\tstring\n\tVersion\tstring\n\n\t// Indirect reports a requirement the module does not import itself, and\n\t// carries only to pin what a dependency of a dependency resolves to. It is\n\t// the \"// indirect\" comment go mod tidy writes. An indirect requirement is\n\t// bookkeeping, where a direct one is a decision.\n\tIndirect\tbool\t`json:\",omitempty\"`\n}"
       },
       {
         "Kind": "type",
@@ -1064,7 +1343,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 68,
+        "Line": 75,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -1084,7 +1363,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 49,
+        "Line": 56,
         "SelfContained": false,
         "Name": "ClearSource",
         "Receiver": "*Definition",
@@ -1099,7 +1378,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 56,
+        "Line": 63,
         "SelfContained": false,
         "References": {
           "strings": [
@@ -1119,7 +1398,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 21,
+        "Line": 28,
         "SelfContained": false,
         "Doc": "DeclarationList merges all the declarations together.",
         "Name": "DeclarationList",
@@ -1138,7 +1417,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 80,
+        "Line": 87,
         "SelfContained": false,
         "Name": "Fill",
         "Receiver": "*Definition",
@@ -1153,7 +1432,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 86,
+        "Line": 93,
         "SelfContained": false,
         "Name": "Merge",
         "Receiver": "*Definition",
@@ -1161,17 +1440,17 @@
           "*Definition"
         ],
         "Signature": "Merge (in *Definition)",
-        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
+        "Source": "func (d *Definition) Merge(in *Definition) {\n\td.TestPackage = d.TestPackage || in.TestPackage\n\n\t// Both sides are the same package, so they are the same module. Only the\n\t// side that has one can contribute it.\n\tif d.Module == nil {\n\t\td.Module = in.Module\n\t}\n\n\tfor k, v := range in.Imports {\n\t\td.Imports.Add(k, v...)\n\t}\n\n\td.Types.AppendUnique(in.Types...)\n\td.Funcs.AppendUnique(in.Funcs...)\n\td.Vars.AppendUnique(in.Vars...)\n\td.Consts.AppendUnique(in.Consts...)\n\n\t// this line causes Sort to be omitted from the\n\t// definitions :/ ... solved by adding the sort\n\t// in the AppendUnique above, but the Sort symbol\n\t// should not be omitted from Definition.\n\n\t// d.Sort()\n}",
         "Complexity": {
-          "Cognitive": 2,
-          "Cyclomatic": 3,
-          "Lines": 19
+          "Cognitive": 3,
+          "Cyclomatic": 4,
+          "Lines": 25
         }
       },
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 38,
+        "Line": 45,
         "SelfContained": false,
         "Name": "Order",
         "Receiver": "*Definition",
@@ -1189,7 +1468,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 31,
+        "Line": 38,
         "SelfContained": false,
         "Doc": "Sort will sort the inner types so they have a stable order.",
         "Name": "Sort",
@@ -1623,7 +1902,7 @@
       {
         "Kind": "func",
         "File": "definition.go",
-        "Line": 106,
+        "Line": 119,
         "SelfContained": false,
         "Name": "getImports",
         "Receiver": "*Definition",

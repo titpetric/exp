@@ -6,6 +6,156 @@
     "Path": ".",
     "TestPackage": false,
     "Doc": "Example package doc.",
+    "Module": {
+      "Path": "github.com/titpetric/exp/cmd/go-fsck",
+      "GoVersion": "1.27.0",
+      "Requires": [
+        {
+          "Path": "github.com/davecgh/go-spew",
+          "Version": "v1.1.2-0.20180830191138-d8f796af33cc"
+        },
+        {
+          "Path": "github.com/dustin/go-humanize",
+          "Version": "v1.0.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/fbiville/markdown-table-formatter",
+          "Version": "v0.3.0"
+        },
+        {
+          "Path": "github.com/fzipp/gocyclo",
+          "Version": "v0.6.0"
+        },
+        {
+          "Path": "github.com/go-bridget/mig",
+          "Version": "v0.6.1"
+        },
+        {
+          "Path": "github.com/google/go-cmp",
+          "Version": "v0.7.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/google/uuid",
+          "Version": "v1.6.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/jmoiron/sqlx",
+          "Version": "v1.4.0"
+        },
+        {
+          "Path": "github.com/kortschak/utter",
+          "Version": "v1.7.0"
+        },
+        {
+          "Path": "github.com/kr/pretty",
+          "Version": "v0.3.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-isatty",
+          "Version": "v0.0.24",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-sqlite3",
+          "Version": "v1.14.50"
+        },
+        {
+          "Path": "github.com/ncruces/go-strftime",
+          "Version": "v1.0.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pkg/errors",
+          "Version": "v0.9.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pmezard/go-difflib",
+          "Version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/remyoudompheng/bigfft",
+          "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/rogpeppe/go-internal",
+          "Version": "v1.14.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/spf13/pflag",
+          "Version": "v1.0.10"
+        },
+        {
+          "Path": "github.com/stoewer/go-strcase",
+          "Version": "v1.3.1"
+        },
+        {
+          "Path": "github.com/stretchr/testify",
+          "Version": "v1.11.1"
+        },
+        {
+          "Path": "github.com/uudashr/gocognit",
+          "Version": "v1.2.1"
+        },
+        {
+          "Path": "golang.org/x/exp",
+          "Version": "v0.0.0-20260824195058-e88cd73687aa"
+        },
+        {
+          "Path": "golang.org/x/mod",
+          "Version": "v0.40.0"
+        },
+        {
+          "Path": "golang.org/x/sync",
+          "Version": "v0.22.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/sys",
+          "Version": "v0.47.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/tools",
+          "Version": "v0.49.0"
+        },
+        {
+          "Path": "gopkg.in/check.v1",
+          "Version": "v1.0.0-20201130134442-10cb98267c6c",
+          "Indirect": true
+        },
+        {
+          "Path": "gopkg.in/yaml.v3",
+          "Version": "v3.0.1"
+        },
+        {
+          "Path": "modernc.org/libc",
+          "Version": "v1.75.5",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/mathutil",
+          "Version": "v1.7.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/memory",
+          "Version": "v1.12.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/sqlite",
+          "Version": "v1.57.0"
+        }
+      ]
+    },
     "Imports": {
       "example.go": [
         "\"net/http\""
@@ -241,6 +391,156 @@
     "Path": ".",
     "TestPackage": true,
     "Doc": "Example package doc.",
+    "Module": {
+      "Path": "github.com/titpetric/exp/cmd/go-fsck",
+      "GoVersion": "1.27.0",
+      "Requires": [
+        {
+          "Path": "github.com/davecgh/go-spew",
+          "Version": "v1.1.2-0.20180830191138-d8f796af33cc"
+        },
+        {
+          "Path": "github.com/dustin/go-humanize",
+          "Version": "v1.0.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/fbiville/markdown-table-formatter",
+          "Version": "v0.3.0"
+        },
+        {
+          "Path": "github.com/fzipp/gocyclo",
+          "Version": "v0.6.0"
+        },
+        {
+          "Path": "github.com/go-bridget/mig",
+          "Version": "v0.6.1"
+        },
+        {
+          "Path": "github.com/google/go-cmp",
+          "Version": "v0.7.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/google/uuid",
+          "Version": "v1.6.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/jmoiron/sqlx",
+          "Version": "v1.4.0"
+        },
+        {
+          "Path": "github.com/kortschak/utter",
+          "Version": "v1.7.0"
+        },
+        {
+          "Path": "github.com/kr/pretty",
+          "Version": "v0.3.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-isatty",
+          "Version": "v0.0.24",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-sqlite3",
+          "Version": "v1.14.50"
+        },
+        {
+          "Path": "github.com/ncruces/go-strftime",
+          "Version": "v1.0.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pkg/errors",
+          "Version": "v0.9.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pmezard/go-difflib",
+          "Version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/remyoudompheng/bigfft",
+          "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/rogpeppe/go-internal",
+          "Version": "v1.14.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/spf13/pflag",
+          "Version": "v1.0.10"
+        },
+        {
+          "Path": "github.com/stoewer/go-strcase",
+          "Version": "v1.3.1"
+        },
+        {
+          "Path": "github.com/stretchr/testify",
+          "Version": "v1.11.1"
+        },
+        {
+          "Path": "github.com/uudashr/gocognit",
+          "Version": "v1.2.1"
+        },
+        {
+          "Path": "golang.org/x/exp",
+          "Version": "v0.0.0-20260824195058-e88cd73687aa"
+        },
+        {
+          "Path": "golang.org/x/mod",
+          "Version": "v0.40.0"
+        },
+        {
+          "Path": "golang.org/x/sync",
+          "Version": "v0.22.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/sys",
+          "Version": "v0.47.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/tools",
+          "Version": "v0.49.0"
+        },
+        {
+          "Path": "gopkg.in/check.v1",
+          "Version": "v1.0.0-20201130134442-10cb98267c6c",
+          "Indirect": true
+        },
+        {
+          "Path": "gopkg.in/yaml.v3",
+          "Version": "v3.0.1"
+        },
+        {
+          "Path": "modernc.org/libc",
+          "Version": "v1.75.5",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/mathutil",
+          "Version": "v1.7.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/memory",
+          "Version": "v1.12.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/sqlite",
+          "Version": "v1.57.0"
+        }
+      ]
+    },
     "Imports": {
       "example_test.go": [
         "\"testing\"",
@@ -279,6 +579,156 @@
     "ImportPath": "github.com/titpetric/exp/cmd/go-fsck/example_test",
     "Path": ".",
     "TestPackage": true,
+    "Module": {
+      "Path": "github.com/titpetric/exp/cmd/go-fsck",
+      "GoVersion": "1.27.0",
+      "Requires": [
+        {
+          "Path": "github.com/davecgh/go-spew",
+          "Version": "v1.1.2-0.20180830191138-d8f796af33cc"
+        },
+        {
+          "Path": "github.com/dustin/go-humanize",
+          "Version": "v1.0.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/fbiville/markdown-table-formatter",
+          "Version": "v0.3.0"
+        },
+        {
+          "Path": "github.com/fzipp/gocyclo",
+          "Version": "v0.6.0"
+        },
+        {
+          "Path": "github.com/go-bridget/mig",
+          "Version": "v0.6.1"
+        },
+        {
+          "Path": "github.com/google/go-cmp",
+          "Version": "v0.7.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/google/uuid",
+          "Version": "v1.6.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/jmoiron/sqlx",
+          "Version": "v1.4.0"
+        },
+        {
+          "Path": "github.com/kortschak/utter",
+          "Version": "v1.7.0"
+        },
+        {
+          "Path": "github.com/kr/pretty",
+          "Version": "v0.3.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-isatty",
+          "Version": "v0.0.24",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/mattn/go-sqlite3",
+          "Version": "v1.14.50"
+        },
+        {
+          "Path": "github.com/ncruces/go-strftime",
+          "Version": "v1.0.0",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pkg/errors",
+          "Version": "v0.9.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/pmezard/go-difflib",
+          "Version": "v1.0.1-0.20181226105442-5d4384ee4fb2",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/remyoudompheng/bigfft",
+          "Version": "v0.0.0-20230129092748-24d4a6f8daec",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/rogpeppe/go-internal",
+          "Version": "v1.14.1",
+          "Indirect": true
+        },
+        {
+          "Path": "github.com/spf13/pflag",
+          "Version": "v1.0.10"
+        },
+        {
+          "Path": "github.com/stoewer/go-strcase",
+          "Version": "v1.3.1"
+        },
+        {
+          "Path": "github.com/stretchr/testify",
+          "Version": "v1.11.1"
+        },
+        {
+          "Path": "github.com/uudashr/gocognit",
+          "Version": "v1.2.1"
+        },
+        {
+          "Path": "golang.org/x/exp",
+          "Version": "v0.0.0-20260824195058-e88cd73687aa"
+        },
+        {
+          "Path": "golang.org/x/mod",
+          "Version": "v0.40.0"
+        },
+        {
+          "Path": "golang.org/x/sync",
+          "Version": "v0.22.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/sys",
+          "Version": "v0.47.0",
+          "Indirect": true
+        },
+        {
+          "Path": "golang.org/x/tools",
+          "Version": "v0.49.0"
+        },
+        {
+          "Path": "gopkg.in/check.v1",
+          "Version": "v1.0.0-20201130134442-10cb98267c6c",
+          "Indirect": true
+        },
+        {
+          "Path": "gopkg.in/yaml.v3",
+          "Version": "v3.0.1"
+        },
+        {
+          "Path": "modernc.org/libc",
+          "Version": "v1.75.5",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/mathutil",
+          "Version": "v1.7.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/memory",
+          "Version": "v1.12.1",
+          "Indirect": true
+        },
+        {
+          "Path": "modernc.org/sqlite",
+          "Version": "v1.57.0"
+        }
+      ]
+    },
     "Imports": {
       "printer_test.go": [
         "\"fmt\"",

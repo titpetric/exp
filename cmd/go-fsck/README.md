@@ -43,7 +43,7 @@ It's something to build upon. The feature existed first, while others
 have been added or abandoned over time.
 
 - `coverage`: print a coverage report, per function, per package, markdown
-- `diff`: compare the exported API of two models, report what a release takes away
+- `diff`: compare the exported API and the go.mod of two models, report what a release takes away
 - `docs`: print markdown docs with package godoc, render plantuml diagrams
 - `lint`: test that no package name in a project repeats, fight ambiguous short imports
 - `query`: a half-hearted attempt at interface discovery
@@ -78,8 +78,9 @@ out.
 
 ## Comparing releases with `diff`
 
-The `diff` command reads two models and reports what happened to the exported
-API between them. It answers the question a release has to answer before it is
+The `diff` command reads two models and reports what happened between them: to
+the exported API, to the data model behind it, and to the go.mod the module is
+built from. It answers the question a release has to answer before it is
 tagged: does this take anything away?
 
 ```shell
@@ -94,7 +95,10 @@ go-fsck diff --old /tmp/old.json --new /tmp/new.json
 ~ github.com/go-bridget/mig/migrate.Print
 + github.com/go-bridget/mig/migrate.NewManager
 ~ github.com/go-bridget/mig/migrate.Config.Driver
-1 removed, 1 changed, 1 added, 1 fields, breaking
+~ go 1.23.0 -> 1.24.0
+~ require github.com/jmoiron/sqlx v1.3.5 -> v1.4.0
++ require golang.org/x/sync v0.22.0
+1 removed, 1 changed, 1 added, 1 fields, 2 requires, breaking
 ```
 
 A symbol is keyed by import path, receiver type and name, so moving a
@@ -126,15 +130,54 @@ What a data model change costs depends on the shape:
 Adding a method to an interface stops every implementor compiling, where adding
 a field to a struct costs a consumer nothing.
 
+The go.mod of each module the two models were extracted from is compared as
+well, and reported under `modules`. A release changes what it costs to depend
+on a module as much as it changes what the module offers: a requirement moved
+to another major version, a dependency dropped or taken on, a replace directive
+pointing the build somewhere else, or a raised `go` directive that leaves older
+toolchains behind.
+
+```json
+{
+  "path": "github.com/go-bridget/mig",
+  "go": { "old": "1.23.0", "new": "1.24.0" },
+  "requires": [
+    {
+      "path": "github.com/jmoiron/sqlx",
+      "change": "changed",
+      "old": { "path": "github.com/jmoiron/sqlx", "version": "v1.3.5" },
+      "new": { "path": "github.com/jmoiron/sqlx", "version": "v1.4.0" }
+    },
+    {
+      "path": "golang.org/x/sync",
+      "change": "added",
+      "new": { "path": "golang.org/x/sync", "version": "v0.22.0" }
+    }
+  ]
+}
+```
+
+Indirect requirements are left out. They are written by `go mod tidy` rather
+than decided on, and a routine tidy rewrites dozens of them, which buries the
+handful of direct ones that are the actual release note. `--include-indirect`
+puts them back. A requirement direct on either side counts as direct, so one
+that changed from indirect to direct is reported either way.
+
+No module change sets `breaking`. A dependency is not API, and moving one takes
+nothing away that a compiler will complain about.
+
 `--json` writes the same result as `{"removed": [], "added": [], "changed": [],
-"types": [], "breaking": false}`, where `breaking` covers removed symbols,
-changed signatures and the data model changes that cost something, but not
-added ones. That is the semantic version question: a breaking difference earns
-at least a minor release, anything else a patch. Each entry of `types` holds the
-type's `key`, `underlying` shape and its `fields`, each naming the `change`
-(`added`, `changed` or `removed`) and the field on either side of it. An added
-type carries its exported `fields` on the symbol itself, so a reader sees the
-shape without reading the source.
+"types": [], "modules": [], "breaking": false}`, where `breaking` covers removed
+symbols, changed signatures and the data model changes that cost something, but
+not added ones. That is the semantic version question: a breaking difference
+earns at least a minor release, anything else a patch. Each entry of `types`
+holds the type's `key`, `underlying` shape and its `fields`, each naming the
+`change` (`added`, `changed` or `removed`) and the field on either side of it.
+Each entry of `modules` holds the module `path`, the `go` and `toolchain`
+directives when they moved, and its `requires` and `replaces`, which name the
+same three changes and the entry on either side of them. An added type carries
+its exported `fields` on the symbol itself, so a reader sees the shape without
+reading the source.
 
 Test packages, commands and internal packages are left out, since none of them
 are API another module can depend on; `--include-internal` puts internal
@@ -197,6 +240,34 @@ go install github.com/titpetric/tools/gofsck
 
 Running `go-fsck extract --pretty-json` will render the schema for a
 package into a local `go-fsck.json` file.
+
+Each package in the model carries a `Module` block, read from the go.mod that
+governs it. The go.mod is found by searching upward from the source path, so
+`go-fsck extract -i model/` reaches the one a level or more above it, and a
+recursive extract records each package under the go.mod of its own module:
+
+```json
+{
+  "Module": {
+    "Path": "github.com/titpetric/exp/cmd/go-fsck",
+    "GoVersion": "1.27.0",
+    "Toolchain": "go1.27.0",
+    "Requires": [
+      { "Path": "github.com/spf13/pflag", "Version": "v1.0.10" },
+      { "Path": "golang.org/x/sys", "Version": "v0.47.0", "Indirect": true }
+    ],
+    "Replaces": [
+      { "Path": "github.com/spf13/pflag", "NewPath": "../pflag" }
+    ]
+  }
+}
+```
+
+The model is a flat list of packages with nowhere else to hold module level
+facts, so the block repeats on every package of the same module. A package
+extracted from a tree holding no go.mod carries none. `Requires` and `Replaces`
+are sorted by module path, so reordering a require block does not change the
+model.
 
 Using `go-fsck restore -p package (--save)` will render the schema into a
 package on disk. This package groups structs to 1 per file, keeping

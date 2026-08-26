@@ -10,6 +10,13 @@ type Definition struct {
 
 	Doc string `json:",omitempty"`
 
+	// Module is the go.mod the package belongs to. It repeats on every
+	// definition of the same module rather than living in one place, because
+	// the model is a flat list of packages with no entry to hang it off, and
+	// a definition that travels alone still has to say what it builds against.
+	// It is nil for a package extracted from a tree holding no go.mod.
+	Module *Module `json:",omitempty"`
+
 	Imports   StringSet `json:",omitempty"`
 	InitCount int       `json:",omitempty"`
 
@@ -68,6 +75,12 @@ func (d *Definition) Fill() {
 
 func (d *Definition) Merge(in *Definition) {
 	d.TestPackage = d.TestPackage || in.TestPackage
+
+	// Both sides are the same package, so they are the same module. Only the
+	// side that has one can contribute it.
+	if d.Module == nil {
+		d.Module = in.Module
+	}
 
 	for k, v := range in.Imports {
 		d.Imports.Add(k, v...)

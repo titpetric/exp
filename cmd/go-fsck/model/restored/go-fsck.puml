@@ -40,6 +40,7 @@ class "model.Declaration" {
 
 class "model.Definition" {
   + Doc: string
+  + Module: *Module
   + Imports: StringSet
   + InitCount: int
   + Types: DeclarationList
@@ -88,6 +89,14 @@ class "model.JSONSchema" {
   + AdditionalProperties: any
 }
 
+class "model.Module" {
+  + Path: string
+  + GoVersion: string
+  + Toolchain: string
+  + Requires: []Require
+  + Replaces: []Replace
+}
+
 class "model.Package" {
   + ID: string
   + Package: string
@@ -109,6 +118,19 @@ class "model.Ref" {
   + String () string
 }
 
+class "model.Replace" {
+  + Path: string
+  + Version: string
+  + NewPath: string
+  + NewVersion: string
+}
+
+class "model.Require" {
+  + Path: string
+  + Version: string
+  + Indirect: bool
+}
+
 
 "model.Declaration" --> "model.DeclarationKind" : .Kind
 "model.Declaration" --> "model.StringSet" : .References
@@ -117,6 +139,7 @@ class "model.Ref" {
 "model.Declaration" --> "model.Complexity" : .Complexity
 
 "model.Definition" --|> "model.Package" : embeds
+"model.Definition" --> "model.Module" : .Module
 "model.Definition" --> "model.StringSet" : .Imports
 "model.Definition" --> "model.DeclarationList" : .Types
 "model.Definition" --> "model.DeclarationList" : .Consts
@@ -130,9 +153,14 @@ class "model.Ref" {
 "model.JSONSchema" --> "model.any" : .Enum
 "model.JSONSchema" --> "model.any" : .AdditionalProperties
 
+"model.Module" --> "model.Require" : .Requires
+"model.Module" --> "model.Replace" : .Replaces
+
 "model.Package" --> "model.Complexity" : .Complexity
 
 "model.Ref" --> "model.Package" : .Package
+
+
 
 
 @enduml
