@@ -6,7 +6,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/fbiville/markdown-table-formatter v0.3.0
 	github.com/fzipp/gocyclo v0.6.0
-	github.com/go-bridget/mig v0.6.0
+	github.com/go-bridget/mig v0.6.1
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/kortschak/utter v1.7.0
 	github.com/mattn/go-sqlite3 v1.14.50
@@ -14,7 +14,7 @@ require (
 	github.com/stoewer/go-strcase v1.3.1
 	github.com/stretchr/testify v1.11.1
 	github.com/uudashr/gocognit v1.2.1
-	golang.org/x/exp v0.0.0-20260820122028-d6e0b57b1a69
+	golang.org/x/exp v0.0.0-20260824195058-e88cd73687aa
 	golang.org/x/mod v0.40.0
 	golang.org/x/tools v0.49.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -35,7 +35,7 @@ require (
 	golang.org/x/sync v0.22.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
-	modernc.org/libc v1.75.4 // indirect
+	modernc.org/libc v1.75.5 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.12.1 // indirect
 )
