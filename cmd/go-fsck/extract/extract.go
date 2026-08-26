@@ -28,6 +28,13 @@ func loadModuleTree(ctx context.Context, cfg *options, modules []internal.Module
 			return nil, err
 		}
 
+		// The go.mod was already located by ListModules, so there is nothing
+		// left to search for; a module whose go.mod will not parse is reported
+		// without one, the same as a tree that has none.
+		if module, err := internal.ReadModule(m.Filename); err == nil {
+			setModule(defs, module)
+		}
+
 		// Adjust paths to be relative to root, not module directory
 		moduleRelPath := strings.TrimPrefix(m.Dir, absSourcePath)
 		if moduleRelPath != "" {
@@ -41,6 +48,18 @@ func loadModuleTree(ctx context.Context, cfg *options, modules []internal.Module
 		result = append(result, defs...)
 	}
 	return result, nil
+}
+
+// setModule records the go.mod on every package extracted from it. The model
+// is a flat list of packages, so a package that is asked what it builds
+// against has to answer on its own.
+func setModule(defs []*model.Definition, module *model.Module) {
+	if module == nil {
+		return
+	}
+	for _, def := range defs {
+		def.Module = module
+	}
 }
 
 func getDefinitions(cfg *options) ([]*model.Definition, error) {
@@ -68,10 +87,19 @@ func getDefinitions(cfg *options) ([]*model.Definition, error) {
 	}
 
 	if pattern == "." {
+		// Resolved before walking, since listing packages leaves the process
+		// in the source directory and a relative source path stops resolving
+		// to the same place afterwards.
+		module, err := internal.FindModule(cfg.sourcePath)
+		if err != nil {
+			return nil, err
+		}
+
 		d, err := walkPackage(ctx, cfg.sourcePath, pattern, cfg.includeTests, cfg.verbose)
 		if err != nil {
 			return nil, err
 		}
+		setModule(d, module)
 		defs = append(defs, d...)
 	}
 
