@@ -177,8 +177,25 @@ func lint(cfg *options) error {
 	}
 
 	if !hasErrors {
+		if !cfg.jsonOut && !cfg.summarize {
+			fmt.Println(scannedSummary(defs))
+		}
 		return nil
 	}
 
 	return errors.New("Linter not passing")
+}
+
+// scannedSummary says what a clean run looked at, so an empty report reads as
+// a result and not as a linter that did not run.
+func scannedSummary(defs []*model.Definition) string {
+	var types, fields, funcs int
+	for _, def := range defs {
+		types += len(def.Types)
+		funcs += len(def.Funcs)
+		for _, decl := range def.Types {
+			fields += len(decl.Fields)
+		}
+	}
+	return fmt.Sprintf("nothing to report, scanned %d types, %d fields, %d funcs in %d packages", types, fields, funcs, len(defs))
 }
