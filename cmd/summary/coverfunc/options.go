@@ -25,7 +25,7 @@ func NewOptions() *options {
 	flag.BoolVar(&cfg.GroupByPackage, "packages", cfg.GroupByPackage, "Group coverage by package")
 	flag.BoolVar(&cfg.GroupByFunction, "functions", cfg.GroupByFunction, "Group coverage by function")
 
-	flag.BoolVar(&cfg.SkipUncovered, "skip-uncovered", cfg.SkipUncovered, "Skip uncovered files")
+	flag.BoolVar(&cfg.SkipUncovered, "skip-uncovered", cfg.SkipUncovered, "Omit fully uncovered entries from the output (averages still count them)")
 	flag.BoolVar(&cfg.RenderJSON, "json", false, "Render output as json")
 	flag.Parse()
 

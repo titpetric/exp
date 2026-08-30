@@ -6,8 +6,10 @@ import (
 	"strings"
 )
 
-// Parse parses the coverage data into CoverageInfo.
-func Parse(data [][]string, skipUncovered bool) []CoverageInfo {
+// Parse parses the coverage data into CoverageInfo. Every function row is
+// kept, covered or not: filtering happens after aggregation, so an uncovered
+// function still dilutes its file's and package's averages.
+func Parse(data [][]string) []CoverageInfo {
 	var coverageInfos []CoverageInfo
 
 	for _, line := range data {
@@ -29,10 +31,6 @@ func Parse(data [][]string, skipUncovered bool) []CoverageInfo {
 		}
 		percent, _ := strconv.ParseFloat(strings.TrimSuffix(line[2], "%"), 64)
 		info.Coverage = percent
-
-		if percent <= 0 && skipUncovered {
-			continue
-		}
 
 		coverageInfos = append(coverageInfos, info)
 	}
