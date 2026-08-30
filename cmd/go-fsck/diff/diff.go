@@ -105,18 +105,18 @@ type TypeChange struct {
 	Breaking bool `json:"breaking"`
 }
 
-// String renders the declaration the way it reads in source.
+// String renders the declaration as it reads in source, a type with its shape.
 func (s Symbol) String() string {
 	if s.Signature != "" {
 		return s.Signature
 	}
+	if s.Underlying != "" {
+		return s.Kind + " " + s.Name + " " + s.Underlying
+	}
 	return s.Kind + " " + s.Name
 }
 
-// String renders one field the way it is declared, which for an embedded field
-// is the type it embeds, pointer and package qualifier included. The name an
-// embed is reached by is the type with both stripped, so naming it instead
-// says less than the source does.
+// String renders one field as declared, an embed as the type it embeds.
 func (f Field) String() string {
 	if f.Embedded {
 		return "embeds " + f.Type
@@ -124,8 +124,7 @@ func (f Field) String() string {
 	return f.Name + " " + f.Type
 }
 
-// Field returns the side of the change to report, which is the field as it
-// stands after the release, or as it stood when the release dropped it.
+// Field returns the field after the release, or before it when it was dropped.
 func (c FieldChange) Field() Field {
 	switch {
 	case c.New != nil:
@@ -136,9 +135,7 @@ func (c FieldChange) Field() Field {
 	return Field{Name: c.Name}
 }
 
-// Label returns how the change reads under the type it is a field of: an
-// embedded field says what it embeds, and every other field is reached by
-// name.
+// Label returns how the change reads under the type it is a field of.
 func (c FieldChange) Label(key string) string {
 	if field := c.Field(); field.Embedded {
 		return key + " " + field.String()

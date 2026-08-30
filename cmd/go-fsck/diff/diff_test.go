@@ -150,7 +150,7 @@ func TestCompareReportsTheKindOfEachSymbol(t *testing.T) {
 	}
 	// Sorted by key, so by name; a struct is declared as one but reads as a
 	// type.
-	want := []string{"type Client", "var ErrClosed", "const Name", "func Open () error"}
+	want := []string{"type Client struct", "var ErrClosed", "const Name", "func Open () error"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("Compare().Added = %#v, want %#v", got, want)
 	}
