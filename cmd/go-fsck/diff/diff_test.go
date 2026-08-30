@@ -339,3 +339,34 @@ func TestCompareSortsDataModelChanges(t *testing.T) {
 		t.Errorf("field order = %#v, want %#v", names, want)
 	}
 }
+
+func TestFieldStringReadsAsDeclared(t *testing.T) {
+	tests := []struct {
+		field Field
+		want  string
+	}{
+		{Field{Name: "Addr", Type: "string"}, "Addr string"},
+		{Field{Name: "Storage", Type: "*Storage", Embedded: true}, "embeds *Storage"},
+		{Field{Name: "Module", Type: "platform.Module", Embedded: true}, "embeds platform.Module"},
+	}
+	for _, test := range tests {
+		if got := test.field.String(); got != test.want {
+			t.Errorf("Field%#v.String() = %q, want %q", test.field, got, test.want)
+		}
+	}
+}
+
+func TestFieldChangeLabelNamesTheEmbeddedType(t *testing.T) {
+	added := Field{Name: "Storage", Type: "*Storage", Embedded: true}
+	change := FieldChange{Name: "Storage", Change: fieldAdded, New: &added}
+	if got, want := change.Label("Disk"), "Disk embeds *Storage"; got != want {
+		t.Errorf("Label() = %q, want %q", got, want)
+	}
+
+	// A removed field is reported from the side that still has it.
+	removed := Field{Name: "Addr", Type: "string"}
+	change = FieldChange{Name: "Addr", Change: fieldRemoved, Old: &removed}
+	if got, want := change.Label("Disk"), "Disk.Addr"; got != want {
+		t.Errorf("Label() = %q, want %q", got, want)
+	}
+}

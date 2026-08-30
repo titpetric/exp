@@ -113,6 +113,39 @@ func (s Symbol) String() string {
 	return s.Kind + " " + s.Name
 }
 
+// String renders one field the way it is declared, which for an embedded field
+// is the type it embeds, pointer and package qualifier included. The name an
+// embed is reached by is the type with both stripped, so naming it instead
+// says less than the source does.
+func (f Field) String() string {
+	if f.Embedded {
+		return "embeds " + f.Type
+	}
+	return f.Name + " " + f.Type
+}
+
+// Field returns the side of the change to report, which is the field as it
+// stands after the release, or as it stood when the release dropped it.
+func (c FieldChange) Field() Field {
+	switch {
+	case c.New != nil:
+		return *c.New
+	case c.Old != nil:
+		return *c.Old
+	}
+	return Field{Name: c.Name}
+}
+
+// Label returns how the change reads under the type it is a field of: an
+// embedded field says what it embeds, and every other field is reached by
+// name.
+func (c FieldChange) Label(key string) string {
+	if field := c.Field(); field.Embedded {
+		return key + " " + field.String()
+	}
+	return key + "." + c.Name
+}
+
 // Change is an exported symbol whose signature moved between two revisions.
 type Change struct {
 	Key     string `json:"key"`
@@ -337,7 +370,7 @@ func diff(cfg *options) error {
 	}
 	for _, change := range result.Types {
 		for _, field := range change.Fields {
-			fmt.Printf("%s %s.%s\n", fieldMarker(field.Change), change.Key, field.Name)
+			fmt.Printf("%s %s\n", fieldMarker(field.Change), field.Label(change.Key))
 			if cfg.verbose {
 				if field.Old != nil {
 					fmt.Printf("    %s\n", field.Old.Type)
