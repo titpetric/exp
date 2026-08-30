@@ -238,6 +238,8 @@ func coverage(cfg *options) error {
 			return encoder.Encode(result)
 		}
 
+		module := modulePath(defs)
+
 		type templateData struct {
 			Packages  string
 			Functions string
@@ -255,8 +257,9 @@ func coverage(cfg *options) error {
 					passText = coverageFail
 				}
 
-				vars = append(vars, []string{passText, r.Package, r.Function, fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit)})
+				vars = append(vars, []string{passText, relativePackage(module, r.Package), r.Function, fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit)})
 			}
+			collapseColumn(vars, 1)
 
 			table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Status", "Package", "Function", "Coverage", "Cognitive").Format(vars)
 			if err != nil {
@@ -281,7 +284,7 @@ func coverage(cfg *options) error {
 					passText = coverageFail
 				}
 
-				vars = append(vars, []string{passText, r.ImportPath, fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit), fmt.Sprint(lines)})
+				vars = append(vars, []string{passText, relativePackage(module, r.ImportPath), fmt.Sprintf("%.2f%%", coverage), fmt.Sprint(cognit), fmt.Sprint(lines)})
 			}
 
 			table, err := markdown.NewTableFormatterBuilder().WithPrettyPrint().Build("Status", "Package", "Coverage", "Cognitive", "Lines").Format(vars)
@@ -316,4 +319,58 @@ func combined(receiver, name string) string {
 		return strings.TrimLeft(receiver, "*") + "." + name
 	}
 	return name
+}
+
+// modulePath returns the module every definition belongs to, or an empty
+// string when the tree holds no go.mod or spans more than one module. The
+// report names packages relative to it, and relative to what is a question a
+// tree of two modules has two answers to.
+func modulePath(defs []*model.Definition) string {
+	var path string
+	for _, def := range defs {
+		if def.Module == nil || def.Module.Path == "" {
+			continue
+		}
+		if path != "" && path != def.Module.Path {
+			return ""
+		}
+		path = def.Module.Path
+	}
+	return path
+}
+
+// relativePackage renames an import path to what it is called inside its own
+// module. A report of one module repeats the module path on every row, where
+// what tells two rows apart is what follows it; the root package has nothing
+// following it and is named ".", as a path relative to the module root is.
+func relativePackage(module, importPath string) string {
+	if module == "" {
+		return importPath
+	}
+	if importPath == module {
+		return "."
+	}
+	if rest, ok := strings.CutPrefix(importPath, module+"/"); ok {
+		return rest
+	}
+	return importPath
+}
+
+// collapseColumn blanks a cell that repeats the row above it, so a column
+// reads as the groups it holds rather than as the same value written out
+// once per row. The rows are already sorted by that column, so a value
+// reappearing after a different one is a different group and is written again.
+func collapseColumn(rows [][]string, column int) {
+	previous := ""
+	for _, row := range rows {
+		if column >= len(row) {
+			continue
+		}
+		current := row[column]
+		if current == previous {
+			row[column] = ""
+			continue
+		}
+		previous = current
+	}
 }
