@@ -67,8 +67,8 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
-github.com/titpetric/tools/splint v0.0.0-20260831161149-c161a5e9910d h1:wgitm3prPngglDxlWLnuC30TuEgtBk+LyEDYVEHwtQE=
-github.com/titpetric/tools/splint v0.0.0-20260831161149-c161a5e9910d/go.mod h1:Daqi5ljr58fsF6Q30+P3ou7+UhNoGBtB+43IqeHiMRc=
+github.com/titpetric/tools/splint v0.0.0-20260831162921-e73a997ef03a h1:W6ASRVVQZOCWYWNbaV2VAKyaYV6qTv5dIDzuUsjMHw4=
+github.com/titpetric/tools/splint v0.0.0-20260831162921-e73a997ef03a/go.mod h1:Daqi5ljr58fsF6Q30+P3ou7+UhNoGBtB+43IqeHiMRc=
 github.com/uudashr/gocognit v1.2.1 h1:CSJynt5txTnORn/DkhiB4mZjwPuifyASC8/6Q0I/QS4=
 github.com/uudashr/gocognit v1.2.1/go.mod h1:acaubQc6xYlXFEMb9nWX2dYBzJ/bIjEkc1zzvyIZg5Q=
 golang.org/x/exp v0.0.0-20260824195058-e88cd73687aa h1:QSyA8ishJCyT21kER9KwNt0b7BM3iRK4x9QXhjN5Fdk=
