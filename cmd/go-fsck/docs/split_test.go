@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func TestGenerateFilename(t *testing.T) {

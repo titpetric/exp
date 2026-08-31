@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // details renders a type, const or var as a section a reader opens.

@@ -3,7 +3,7 @@ package diff
 import (
 	"sort"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // A go.mod entry moves the same three ways a field of a type does, and is

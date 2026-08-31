@@ -1,4 +1,5 @@
-package model
+// Package jsonschema converts the splint model into a JSON Schema document.
+package jsonschema
 
 // JSONSchema represents a JSON Schema document according to the draft-07 specification.
 // It includes standard fields used to define types, formats, validations.

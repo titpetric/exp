@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // modDefs builds the definitions a model extracted from one module produces,

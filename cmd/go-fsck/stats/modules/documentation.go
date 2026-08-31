@@ -4,7 +4,7 @@ import (
 	"go/ast"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // Documentation computes documentation stats for exported functions in defs.

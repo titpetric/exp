@@ -3,7 +3,7 @@ package modules
 import (
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // ImportStats produces a grouping of short package names imported.

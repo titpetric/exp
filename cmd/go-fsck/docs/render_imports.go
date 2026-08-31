@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func renderImports(opt *options, defs []*model.Definition) error {

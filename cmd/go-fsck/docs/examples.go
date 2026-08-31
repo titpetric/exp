@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // collectExamples returns the example functions of each package, keyed by the

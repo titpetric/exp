@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func saveLayout(cfg *options, files map[string]model.DeclarationList, filenames []string) error {

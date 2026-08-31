@@ -3,7 +3,7 @@ package coverage
 import (
 	"testing"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func TestModulePath(t *testing.T) {

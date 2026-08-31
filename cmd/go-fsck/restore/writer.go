@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal/files"
-	"github.com/titpetric/exp/cmd/go-fsck/model"
-	. "github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
+	. "github.com/titpetric/tools/splint/model"
 )
 
 // RestoreDefinition creates files for the given definition in the package.

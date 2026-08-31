@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/internal"
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/analyzer"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // compileMultiModuleTests handles go test -c across multiple modules.
@@ -30,7 +30,7 @@ func compileMultiModuleTests(args []string) error {
 	}
 
 	// List all modules in the workspace
-	modules, err := internal.ListModules(".", "./...")
+	modules, err := analyzer.ListModules(".", "./...")
 	if err != nil {
 		return fmt.Errorf("failed to list modules: %w", err)
 	}
@@ -55,10 +55,10 @@ func compileMultiModuleTests(args []string) error {
 }
 
 // compileModuleTests compiles tests for a single module.
-func compileModuleTests(args []string, outputDir string, mod internal.Module) error {
+func compileModuleTests(args []string, outputDir string, mod analyzer.Module) error {
 	// List all packages first to determine which ones to try compiling
 	// We use the internal ListPackages which loads with Tests: true
-	allPackages, err := internal.ListPackages(mod.Dir, "./...")
+	targets, err := analyzer.ListPackages(mod.Dir, "./...")
 	if err != nil {
 		return fmt.Errorf("failed to list packages in module %s: %w", mod.ImportPath, err)
 	}
@@ -67,6 +67,7 @@ func compileModuleTests(args []string, outputDir string, mod internal.Module) er
 	// When packages.Load is used with Tests: true, it returns synthetic test packages too
 	// We compile all non-synthetic packages and skip those without tests
 	packagesToTry := make(map[string]*model.Package)
+	allPackages := targets.Packages()
 	for _, pkg := range allPackages {
 		// Skip synthetic test packages (.test and _test suffixes)
 		if strings.HasSuffix(pkg.ImportPath, ".test") || strings.HasSuffix(pkg.ImportPath, "_test") {

@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // PackageDoc holds a single package's documentation and metadata.

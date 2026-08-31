@@ -4,7 +4,7 @@ The code introspection tooling for your package layout.
 
 ```
 Usage: go-fsck <command> help
-Available commands: coverage, docs, extract, lint, query, report, restore, search, sqlite, stats
+Available commands: coverage, docs, extract, query, report, restore, search, sqlite, stats
 ```
 
 ## Use cases
@@ -45,7 +45,6 @@ have been added or abandoned over time.
 - `coverage`: print a coverage report, per function, per package, markdown
 - `diff`: compare the exported API and the go.mod of two models, report what a release takes away
 - `docs`: print markdown docs with package godoc, render plantuml diagrams
-- `lint`: test that no package name in a project repeats, fight ambiguous short imports
 - `query`: a half-hearted attempt at interface discovery
 - `report`: reporting test naming conventions to match symbols
 - `restore`: the opinionated file grouping (symbol should match filename)
@@ -189,21 +188,32 @@ Extraction works on an unbuilt source tree, which is what makes the `git
 archive` above viable: the model is read from the AST and package load errors
 are discarded, so no module cache or build is needed.
 
-## Linting with `lint`
+## Linting, and where the model lives now
 
-The `lint` tool has limited use. Arguably it can be replaced with a `go
-test -c ./...`, which will let you know the error concisely:
+The model, the extractor behind it and the linters over it are
+[splint](https://github.com/titpetric/tools/tree/main/splint), a module of its
+own. go-fsck depends on it and no longer carries any of it: every subcommand
+here used to repeat the same twenty lines to build the model, and there is one
+call now.
 
-```shell
-$ go test -c ./...
-cannot write test binary loader.test for multiple packages:
-github.com/titpetric/exp/cmd/go-fsck/model/loader
-github.com/titpetric/exp/cmd/go-fsck/query/loader
+```go
+options := internal.Options(".", recursive, includeTests, includeSources, verbose)
+defs, err := internal.Definitions(options)
 ```
 
-The linter protects against ambiguous imports, e.g. repetition of `model`
-folders or similar. It's sort of hard to enforce on a repository basis,
-and there is a sweet spot where it's reasonable.
+`go-fsck lint` went with it. What it did, and three rules besides, is what
+`splint` does:
+
+```shell
+go install github.com/titpetric/tools/splint/cmd/splint@latest
+splint ./...
+```
+
+splint carries a second parser as well, one that reads the source without
+building a syntax tree. It produces the same document, reads source that does
+not compile, and is an order of magnitude quicker. Anything reading a
+`go-fsck.json` reads what it writes: the schema is the same one, and splint's
+harness compares the two over sixteen repositories to keep it that way.
 
 ## Interface discovery with `query`
 
@@ -230,10 +240,11 @@ I've accepted linting may be the only approach to the issue, even if
 fixing could be made deterministic. I tend to follow code grouping
 naturally, but wouldn't mind a sanity check in the pipeline.
 
-You can try the linter:
+You can try the linters:
 
-```go
-go install github.com/titpetric/tools/gofsck
+```shell
+go install github.com/titpetric/tools/gofsck@latest
+go install github.com/titpetric/tools/splint/cmd/splint@latest
 ```
 
 ## Schema

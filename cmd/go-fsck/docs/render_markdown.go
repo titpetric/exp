@@ -5,7 +5,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func renderMarkdown(_ *options, defs []*model.Definition) error {

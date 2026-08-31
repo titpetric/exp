@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func Title(s string) string {
@@ -51,9 +51,9 @@ func handleMapField(fieldType string, pkgInfo *model.Definition, dependencies ma
 	}
 }
 
-func getJSONType(goType string) *model.JSONSchema {
+func getJSONType(goType string) *JSONSchema {
 	if goType == "[]byte" {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type:   "string",
 			Format: "byte",
 		}
@@ -62,16 +62,16 @@ func getJSONType(goType string) *model.JSONSchema {
 	if strings.HasPrefix(goType, "[]") {
 		elementType := strings.TrimPrefix(goType, "[]")
 		if isCustomType(elementType) {
-			return &model.JSONSchema{
+			return &JSONSchema{
 				Type: "array",
-				Items: &model.JSONSchema{
+				Items: &JSONSchema{
 					Ref: "#/definitions/" + elementType,
 				},
 			}
 		}
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type: "array",
-			Items: &model.JSONSchema{
+			Items: &JSONSchema{
 				Type: getBaseJSONType(elementType),
 			},
 		}
@@ -81,7 +81,7 @@ func getJSONType(goType string) *model.JSONSchema {
 		inside := goType[len("map["):]
 		parts := strings.SplitN(inside, "]", 2)
 		if len(parts) != 2 {
-			return &model.JSONSchema{
+			return &JSONSchema{
 				Type:                 "object",
 				AdditionalProperties: true,
 			}
@@ -90,35 +90,35 @@ func getJSONType(goType string) *model.JSONSchema {
 		valueType := strings.TrimSpace(parts[1])
 
 		if keyType != "string" {
-			return &model.JSONSchema{
+			return &JSONSchema{
 				Type:                 "object",
 				AdditionalProperties: true,
 			}
 		}
 		if valueType == "interface{}" || valueType == "any" {
-			return &model.JSONSchema{
+			return &JSONSchema{
 				Type:                 "object",
 				AdditionalProperties: true,
 			}
 		}
 		if !isCustomType(valueType) {
-			return &model.JSONSchema{
+			return &JSONSchema{
 				Type: "object",
-				AdditionalProperties: &model.JSONSchema{
+				AdditionalProperties: &JSONSchema{
 					Type: getBaseJSONType(valueType),
 				},
 			}
 		}
 		// custom type => $ref
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type: "object",
-			AdditionalProperties: &model.JSONSchema{
+			AdditionalProperties: &JSONSchema{
 				Ref: "#/definitions/" + valueType,
 			},
 		}
 	}
 
-	schema := &model.JSONSchema{
+	schema := &JSONSchema{
 		Type: getBaseJSONType(goType),
 	}
 
@@ -150,9 +150,9 @@ func getJSONType(goType string) *model.JSONSchema {
 		schema.Type = "string"
 		schema.Pattern = "^[-+]?([0-9]*(\\.[0-9]*)?[a-z]+)+$"
 	case "complex64", "complex128":
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type: "object",
-			Properties: map[string]*model.JSONSchema{
+			Properties: map[string]*JSONSchema{
 				"real": {Type: "number"},
 				"imag": {Type: "number"},
 			},

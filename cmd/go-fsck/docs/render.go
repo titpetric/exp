@@ -5,49 +5,11 @@ import (
 	"os"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
-	"github.com/titpetric/exp/cmd/go-fsck/model"
-	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/tools/splint/model"
 )
 
-func getDefinitions(cfg *options) ([]*model.Definition, error) {
-	// Read the exported go-fsck.json data.
-	defs, err := loader.ReadFile(cfg.inputFile)
-	if err == nil {
-		return defs, nil
-	}
-
-	packagePath := "./..."
-	if len(cfg.args) > 1 {
-		// [docs .]
-		packagePath = cfg.args[1]
-	}
-
-	// list current local packages
-	packages, err := internal.ListPackages(".", packagePath)
-	if err != nil {
-		return nil, err
-	}
-
-	defs = []*model.Definition{}
-
-	for _, pkg := range packages {
-		d, err := loader.Load(pkg, false, cfg.verbose)
-		if err != nil {
-			return nil, err
-		}
-
-		for _, v := range d {
-			v.Package.ID = pkg.ID
-			v.Package.ImportPath = pkg.ImportPath
-			v.Package.Path = pkg.Path
-			v.Package.Package = pkg.Package
-			v.Package.TestPackage = pkg.TestPackage
-		}
-
-		defs = append(defs, d...)
-	}
-
-	return defs, nil
+func getDefinitions(cfg *options) (model.DefinitionList, error) {
+	return internal.DefinitionsFrom(cfg.inputFile, internal.Options(".", false, false, false, cfg.verbose))
 }
 
 func render(cfg *options) error {

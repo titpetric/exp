@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // sym builds the Symbol a package level declaration of example.com/x reports.

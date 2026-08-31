@@ -10,8 +10,8 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
-	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func restore(cfg *options) error {
@@ -22,7 +22,7 @@ func restore(cfg *options) error {
 }
 
 func restoreV2(cfg *options) error {
-	defs, err := loader.ReadFile(cfg.inputFile)
+	defs, err := internal.ReadDocument(cfg.inputFile)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func restoreV2(cfg *options) error {
 }
 
 func restoreV1(cfg *options) error {
-	defs, err := loader.ReadFile(cfg.inputFile)
+	defs, err := internal.ReadDocument(cfg.inputFile)
 	if err != nil {
 		return err
 	}

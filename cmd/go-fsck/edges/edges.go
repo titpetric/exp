@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // ExtractEdges extracts symbol edges and relationships from a model Definition.

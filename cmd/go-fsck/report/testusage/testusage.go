@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 type FuncRef struct {

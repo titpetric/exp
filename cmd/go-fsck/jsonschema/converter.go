@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // ParseAndConvertStruct parses the given repo directory for Go structs and
@@ -34,10 +34,10 @@ func ParseAndConvertStruct(cfg *options) error {
 }
 
 // ConvertToJSONSchema converts PackageInfo to JSON Schema with only the root type and its (internal and external) dependencies.
-func ConvertToJSONSchema(pkgInfo *model.Definition, config *RequiredFieldsConfig, cfg *options) (*model.JSONSchema, error) {
-	rootSchema := &model.JSONSchema{
+func ConvertToJSONSchema(pkgInfo *model.Definition, config *RequiredFieldsConfig, cfg *options) (*JSONSchema, error) {
+	rootSchema := &JSONSchema{
 		Schema:      "http://json-schema.org/draft-07/schema#",
-		Definitions: make(map[string]*model.JSONSchema),
+		Definitions: make(map[string]*JSONSchema),
 	}
 	definitions := rootSchema.Definitions
 
@@ -57,7 +57,7 @@ func ConvertToJSONSchema(pkgInfo *model.Definition, config *RequiredFieldsConfig
 	return rootSchema, nil
 }
 
-func generateTypeSchema(decl *model.Declaration, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *model.JSONSchema {
+func generateTypeSchema(decl *model.Declaration, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *JSONSchema {
 	switch {
 	case len(decl.Fields) > 0:
 		return GenerateStructSchema(decl, config, pkgName, stripPrefix)
@@ -69,7 +69,7 @@ func generateTypeSchema(decl *model.Declaration, config *RequiredFieldsConfig, p
 		return GenerateSliceDefinition(decl.Type)
 
 	case !isCustomType(decl.Type):
-		return &model.JSONSchema{Type: getBaseJSONType(decl.Type)}
+		return &JSONSchema{Type: getBaseJSONType(decl.Type)}
 
 	case strings.Contains(decl.Type, "."):
 		log.Printf("Skipping %q with external ref %q", decl.Name, decl.Type)
@@ -77,7 +77,7 @@ func generateTypeSchema(decl *model.Declaration, config *RequiredFieldsConfig, p
 
 	case decl.Name != decl.Type && len(decl.Fields) == 0:
 		refName := getRefName(decl.Type, pkgName, stripPrefix)
-		return &model.JSONSchema{Ref: "#/definitions/" + refName}
+		return &JSONSchema{Ref: "#/definitions/" + refName}
 
 	default:
 		log.Printf("Skipping %q with underlying type %q\n", decl.Name, decl.Type)
@@ -85,7 +85,7 @@ func generateTypeSchema(decl *model.Declaration, config *RequiredFieldsConfig, p
 	}
 }
 
-func generateFieldSchema(decl *model.Field, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *model.JSONSchema {
+func generateFieldSchema(decl *model.Field, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *JSONSchema {
 	switch {
 	case strings.HasPrefix(decl.Type, "map["):
 		return GenerateMapDefinition(decl.Type)
@@ -94,7 +94,7 @@ func generateFieldSchema(decl *model.Field, config *RequiredFieldsConfig, pkgNam
 		return GenerateSliceDefinition(decl.Type)
 
 	case !isCustomType(decl.Type):
-		return &model.JSONSchema{Type: getBaseJSONType(decl.Type)}
+		return &JSONSchema{Type: getBaseJSONType(decl.Type)}
 
 	default:
 		log.Printf("Skipping %q with underlying type %q\n", decl.Name, decl.Type)
@@ -162,10 +162,10 @@ func CollectTypeDefinitionDeps(typeInfo *model.Declaration, pkgInfo *model.Defin
 }
 
 // GenerateStructSchema creates a JSON Schema definition for a struct type.
-func GenerateStructSchema(typeInfo *model.Declaration, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *model.JSONSchema {
-	result := &model.JSONSchema{
+func GenerateStructSchema(typeInfo *model.Declaration, config *RequiredFieldsConfig, pkgName string, stripPrefix []string) *JSONSchema {
+	result := &JSONSchema{
 		Type:                 "object",
-		Properties:           make(map[string]*model.JSONSchema),
+		Properties:           make(map[string]*JSONSchema),
 		AdditionalProperties: false,
 	}
 	requiredFields := config.Fields[typeInfo.Name]
@@ -203,13 +203,13 @@ func GenerateStructSchema(typeInfo *model.Declaration, config *RequiredFieldsCon
 }
 
 // GenerateMapDefinition creates a top-level JSON Schema definition for a map type (e.g. map[string]Something).
-func GenerateMapDefinition(goType string) *model.JSONSchema {
+func GenerateMapDefinition(goType string) *JSONSchema {
 	// Example: "map[string]interface{}" or "map[string]PortWhiteList"
 	inside := goType[len("map["):]
 	parts := strings.SplitN(inside, "]", 2)
 
 	if len(parts) != 2 {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type:                 "object",
 			AdditionalProperties: true,
 		}
@@ -219,53 +219,53 @@ func GenerateMapDefinition(goType string) *model.JSONSchema {
 	valueType := strings.TrimSpace(parts[1]) // e.g. "interface{}" or "PortWhiteList"
 
 	if keyType != "string" {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type:                 "object",
 			AdditionalProperties: true,
 		}
 	}
 
 	if valueType == "interface{}" || valueType == "any" {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type:                 "object",
 			AdditionalProperties: true,
 		}
 	}
 
 	if !isCustomType(valueType) {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type: "object",
-			AdditionalProperties: &model.JSONSchema{
+			AdditionalProperties: &JSONSchema{
 				Type: getBaseJSONType(valueType),
 			},
 		}
 	}
 
-	return &model.JSONSchema{
+	return &JSONSchema{
 		Type: "object",
-		AdditionalProperties: &model.JSONSchema{
+		AdditionalProperties: &JSONSchema{
 			Ref: "#/definitions/" + valueType,
 		},
 	}
 }
 
 // GenerateSliceDefinition creates a top-level JSON Schema definition for a slice type (e.g. []CertData).
-func GenerateSliceDefinition(goType string) *model.JSONSchema {
+func GenerateSliceDefinition(goType string) *JSONSchema {
 	elemType := strings.TrimPrefix(goType, "[]")
 	elemType = strings.TrimSpace(elemType)
 
 	if !isCustomType(elemType) {
-		return &model.JSONSchema{
+		return &JSONSchema{
 			Type: "array",
-			Items: &model.JSONSchema{
+			Items: &JSONSchema{
 				Type: getBaseJSONType(elemType),
 			},
 		}
 	}
 
-	return &model.JSONSchema{
+	return &JSONSchema{
 		Type: "array",
-		Items: &model.JSONSchema{
+		Items: &JSONSchema{
 			Ref: "#/definitions/" + elemType,
 		},
 	}

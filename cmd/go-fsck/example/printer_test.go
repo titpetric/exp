@@ -10,8 +10,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/titpetric/exp/cmd/go-fsck/internal/ast"
 )
 
 func PrintSource(out io.Writer, fset *token.FileSet, node any) error {
@@ -31,7 +29,7 @@ func TestPrinter(t *testing.T) {
 					Node:     decl,
 					Comments: f.Comments,
 				}
-				assert.NoError(t, ast.PrintSource(&out, fset, x))
+				assert.NoError(t, PrintSource(&out, fset, x))
 				fmt.Println(out.String())
 			}
 		}

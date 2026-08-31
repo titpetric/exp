@@ -6,7 +6,7 @@ import (
 
 	"github.com/stoewer/go-strcase"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 var builtInTypes = model.BuiltInTypes

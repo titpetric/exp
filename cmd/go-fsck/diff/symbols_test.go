@@ -5,7 +5,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // def builds a definition holding a single declaration list, the shape the

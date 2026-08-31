@@ -3,10 +3,10 @@ package docs
 import (
 	"fmt"
 	gast "go/ast"
+	"reflect"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/internal/ast"
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // dbRelationship describes a database relationship
@@ -51,7 +51,7 @@ func detectDBRelationships(t *model.Declaration, allTypes map[string]*model.Decl
 		var exists bool
 
 		if f.Tag != "" {
-			dbCol := ast.DBTagName(f.Tag)
+			dbCol := dbTagName(f.Tag)
 			if dbCol != "" && strings.HasSuffix(strings.ToLower(dbCol), "_id") {
 				// Extract target type from column name with fallback matching
 				baseCol := strings.TrimSuffix(strings.ToLower(dbCol), "_id")
@@ -382,4 +382,14 @@ func renderPlantUML(opt *options, defs []*model.Definition) error {
 	fmt.Println("@enduml")
 
 	return nil
+}
+
+// dbTagName is the column a field maps to, which is the name in its db tag.
+//
+// The renderer is the only reader left of the tag helpers that used to sit in
+// this repository; the rest went to splint with the collector.
+func dbTagName(tag string) string {
+	value := reflect.StructTag(tag).Get("db")
+	name, _, _ := strings.Cut(value, ",")
+	return name
 }

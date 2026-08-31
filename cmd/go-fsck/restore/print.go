@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 func printLayout(cfg *options, files map[string]model.DeclarationList, filenames []string) error {

@@ -6,7 +6,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // declKind is the kind a symbol is reported under, taken from the list of the

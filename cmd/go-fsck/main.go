@@ -16,7 +16,6 @@ import (
 	"github.com/titpetric/exp/cmd/go-fsck/edges"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
 	"github.com/titpetric/exp/cmd/go-fsck/jsonschema"
-	"github.com/titpetric/exp/cmd/go-fsck/lint"
 	"github.com/titpetric/exp/cmd/go-fsck/query"
 	"github.com/titpetric/exp/cmd/go-fsck/report"
 	"github.com/titpetric/exp/cmd/go-fsck/restore"
@@ -39,7 +38,6 @@ func start() (err error) {
 		"coverage":   coverage.Run,
 		"restore":    restore.Run,
 		"stats":      stats.Run,
-		"lint":       lint.Run,
 		"jsonschema": jsonschema.Run,
 		"search":     search.Run,
 		"query":      query.Run,

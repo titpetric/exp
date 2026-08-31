@@ -3,7 +3,7 @@ package docs
 import (
 	"strings"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // declaration returns what a type, const or var is printed as.

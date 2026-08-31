@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/titpetric/exp/cmd/go-fsck/model"
-	"github.com/titpetric/exp/cmd/go-fsck/model/loader"
+	"github.com/titpetric/exp/cmd/go-fsck/internal"
+	"github.com/titpetric/tools/splint/model"
 )
 
 // Symbol is one exported declaration of a package.
@@ -365,11 +365,11 @@ func sortSymbols(symbols []Symbol) {
 }
 
 func diff(cfg *options) error {
-	oldDefs, err := loader.ReadFile(cfg.oldFile)
+	oldDefs, err := internal.ReadDocument(cfg.oldFile)
 	if err != nil {
 		return fmt.Errorf("read %s: %w", cfg.oldFile, err)
 	}
-	newDefs, err := loader.ReadFile(cfg.newFile)
+	newDefs, err := internal.ReadDocument(cfg.newFile)
 	if err != nil {
 		return fmt.Errorf("read %s: %w", cfg.newFile, err)
 	}
