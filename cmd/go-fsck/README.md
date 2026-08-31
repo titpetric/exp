@@ -32,7 +32,6 @@ Usage of go-fsck:
 The data model has rich traversal opportunities, as well as gives
 accessibility to the data. This has proven to be valuable for:
 
-- jsonschema generation from data model structs
 - proto UML generation from data model, database schema model
 - source code generation with naming by policy
 - markdown documentation with godoc API
@@ -209,11 +208,20 @@ go install github.com/titpetric/tools/splint/cmd/splint@latest
 splint ./...
 ```
 
+`go-fsck jsonschema` went the same way, and reads better for it: `splint
+--schema` renders every package of a tree rather than the first one, and takes
+a `go-fsck.json` as readily as a source path.
+
+```shell
+splint --schema ./... > schema.json
+splint --schema --input go-fsck.json > schema.json
+```
+
 splint carries a second parser as well, one that reads the source without
 building a syntax tree. It produces the same document, reads source that does
-not compile, and is an order of magnitude quicker. Anything reading a
-`go-fsck.json` reads what it writes: the schema is the same one, and splint's
-harness compares the two over sixteen repositories to keep it that way.
+not compile, and is twenty times quicker. Anything reading a `go-fsck.json`
+reads what it writes: the schema is the same one, and splint compares the two
+value by value over sixteen repositories to keep it that way.
 
 ## Interface discovery with `query`
 
