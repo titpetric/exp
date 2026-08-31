@@ -3,6 +3,26 @@
 This tool will go through the imports in go.mod and check with the
 official go proxy to get a list of versions for each of the imports.
 
+## The audit output moved
+
+The dependency audit below, the size and file count per import, is
+[`splint`](https://github.com/titpetric/tools/tree/main/splint) now:
+
+```bash
+go install github.com/titpetric/tools/splint/cmd/splint@latest
+splint -stats --linters modcheck ./...
+```
+
+It reports more than the size, because the size is the shallow half of what a
+dependency costs. The other half is how far it reaches into the tree, which
+splint reads out of its own model of the source: how many files import it, how
+many packages they belong to, and how many of its exported symbols are actually
+used. A library pulled into one file through one symbol is cheap to drop
+whatever it weighs; one reached from forty files through twelve symbols is
+load bearing.
+
+It reports on the go.mod as well, and fails a run on a replace directive.
+
 ## Install
 
 ```bash
