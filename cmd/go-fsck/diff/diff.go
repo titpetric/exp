@@ -25,6 +25,10 @@ type Symbol struct {
 	// Kind is type, const, var or func.
 	Kind string `json:"kind"`
 
+	// Exported reports whether the name is exported and the package it sits
+	// in is importable, which together make a symbol part of the API.
+	Exported bool `json:"exported"`
+
 	// Signature is a func as it is declared, and is empty for every other
 	// kind, which is named by Kind and Name alone.
 	Signature string `json:"signature,omitempty"`
@@ -143,11 +147,15 @@ func (c FieldChange) Label(key string) string {
 	return key + "." + c.Name
 }
 
-// Change is an exported symbol whose signature moved between two revisions.
+// Change is a symbol whose signature moved between two revisions.
 type Change struct {
 	Key     string `json:"key"`
 	Package string `json:"package"`
 	Name    string `json:"name"`
+
+	// Exported reports whether the symbol is part of the API, the way it does
+	// on Symbol, so a consumer of the report needs no second rule for it.
+	Exported bool `json:"exported"`
 
 	// Old and New are the signature before and after, with parameter names
 	// removed, which is what they were compared on.
@@ -192,9 +200,22 @@ type Result struct {
 // module offers. Indirect requirements are left out unless includeIndirect
 // asks for them.
 func Compare(oldDefs, newDefs []*model.Definition, includeInternal, includeIndirect bool) Result {
+	return CompareWith(Options{IncludeInternal: includeInternal, IncludeIndirect: includeIndirect}, oldDefs, newDefs)
+}
+
+// Options are what a comparison covers beyond the API: the internal packages
+// and the unexported declarations, neither of which a consumer can reach.
+type Options struct {
+	IncludeInternal   bool
+	IncludeIndirect   bool
+	IncludeUnexported bool
+}
+
+// CompareWith is Compare with the coverage stated explicitly.
+func CompareWith(opts Options, oldDefs, newDefs []*model.Definition) Result {
 	var (
-		old = symbols(oldDefs, includeInternal)
-		cur = symbols(newDefs, includeInternal)
+		old = symbols(oldDefs, opts.IncludeInternal, opts.IncludeUnexported)
+		cur = symbols(newDefs, opts.IncludeInternal, opts.IncludeUnexported)
 	)
 
 	result := Result{
@@ -202,7 +223,7 @@ func Compare(oldDefs, newDefs []*model.Definition, includeInternal, includeIndir
 		Added:   []Symbol{},
 		Changed: []Change{},
 		Types:   []TypeChange{},
-		Modules: compareModules(modules(oldDefs), modules(newDefs), includeIndirect),
+		Modules: compareModules(modules(oldDefs), modules(newDefs), opts.IncludeIndirect),
 	}
 
 	for key, was := range old {
@@ -212,11 +233,12 @@ func Compare(oldDefs, newDefs []*model.Definition, includeInternal, includeIndir
 			result.Removed = append(result.Removed, was.symbol)
 		case is.normalized != was.normalized:
 			result.Changed = append(result.Changed, Change{
-				Key:     key,
-				Package: is.symbol.Package,
-				Name:    is.symbol.Name,
-				Old:     was.normalized,
-				New:     is.normalized,
+				Key:      key,
+				Package:  is.symbol.Package,
+				Name:     is.symbol.Name,
+				Exported: is.symbol.Exported,
+				Old:      was.normalized,
+				New:      is.normalized,
 			})
 		default:
 			// The shape held, so what is left to compare is what the shape is
@@ -240,11 +262,27 @@ func Compare(oldDefs, newDefs []*model.Definition, includeInternal, includeIndir
 	sort.Slice(result.Changed, func(i, j int) bool { return result.Changed[i].Key < result.Changed[j].Key })
 	sort.Slice(result.Types, func(i, j int) bool { return result.Types[i].Key < result.Types[j].Key })
 
-	result.Breaking = len(result.Removed) > 0 || len(result.Changed) > 0
+	// Only the API can break: an unexported symbol or one in an internal
+	// package is not something another module compiled against.
+	for _, symbol := range result.Removed {
+		result.Breaking = result.Breaking || symbol.Exported
+	}
+	for _, change := range result.Changed {
+		result.Breaking = result.Breaking || change.Exported
+	}
 	for _, change := range result.Types {
-		result.Breaking = result.Breaking || change.Breaking
+		result.Breaking = result.Breaking || (change.Breaking && exportedKey(cur, old, change.Key))
 	}
 	return result
+}
+
+// exportedKey reports whether the symbol behind a key is part of the API,
+// reading whichever revision still carries it.
+func exportedKey(cur, old map[string]entry, key string) bool {
+	if entry, ok := cur[key]; ok {
+		return entry.symbol.Exported
+	}
+	return old[key].symbol.Exported
 }
 
 // compareFields reports how the exported fields of one type moved between two
@@ -336,7 +374,11 @@ func diff(cfg *options) error {
 		return fmt.Errorf("read %s: %w", cfg.newFile, err)
 	}
 
-	result := Compare(oldDefs, newDefs, cfg.includeInternal, cfg.includeIndirect)
+	result := CompareWith(Options{
+		IncludeInternal:   cfg.includeInternal || cfg.includeUnexported,
+		IncludeIndirect:   cfg.includeIndirect,
+		IncludeUnexported: cfg.includeUnexported,
+	}, oldDefs, newDefs)
 
 	if cfg.json {
 		b, err := json.Marshal(result)

@@ -14,6 +14,7 @@ func sym(kind, name, signature string) Symbol {
 		Package:   "example.com/x",
 		Name:      name,
 		Kind:      kind,
+		Exported:  true,
 		Signature: signature,
 	}
 }
@@ -106,11 +107,12 @@ func TestCompare(t *testing.T) {
 				Removed: []Symbol{},
 				Added:   []Symbol{},
 				Changed: []Change{{
-					Key:     "example.com/x.Open",
-					Package: "example.com/x",
-					Name:    "Open",
-					Old:     "Open (string) error",
-					New:     "Open (string, int) error",
+					Key:      "example.com/x.Open",
+					Package:  "example.com/x",
+					Name:     "Open",
+					Exported: true,
+					Old:      "Open (string) error",
+					New:      "Open (string, int) error",
 				}},
 				Types:    []TypeChange{},
 				Modules:  []ModuleChange{},
@@ -293,11 +295,12 @@ func TestCompareReportsAChangedUnderlyingTypeAsAChangedSymbol(t *testing.T) {
 	got := Compare(typeDefs("ID", "string"), typeDefs("ID", "int"), false, false)
 
 	want := []Change{{
-		Key:     "example.com/x.ID",
-		Package: "example.com/x",
-		Name:    "ID",
-		Old:     "type ID string",
-		New:     "type ID int",
+		Key:      "example.com/x.ID",
+		Package:  "example.com/x",
+		Name:     "ID",
+		Exported: true,
+		Old:      "type ID string",
+		New:      "type ID int",
 	}}
 	if !reflect.DeepEqual(got.Changed, want) {
 		t.Fatalf("Compare().Changed = %#v, want %#v", got.Changed, want)
@@ -368,5 +371,56 @@ func TestFieldChangeLabelNamesTheEmbeddedType(t *testing.T) {
 	change = FieldChange{Name: "Addr", Change: fieldRemoved, Old: &removed}
 	if got, want := change.Label("Disk"), "Disk.Addr"; got != want {
 		t.Errorf("Label() = %q, want %q", got, want)
+	}
+}
+
+func TestCompareWithIncludesUnexported(t *testing.T) {
+	defs := []*model.Definition{def("example.com/x", "x", false, model.DeclarationList{
+		{Names: []string{"Open"}, Signature: "Open() error"},
+		{Names: []string{"parse"}, Signature: "parse() error"},
+	}, nil)}
+
+	// The default comparison is the API, so the unexported func is not in it.
+	api := CompareWith(Options{}, nil, defs)
+	if got := keys(api.Added); len(got) != 1 || got[0] != "example.com/x.Open" {
+		t.Fatalf("Compare().Added = %v, want the exported func alone", got)
+	}
+
+	full := CompareWith(Options{IncludeUnexported: true}, nil, defs)
+	if got := keys(full.Added); len(got) != 2 {
+		t.Fatalf("Compare().Added = %v, want both funcs", got)
+	}
+	for _, symbol := range full.Added {
+		if want := symbol.Name == "Open"; symbol.Exported != want {
+			t.Errorf("%s reports Exported=%v", symbol.Name, symbol.Exported)
+		}
+	}
+}
+
+func TestCompareWithUnexportedIsNeverBreaking(t *testing.T) {
+	before := []*model.Definition{def("example.com/x", "x", false,
+		model.DeclarationList{{Names: []string{"parse"}, Signature: "parse() error"}}, nil)}
+
+	// Dropping an unexported func is a refactor, not a release: nothing
+	// outside the module compiled against it.
+	got := CompareWith(Options{IncludeUnexported: true}, before, nil)
+	if len(got.Removed) != 1 {
+		t.Fatalf("Compare().Removed = %v, want the unexported func", keys(got.Removed))
+	}
+	if got.Breaking {
+		t.Error("dropping an unexported func was called breaking")
+	}
+}
+
+func TestCompareWithInternalPackagesAreNotExported(t *testing.T) {
+	defs := []*model.Definition{def("example.com/x/internal", "internal", false,
+		model.DeclarationList{{Names: []string{"Broker"}, Signature: "Broker() error"}}, nil)}
+
+	got := CompareWith(Options{IncludeInternal: true}, nil, defs)
+	if len(got.Added) != 1 {
+		t.Fatalf("Compare().Added = %v, want the internal func", keys(got.Added))
+	}
+	if got.Added[0].Exported {
+		t.Error("an exported name in an internal package reported as API")
 	}
 }

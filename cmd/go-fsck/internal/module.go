@@ -49,6 +49,11 @@ func ListModules(root string, pattern string) ([]Module, error) {
 		if walkErr != nil {
 			return walkErr
 		}
+		// testdata is a module the toolchain ignores, and a fixture module
+		// under it is not the code being reported on.
+		if d.IsDir() && (d.Name() == "testdata" || d.Name() == "vendor") {
+			return filepath.SkipDir
+		}
 		if d.Name() != "go.mod" {
 			return nil
 		}

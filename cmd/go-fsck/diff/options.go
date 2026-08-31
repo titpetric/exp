@@ -12,8 +12,9 @@ type options struct {
 	oldFile string
 	newFile string
 
-	includeInternal bool
-	includeIndirect bool
+	includeInternal   bool
+	includeIndirect   bool
+	includeUnexported bool
 
 	json    bool
 	verbose bool
@@ -27,6 +28,7 @@ func NewOptions() *options {
 
 	flag.BoolVar(&cfg.includeInternal, "include-internal", cfg.includeInternal, "compare internal packages as well")
 	flag.BoolVar(&cfg.includeIndirect, "include-indirect", cfg.includeIndirect, "compare indirect go.mod requirements as well")
+	flag.BoolVar(&cfg.includeUnexported, "include-unexported", cfg.includeUnexported, "compare unexported declarations and internal packages as well, reported but never breaking")
 
 	flag.BoolVar(&cfg.json, "json", cfg.json, "print results as json")
 	flag.BoolVarP(&cfg.verbose, "verbose", "v", cfg.verbose, "verbose output")

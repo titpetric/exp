@@ -20,7 +20,7 @@ func def(importPath, pkg string, testPackage bool, funcs, types model.Declaratio
 
 func keysOf(t *testing.T, defs []*model.Definition, includeInternal bool) []string {
 	t.Helper()
-	got := symbols(defs, includeInternal)
+	got := symbols(defs, includeInternal, false)
 	keys := make([]string, 0, len(got))
 	for key := range got {
 		keys = append(keys, key)
@@ -201,7 +201,7 @@ func TestSymbolsCarriesTheBodyOfATypeOnly(t *testing.T) {
 		}},
 	}}
 
-	got := symbols(defs, false)
+	got := symbols(defs, false, false)
 
 	// The body is the declaration as it was written, which is a different
 	// thing from the fields it decomposes into.
@@ -239,7 +239,7 @@ func TestSymbolsReadsTheShapeOfAType(t *testing.T) {
 		},
 	}}
 
-	got := symbols(defs, false)
+	got := symbols(defs, false, false)
 
 	config := got["example.com/x.Config"].symbol
 	if config.Underlying != underlyingStruct {

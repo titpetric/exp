@@ -40,12 +40,14 @@ type entry struct {
 	fields map[string]Field
 }
 
-// symbols returns the exported declarations of defs, keyed so that the same
-// declaration in two revisions of a package produces the same key.
+// symbols returns the declarations of defs, keyed so that the same declaration
+// in two revisions of a package produces the same key.
 //
-// Test packages, commands and, unless asked for, internal packages are left
-// out: none of them are part of the API another module can depend on.
-func symbols(defs []*model.Definition, includeInternal bool) map[string]entry {
+// Test packages and commands are left out. Internal packages and unexported
+// declarations are left out too unless asked for: neither is part of the API
+// another module can depend on, and both are reported separately when a
+// caller wants to see a refactor rather than a release.
+func symbols(defs []*model.Definition, includeInternal, includeUnexported bool) map[string]entry {
 	result := make(map[string]entry)
 	for _, def := range defs {
 		if def.TestPackage || def.Package.Package == "main" {
@@ -66,12 +68,13 @@ func symbols(defs []*model.Definition, includeInternal bool) map[string]entry {
 		}
 		for _, list := range lists {
 			for _, decl := range list.decls {
-				for _, name := range declNames(decl) {
+				for _, name := range declNames(decl, includeUnexported) {
 					symbol := Symbol{
-						Key:     def.ImportPath + "." + name,
-						Package: def.ImportPath,
-						Name:    name,
-						Kind:    list.kind,
+						Key:      def.ImportPath + "." + name,
+						Package:  def.ImportPath,
+						Name:     name,
+						Kind:     list.kind,
+						Exported: exportedSymbol(def.ImportPath, name),
 					}
 					var (
 						normalized string
@@ -103,21 +106,21 @@ func symbols(defs []*model.Definition, includeInternal bool) map[string]entry {
 	return result
 }
 
-// declNames returns the exported names of a declaration, each qualified with
+// declNames returns the names of a declaration, each qualified with
 // its receiver type.
 //
 // Names are filtered one by one rather than through Declaration.IsExported,
 // which reports on the whole group: an unexported name sharing a "const (...)"
 // block with an exported one would otherwise come along with it.
-func declNames(decl *model.Declaration) []string {
+func declNames(decl *model.Declaration, includeUnexported bool) []string {
 	// A method is only reachable when its receiver type is.
-	if decl.Receiver != "" && !ast.IsExported(model.TypeRef(decl.Receiver)) {
+	if !includeUnexported && decl.Receiver != "" && !ast.IsExported(model.TypeRef(decl.Receiver)) {
 		return nil
 	}
 
 	var names []string
 	for _, name := range decl.GetNames() {
-		if !ast.IsExported(name) {
+		if !includeUnexported && !ast.IsExported(name) {
 			continue
 		}
 		names = append(names, strings.Trim(decl.Receiver+"."+name, "*."))
@@ -318,6 +321,20 @@ func isNameList(s string) bool {
 	}
 	for _, name := range strings.Split(s, ",") {
 		if !token.IsIdentifier(name) {
+			return false
+		}
+	}
+	return true
+}
+
+// exportedSymbol reports whether a declaration is part of the API: the name is
+// exported, every name it is qualified by is, and the package is importable.
+func exportedSymbol(importPath, name string) bool {
+	if isInternal(importPath) {
+		return false
+	}
+	for _, part := range strings.Split(name, ".") {
+		if !ast.IsExported(part) {
 			return false
 		}
 	}
