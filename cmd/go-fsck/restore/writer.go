@@ -43,7 +43,7 @@ func RestoreDefinition(definition *Definition, cfg *options) error {
 		imports := definition.Imports[decl.File]
 
 		if strings.HasSuffix(decl.File, "_test.go") {
-			if decl.SelfContained {
+			if selfContained(decl) {
 				modelTestDeclarations = append(modelTestDeclarations, decl)
 				mergeImports(&modelTestImports, imports)
 			} else {
@@ -51,7 +51,7 @@ func RestoreDefinition(definition *Definition, cfg *options) error {
 				mergeImports(&richModelTestImports, imports)
 			}
 		} else {
-			if decl.SelfContained {
+			if selfContained(decl) {
 				modelDeclarations = append(modelDeclarations, decl)
 				mergeImports(&modelImports, imports)
 			} else {
@@ -109,4 +109,17 @@ func writeFile(pkg model.Package, declarations []*Declaration, imports StringSet
 
 	// Write the file content to disk
 	return file.Flush()
+}
+
+// selfContained reports a declaration that names nothing but itself and the
+// builtins: no import of the file it is in, and no package level name from
+// another file. Those are what model.go holds, and the rest go to
+// model_rich.go beside it.
+//
+// The model carried this as a bool until splint made the globals of a
+// declaration mean what they say. The question is the same one, read off the
+// two sets a declaration now records: what it reaches through an import, and
+// what it reaches inside its own package.
+func selfContained(decl *Declaration) bool {
+	return len(decl.Globals) == 0 && len(decl.References) == 0
 }
