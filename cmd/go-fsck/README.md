@@ -4,7 +4,7 @@ The code introspection tooling for your package layout.
 
 ```
 Usage: go-fsck <command> help
-Available commands: coverage, docs, extract, query, report, restore, search, sqlite, stats
+Available commands: coverage, diff, docs, extract, query, report, restore, search, stats
 ```
 
 ## Use cases
@@ -29,6 +29,15 @@ Usage of go-fsck:
   -v, --verbose              verbose output
 ```
 
+The source path is a directory of the tree you are in, or an import path with
+a version after it, which is read out of the module cache and downloaded into
+it first if it is not there:
+
+```
+go-fsck extract -i github.com/titpetric/oida/model@main --include-sources -o model.json .
+go-fsck extract -i github.com/titpetric/oida@v0.2.0 --include-sources -r -o oida.json ./...
+```
+
 The data model has rich traversal opportunities, as well as gives
 accessibility to the data. This has proven to be valuable for:
 
@@ -46,10 +55,13 @@ have been added or abandoned over time.
 - `docs`: print markdown docs with package godoc, render plantuml diagrams
 - `query`: a half-hearted attempt at interface discovery
 - `report`: reporting test naming conventions to match symbols
-- `restore`: the opinionated file grouping (symbol should match filename)
+- `restore`: write the model back out as source, one symbol per file
 - `search`: symbol lookup, takes a reference symbol as `oas.OAS`, also with name.
-- `sqlite`: it may scan go-fsck.json into a sqlite database for further querying
 - `stats`: various code coupling stats, imports, reverse symbol usage, docs compliance, package stats, etc.
+
+`edges`, `sqlite` and `test` were removed: the first was a stub, and the other
+two had eight months of nothing and answered nothing the commands above do
+not.
 
 The errata over time is as follows:
 
@@ -120,10 +132,10 @@ counts because it promotes that type's method set.
 
 What a data model change costs depends on the shape:
 
-| Shape | field added | field reshaped | field removed |
+| Shape     | field added  | field reshaped | field removed |
 |-----------|--------------|----------------|---------------|
-| struct | not breaking | breaking | breaking |
-| interface | breaking | breaking | breaking |
+| struct    | not breaking | breaking       | breaking      |
+| interface | breaking     | breaking       | breaking      |
 
 Adding a method to an interface stops every implementor compiling, where adding
 a field to a struct costs a consumer nothing.
@@ -164,8 +176,7 @@ that changed from indirect to direct is reported either way.
 No module change sets `breaking`. A dependency is not API, and moving one takes
 nothing away that a compiler will complain about.
 
-`--json` writes the same result as `{"removed": [], "added": [], "changed": [],
-"types": [], "modules": [], "breaking": false}`, where `breaking` covers removed
+`--json` writes the same result as `{"removed": [], "added": [], "changed": [], "types": [], "modules": [], "breaking": false}`, where `breaking` covers removed
 symbols, changed signatures and the data model changes that cost something, but
 not added ones. That is the semantic version question: a breaking difference
 earns at least a minor release, anything else a patch. Each entry of `types`
@@ -183,8 +194,7 @@ packages back. Note that the loader skips files carrying build constraints, so
 symbols behind a `//go:build` line are invisible to both sides of the
 comparison.
 
-Extraction works on an unbuilt source tree, which is what makes the `git
-archive` above viable: the model is read from the AST and package load errors
+Extraction works on an unbuilt source tree, which is what makes the `git archive` above viable: the model is read from the AST and package load errors
 are discarded, so no module cache or build is needed.
 
 ## Linting, and where the model lives now
@@ -208,8 +218,7 @@ go install github.com/titpetric/tools/splint/cmd/splint@latest
 splint ./...
 ```
 
-`go-fsck jsonschema` went the same way, and reads better for it: `splint
---schema` renders every package of a tree rather than the first one, and takes
+`go-fsck jsonschema` went the same way, and reads better for it: `splint --schema` renders every package of a tree rather than the first one, and takes
 a `go-fsck.json` as readily as a source path.
 
 ```shell
@@ -236,23 +245,54 @@ The attempt is to find code that is grouped by function signatures,
 type returns or otherwise common function API. It's more than common
 that these should be decomposed into a new package.
 
-## Restoring a codebase with `restore`
+## Vendoring a package with `restore`
 
-This is the missing part to `go fmt` for the codebase. The restore rules
-aren't defined well enough, and without deterministic rules, the
-restored code may only be partially usable.
-
-I used the feature exactly once, [forking a rate limiter project](https://github.com/TykTechnologies/exp/tree/main/pkg/limiters).
-
-I've accepted linting may be the only approach to the issue, even if
-fixing could be made deterministic. I tend to follow code grouping
-naturally, but wouldn't mind a sanity check in the pipeline.
-
-You can try the linters:
+`restore` writes the model back out as source. What it is for is embedding: a
+package you want inside your own module rather than beside it in go.mod, which
+is something go.mod cannot express.
 
 ```shell
-go install github.com/titpetric/tools/gofsck@latest
+go-fsck extract -i github.com/titpetric/oida/model@main --include-sources -o model.json .
+go-fsck restore -i model.json -o internal/model
+```
+
+That reads the package out of the module cache and writes it into
+`internal/model`, one file per exported symbol, named the way splint's
+`grouping` linter checks for: `Trace` in `trace.go`, its methods and `NewTrace`
+beside it, a const typed as `SpanKind` in `span_kind.go`, the unexported half in
+the file named for the package, and the values that belong to no type in
+`const.go` and `vars.go`. `--split` puts every symbol in a file of its own, the
+unexported ones included.
+
+Each file imports what its own declarations reach and nothing else, which is
+what the model records and what makes the output compile. The names are read
+off the syntax, so a package named in a comment or in a string is not imported
+for it, and a blank or a dot import carries with the file it was written in.
+Everything is written through goimports.
+
+Nothing is rewritten. The package clause and the import paths are what the
+source said, so a package of the tree that imports another package of the same
+tree still imports it by the path it was published under. Vendoring a subtree
+means either keeping that module path or fixing the imports afterwards.
+
+```shell
+go-fsck extract -i github.com/titpetric/oida@main --include-sources --include-tests -r -o oida.json ./...
+go-fsck restore -i oida.json -o vendor/oida
+```
+
+The flags are `--keep=type,const,func,var` to write some kinds and not others,
+`--remove-unexported` for the API alone, `--no-tests`, and `--split`.
+
+Two things do not travel. A document extracted without `--include-sources` has
+nothing to write, and the command says so. Anything that is not a Go
+declaration is not in the model, so a package embedding files with `go:embed`
+restores without them.
+
+The linters that judge the layout are splint's:
+
+```shell
 go install github.com/titpetric/tools/splint/cmd/splint@latest
+splint ./...
 ```
 
 ## Schema
@@ -288,9 +328,8 @@ extracted from a tree holding no go.mod carries none. `Requires` and `Replaces`
 are sorted by module path, so reordering a require block does not change the
 model.
 
-Using `go-fsck restore -p package (--save)` will render the schema into a
-package on disk. This package groups structs to 1 per file, keeping
-grouped var declarations scoped together.
+Using `go-fsck restore -o package` will render the schema into a package on
+disk, one symbol per file, keeping grouped var declarations scoped together.
 
 Its intent is mostly as a research tool, and it's not guaranteed to
 handle every possible edge case in terms of how people structure their
@@ -313,9 +352,9 @@ package and make other code have local behaviour.
 This is in effect a black box test, if there is no shared package scope.
 Test utilities are a common coupling that belongs in a separate package.
 
-- The tool implements --save, but two different models emerge, this tool
-  is aimed for DDD schema, mainly grouping by structs. Packages that
-  provide a package-level API need to be structured by functions.
+- Two different models emerge from writing files out. This tool is aimed at a
+  DDD schema, mainly grouping by structs. Packages that provide a
+  package-level API need to be structured by functions.
   How do we better handle the case of conventions for something
   similar to "strings" package?
 
@@ -361,11 +400,11 @@ corresponding to the *shortest* of the type names. The following code
 would be a red flag:
 
 ```go
-type FieldName struct {}
-type FieldKind struct {}
+type FieldName struct{}
+type FieldKind struct{}
 type Field struct {
-       Name FieldName
-       Kind FieldKind
+	Name FieldName
+	Kind FieldKind
 }
 ```
 
@@ -374,12 +413,12 @@ correct way to implement that is:
 
 ```go
 type (
-     FieldName struct {}
-     FieldKind struct {}
-     Field struct {
-       Name FieldName
-       Kind FieldKind
-     }
+	FieldName struct{}
+	FieldKind struct{}
+	Field     struct {
+		Name FieldName
+		Kind FieldKind
+	}
 )
 ```
 
@@ -404,8 +443,8 @@ desc:
   default:
     desc: "Run go-fsck and restore the package"
     cmds:
-      - go-fsck extract .
-      - go-fsck restore -p folder --save
+      - go-fsck extract . --include-sources
+      - go-fsck restore -o folder
 ```
 
 I often use `go-fsck extract ./...` to inspect the complete source tree.
@@ -521,6 +560,10 @@ is expected to have bugs (I am my own QA), but - here's a few caveats:
 - i mean, it's in the experimental repo...
 
 ## Aggregations
+
+The `--stats-files` flag these examples pipe from is gone: what it counted is
+what splint's `filecheck` and `selfcontained` linters report, with `-stats`.
+The jq is kept for the shape of the thing.
 
 A few aggregations of symbols are available below. Using `jq`
 lets us transform our schema into either an array of key value pairs,
