@@ -6,22 +6,17 @@ import (
 	"sort"
 	"strings"
 
-	_ "modernc.org/sqlite"
-
 	"golang.org/x/exp/maps"
 
 	"github.com/titpetric/exp/cmd/go-fsck/coverage"
 	"github.com/titpetric/exp/cmd/go-fsck/diff"
 	"github.com/titpetric/exp/cmd/go-fsck/docs"
-	"github.com/titpetric/exp/cmd/go-fsck/edges"
 	"github.com/titpetric/exp/cmd/go-fsck/extract"
 	"github.com/titpetric/exp/cmd/go-fsck/query"
 	"github.com/titpetric/exp/cmd/go-fsck/report"
 	"github.com/titpetric/exp/cmd/go-fsck/restore"
 	"github.com/titpetric/exp/cmd/go-fsck/search"
-	"github.com/titpetric/exp/cmd/go-fsck/sqlite"
 	"github.com/titpetric/exp/cmd/go-fsck/stats"
-	"github.com/titpetric/exp/cmd/go-fsck/test"
 )
 
 func main() {
@@ -42,9 +37,6 @@ func start() (err error) {
 		"docs":     docs.Run,
 		"diff":     diff.Run,
 		"report":   report.Run,
-		"sqlite":   sqlite.Run,
-		"test":     test.Run,
-		"edges":    edges.Run,
 	}
 	commandList := maps.Keys(commands)
 	sort.Strings(commandList)
