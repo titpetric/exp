@@ -19,6 +19,17 @@ func getDefinitions(cfg *options) (model.DefinitionList, error) {
 }
 
 func extract(cfg *options) error {
+	// A source path that names a package of another module is read out of the
+	// module cache, which is what makes an upstream package extractable
+	// without checking it out first.
+	if isImportPath(cfg.sourcePath) {
+		dir, err := resolveImportPath(cfg.sourcePath, cfg.verbose)
+		if err != nil {
+			return err
+		}
+		cfg.sourcePath = dir
+	}
+
 	definitions, err := getDefinitions(cfg)
 	if err != nil {
 		return err
