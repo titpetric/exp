@@ -1,18 +1,18 @@
 package restore
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/stoewer/go-strcase"
-
-	"github.com/titpetric/tools/splint/model"
 )
 
-var builtInTypes = model.BuiltInTypes
-
-var toType = model.ToType
-
+// toFilename is the file a symbol of this name belongs in, which is the snake
+// case of the name.
+//
+// It is the case splint's grouping linter checks a package against, so a
+// package restored by this command is one that linter has nothing to say
+// about. The two spellings that read wrong in snake case are corrected first:
+// OAuth is one word and CoProcess is two.
 func toFilename(s string) string {
 	s = strings.ReplaceAll(s, "OAuth", "Oauth")
 	s = strings.ReplaceAll(s, "CoProcess", "Coprocess")
@@ -22,31 +22,4 @@ func toFilename(s string) string {
 		return "funcs.go"
 	}
 	return s + ".go"
-}
-
-func IsConflicting(names []string) error {
-	// The problem with unexported functions is that their imports,
-	// when merged, would conflict with another function. For example,
-	// when using text/template or html/template, math/rand, crypto/rand,
-	// or an internal package matching stdlib (internal/crypto).
-	conflicting := map[string]bool{
-		"html/template":            true,
-		"text/template":            true,
-		"math/rand":                true,
-		"crypto":                   true,
-		"crypto/rand":              true,
-		"context":                  true,
-		"golang.org/x/net/context": true,
-	}
-	for _, name := range names {
-		clean := name
-		if strings.Contains(name, " ") {
-			clean = strings.Split(name, " ")[1]
-		}
-		clean = strings.Trim(clean, `"`)
-		if ok, _ := conflicting[clean]; ok {
-			return fmt.Errorf("Imports conflict over %s", clean)
-		}
-	}
-	return nil
 }
