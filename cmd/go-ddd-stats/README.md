@@ -1,46 +1,40 @@
 # go-ddd-stats
 
-The tool prints filesystem stats for a go project. It requires `go mod
-list` to detect the number of packages and the package name.
+The tool reports the size of every `.go` file below a path, per file and per
+package, with a histogram over them. The path defaults to the current
+directory, and vendored files are left out.
 
-Options: `--json`, `--stats`.
+| Flag | What it writes |
+|---|---|
+| none, `-json` | the whole collection: every file, every package, the histogram |
+| `-stats` | the histogram and the counts, without the files |
+| `-d2` | the histogram as a d2 diagram, for the d2 binary to render |
+
+```
+go-ddd-stats -d2 | d2 --layout elk - docs/assets/size.svg
+```
 
 Example:
 
 ```
-# go-ddd-stats --stats --json | jq .
+# go-ddd-stats -stats
 {
-  "Package": "github.com/TykTechnologies/tyk",
   "Sizes": [
     {
-      "Size": "<= 4 KB",
-      "Count": 183
+      "Size": "< 1 KB",
+      "Count": 0
     },
     {
-      "Size": "<= 8 KB",
-      "Count": 94
+      "Size": "< 2 KB",
+      "Count": 2
     },
     {
-      "Size": "<= 16 KB",
-      "Count": 70
-    },
-    {
-      "Size": "<= 32 KB",
-      "Count": 28
-    },
-    {
-      "Size": "<= 64 KB",
-      "Count": 19
-    },
-    {
-      "Size": "<= 128 KB",
-      "Count": 3
+      "Size": "< 4 KB",
+      "Count": 2
     }
   ],
-  "Median": 4656,
-  "P80": 11109,
-  "Packages": 48,
-  "Files": 397
+  "Packages": 2,
+  "Files": 4
 }
 ```
 
