@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	"github.com/titpetric/exp/cmd/go-fsck/internal"
-	"github.com/titpetric/tools/splint"
 	"github.com/titpetric/tools/splint/loader"
 	"github.com/titpetric/tools/splint/model"
+	"github.com/titpetric/tools/splint/pkg/splint"
 )
 
 // source is the package the round trip is run over: a type with a method and a

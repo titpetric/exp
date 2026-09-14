@@ -5,10 +5,10 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/titpetric/tools/splint"
 	"github.com/titpetric/tools/splint/analyzer"
 	"github.com/titpetric/tools/splint/loader"
 	"github.com/titpetric/tools/splint/model"
+	"github.com/titpetric/tools/splint/pkg/splint"
 )
 
 // Definitions reads a tree into the packages it declares.

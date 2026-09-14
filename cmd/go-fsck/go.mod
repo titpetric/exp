@@ -7,7 +7,7 @@ require (
 	github.com/spf13/pflag v1.0.10
 	github.com/stoewer/go-strcase v1.3.1
 	github.com/stretchr/testify v1.11.1
-	github.com/titpetric/tools/splint v0.0.0-20260901101221-cbecc8e80f78
+	github.com/titpetric/tools/splint v0.0.0-20260914083103-b8cdfa8d10d6
 	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba
 	golang.org/x/tools v0.50.0
 )
