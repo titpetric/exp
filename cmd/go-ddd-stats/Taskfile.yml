@@ -3,14 +3,14 @@ version: "3"
 
 tasks:
   default:
-    desc: "go-fsck: Build, test, install"
+    desc: "go-ddd-stats: Build, test, install"
     deps: [ fix ]
     cmds:
       - go install .
       - go-ddd-stats
 
   fix:
-    desc: "go-fsck: Clean up source tree"
+    desc: "go-ddd-stats: Clean up source tree"
     aliases: ["fmt"]
     cmds:
       - goimports -w -local $(go list .) .
