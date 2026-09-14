@@ -34,11 +34,60 @@ type Mutex[T any] struct {
 
 </details>
 
+<details>
+<summary><code>type TemplateExample</code></summary>
+
+```go
+// TemplateExample holds a TemplateRenderer specialized for TemplateExampleData.
+type TemplateExample struct {
+	view TemplateRenderer[TemplateExampleData]
+}
+```
+
+</details>
+
+<details>
+<summary><code>type TemplateExampleData</code></summary>
+
+```go
+// TemplateExampleData is the model passed to the renderer's templates.
+// It represents a user with exported string fields.
+type TemplateExampleData struct {
+	Name	string
+	Link	string
+	Avatar	string
+}
+```
+
+</details>
+
+<details>
+<summary><code>type TemplateFuncMap</code></summary>
+
+```go
+type TemplateFuncMap interface {
+	FuncMap() template.FuncMap
+}
+```
+
+</details>
+
+<details>
+<summary><code>type TemplateRenderer</code></summary>
+
+```go
+type TemplateRenderer[T any] func(w io.Writer, templateName string, data T) error
+```
+
+</details>
+
 ## Function symbols
 
 - `func ListMap (l List[K], mapfn func(K) V) List[V]`
 - `func NewList () List[T]`
 - `func NewMutex (value T) *Mutex[T]`
+- `func NewTemplateExample (files *embed.FS) *TemplateExample`
+- `func NewTemplateRenderer (files *embed.FS, defaultTemplate string) TemplateRenderer[T]`
 - `func Pointer (value T) *T`
 - `func UseMutex (m *Mutex[T], transform func(T) R) R`
 - `func UseMutexCopy (m *Mutex[T], transform func(T) R) R`
@@ -46,10 +95,12 @@ type Mutex[T any] struct {
 - `func (*Mutex[T]) Set (value T)`
 - `func (*Mutex[T]) Use (callback func(T))`
 - `func (*Mutex[T]) UseCopy (callback func(T)) T`
+- `func (*TemplateExample) ServeHTTP (w http.ResponseWriter, r *http.Request)`
 - `func (List[T]) Filter (match func(T) bool) List[T]`
 - `func (List[T]) Find (match func(T) bool) T`
 - `func (List[T]) Get (index int) T`
 - `func (List[T]) Value () []T`
+- `func (TemplateExampleData) FuncMap () template.FuncMap`
 
 ### ListMap
 
@@ -73,6 +124,27 @@ NewMutex will create a new mutex protected value.
 
 ```go
 func NewMutex (value T) *Mutex[T]
+```
+
+### NewTemplateExample
+
+NewTemplateExample constructs a TemplateExample using the provided embedded FS.
+
+```go
+func NewTemplateExample (files *embed.FS) *TemplateExample
+```
+
+### NewTemplateRenderer
+
+NewTempleRenderer provides a type safe callback to render a template in a type-safe manner.
+The passed type needs to implement a FuncMap to provide it's own template APIs if needed.
+It's common to provide these to print time.Time values in human readable formats (localisation).
+The only function provided so far is \`json\`, allowing developers to inspect template data
+structures from the browser. Depending on the context of html/template, this output may
+be escaped, to sanitize it for HTML.
+
+```go
+func NewTemplateRenderer (files *embed.FS, defaultTemplate string) TemplateRenderer[T]
 ```
 
 ### Pointer
@@ -132,6 +204,15 @@ stored value, returning the copy for exclusive use.
 func (*Mutex[T]) UseCopy (callback func(T)) T
 ```
 
+### ServeHTTP
+
+ServeHTTP implements http.Handler. It constructs an TemplateExampleData instance
+and invokes the underlying TemplateRenderer to render the template.
+
+```go
+func (*TemplateExample) ServeHTTP (w http.ResponseWriter, r *http.Request)
+```
+
 ### Filter
 
 Filter traverses the list, and returns a new list with matching items.
@@ -162,5 +243,13 @@ Value function transforms the list to a native []T slice.
 
 ```go
 func (List[T]) Value () []T
+```
+
+### FuncMap
+
+FuncMap satisfies the TemplateFuncMap constraint required by NewTemplateRenderer.
+
+```go
+func (TemplateExampleData) FuncMap () template.FuncMap
 ```
 
