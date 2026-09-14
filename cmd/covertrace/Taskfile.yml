@@ -4,5 +4,5 @@ version: "3"
 tasks:
   default:
     cmds:
-      - goimports -w .
+      - splint fix ./...
       - go install .

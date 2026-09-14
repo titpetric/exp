@@ -5,7 +5,7 @@ tasks:
   default:
     name: "Run tool"
     cmds:
-      - goimports -w .
+      - splint fix ./...
       - go mod tidy
       - go fmt .
       - go install .

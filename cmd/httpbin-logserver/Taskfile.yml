@@ -26,7 +26,7 @@ tasks:
   fmt:
     internal: true
     cmds:
-      - goimports -w -local=$(go list .) .
+      - splint fix ./...
       - go fmt ./...
       - go mod tidy
 

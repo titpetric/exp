@@ -13,6 +13,6 @@ tasks:
   build:
     desc: "Build and install"
     cmds:
-      - goimports -w -local=$(go list .) .
+      - splint fix ./...
       - go fmt ./...
       - go test -v -count 1 .

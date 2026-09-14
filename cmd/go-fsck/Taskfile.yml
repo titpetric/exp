@@ -38,7 +38,7 @@ tasks:
       - go-fsck restore -p model --stats-files | jq -s .
       - go-fsck docs --render puml > go-fsck.puml
       - plantuml -tsvg go-fsck.puml
-      - goimports -w .
+      - splint fix ./...
       - go fmt .
       - go build .
 
@@ -46,7 +46,7 @@ tasks:
     desc: "go-fsck: Clean up source tree"
     aliases: ["fmt"]
     cmds:
-      - goimports -w -local $(go list .) .
+      - splint fix ./...
       - go fmt ./...
       - go mod tidy
 
