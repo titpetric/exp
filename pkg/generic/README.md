@@ -3,10 +3,13 @@
 ```go
 import (
 	"github.com/titpetric/exp/pkg/generic"
-}
+)
 ```
 
 ## Types
+
+<details>
+<summary><code>type List</code></summary>
 
 ```go
 // List[T] is analogous with []T with utility functions.
@@ -16,6 +19,11 @@ import (
 type List[T any] []T
 ```
 
+</details>
+
+<details>
+<summary><code>type Mutex</code></summary>
+
 ```go
 // Mutex protects any value T.
 type Mutex[T any] struct {
@@ -23,6 +31,8 @@ type Mutex[T any] struct {
 	value	T
 }
 ```
+
+</details>
 
 ## Function symbols
 
@@ -153,5 +163,4 @@ Value function transforms the list to a native []T slice.
 ```go
 func (List[T]) Value () []T
 ```
-
 

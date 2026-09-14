@@ -3,7 +3,7 @@
 ```go
 import (
 	"github.com/titpetric/exp/pkg/generic/allocator"
-}
+)
 ```
 
 The allocator package serves as an optimization utility.
@@ -37,6 +37,9 @@ uses runtime.SetFinalizer on the T.
 
 ## Types
 
+<details>
+<summary><code>type Allocator</code></summary>
+
 ```go
 // Allocator holds a sync.Pool of objects of type T.
 type Allocator[T Reseter] struct {
@@ -44,12 +47,19 @@ type Allocator[T Reseter] struct {
 }
 ```
 
+</details>
+
+<details>
+<summary><code>type Reseter</code></summary>
+
 ```go
 // Reseter is the interface that types must implement to be managed by Allocator.
 type Reseter interface {
 	Reset()
 }
 ```
+
+</details>
 
 ## Function symbols
 
@@ -80,5 +90,4 @@ Put returns an object to the pool after resetting it.
 ```go
 func (*Allocator[T]) Put (t T)
 ```
-
 
