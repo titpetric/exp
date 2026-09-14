@@ -9,7 +9,7 @@ The dependency audit below, the size and file count per import, is
 [`splint`](https://github.com/titpetric/tools/tree/main/splint) now:
 
 ```bash
-go install github.com/titpetric/tools/splint/cmd/splint@latest
+go install github.com/titpetric/tools/splint@main
 splint -stats --linters modcheck ./...
 ```
 

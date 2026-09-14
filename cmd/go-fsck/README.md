@@ -214,7 +214,7 @@ defs, err := internal.Definitions(options)
 `splint` does:
 
 ```shell
-go install github.com/titpetric/tools/splint/cmd/splint@latest
+go install github.com/titpetric/tools/splint@main
 splint ./...
 ```
 
@@ -291,7 +291,7 @@ restores without them.
 The linters that judge the layout are splint's:
 
 ```shell
-go install github.com/titpetric/tools/splint/cmd/splint@latest
+go install github.com/titpetric/tools/splint@main
 splint ./...
 ```
 
