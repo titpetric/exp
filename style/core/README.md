@@ -41,9 +41,9 @@ to an internal package. Testing the components inside bound scopes
 
 ### Import groups
 
-Generally people fine tune import groups as much as they like, however,
-inconsistencies in tooling like `goimports` have driven us to use
-[goimports-reviser](https://github.com/incu6us/goimports-reviser).
+Import blocks are formatted with
+[splint fix](https://github.com/titpetric/tools/tree/main/splint), which
+rewrites every block to the grouping below in one pass.
 
 The desired grouping is:
 
