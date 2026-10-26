@@ -4,7 +4,7 @@ go 1.27.0
 
 require (
 	github.com/SentimensRG/ctx v0.0.0-20180729130232-0bfd988c655d
-	github.com/mccutchen/go-httpbin/v2 v2.25.0
+	github.com/mccutchen/go-httpbin/v2 v2.26.0
 )
 
 require github.com/stretchr/testify v1.8.4 // indirect
