@@ -5,10 +5,10 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/huandu/go-assert v1.1.5 h1:fjemmA7sSfYHJD7CUqs9qTwwfdNAx7/j2/ZlHXzNB3c=
 github.com/huandu/go-assert v1.1.5/go.mod h1:yOLvuqZwmcHIC5rIzrBhT7D3Q9c3GFnd0JrPVhn/06U=
-github.com/huandu/go-clone v1.7.3 h1:rtQODA+ABThEn6J5LBTppJfKmZy/FwfpMUWa8d01TTQ=
-github.com/huandu/go-clone v1.7.3/go.mod h1:ReGivhG6op3GYr+UY3lS6mxjKp7MIGTknuU5TbTVaXE=
-github.com/huandu/go-clone/generic v1.7.3 h1:hXbg87J1nWwwHO2vGD5PAnBohQCfltl+fOEHorTIIPY=
-github.com/huandu/go-clone/generic v1.7.3/go.mod h1:GnX7Bo9qvXKm2f3OJybqcbgj6YmA/kuEd/pw5JbsB/I=
+github.com/huandu/go-clone v1.7.5 h1:Q6RB4lv8R+DxQ4EUPbJLOD6n5ngBE3isb6Vg2ByKlgg=
+github.com/huandu/go-clone v1.7.5/go.mod h1:ReGivhG6op3GYr+UY3lS6mxjKp7MIGTknuU5TbTVaXE=
+github.com/huandu/go-clone/generic v1.7.5 h1:SHespT6J9a74WGPcw4abPR+TOZnUxMmST1jI6Y3QQLk=
+github.com/huandu/go-clone/generic v1.7.5/go.mod h1:53SMvtbQfrLqYH7pEIZq61zdG6Qrqm1n8U5sxzD/43Q=
 github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
