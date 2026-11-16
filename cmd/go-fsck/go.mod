@@ -4,12 +4,12 @@ go 1.27.0
 
 require (
 	github.com/fbiville/markdown-table-formatter v0.3.0
-	github.com/spf13/pflag v1.0.10
+	github.com/spf13/pflag v1.1.0
 	github.com/stoewer/go-strcase v1.3.1
 	github.com/stretchr/testify v1.11.1
 	github.com/titpetric/tools/splint v0.0.0-20260914083103-b8cdfa8d10d6
-	golang.org/x/exp v0.0.0-20261014143641-f0251eb4aa3e
-	golang.org/x/tools v0.52.0
+	golang.org/x/exp v0.0.0-20261113113407-e3970619a1a4
+	golang.org/x/tools v0.52.1-0.20261106145633-d407941a339a
 )
 
 require (
@@ -20,8 +20,8 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/uudashr/gocognit v1.3.0 // indirect
-	golang.org/x/mod v0.42.0 // indirect
-	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/mod v0.43.0 // indirect
+	golang.org/x/sync v0.25.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
